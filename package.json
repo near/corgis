@@ -1,0 +1,54 @@
+{
+    "name": "new-corgi",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "assemblyscript-json": "github:nearprotocol/assemblyscript-json",
+        "bignum": "github:MaxGraey/bignum.wasm",
+        "eslint": "^6.8.0",
+        "eslint-plugin-import": "^2.20.0",
+        "gh-pages": "^2.1.1",
+        "gulp": "^4.0.2",
+        "js-cookie": "^2.2.1",
+        "near-runtime-ts": "^0.5.1",
+        "near-shell": "^0.17.2",
+        "nearlib": "^0.19.1",
+        "project-name-generator": "^2.1.7",
+        "randomcolor": "^0.5.4",
+        "react": "^16.11.0",
+        "react-copy-to-clipboard": "^5.0.2",
+        "react-dom": "^16.11.0",
+        "react-icons": "^3.8.0",
+        "react-keyframes": "^0.2.3",
+        "react-router-dom": "^5.1.2",
+        "react-scripts": "3.3.0",
+        "tinycolor2": "^1.4.1",
+        "yarn": "^1.21.1"
+    },
+    "scripts": {
+        "prestart": "gulp build && near deploy ",
+        "start": "react-scripts start",
+        "build:frontend": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject",
+        "deploy:contract": "gulp build && near deploy",
+        "build": "react-scripts build && gulp build ",
+        "deploy:pages": "gh-pages -d build",
+        "fix": "eslint --fix"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not dead",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    }
+}

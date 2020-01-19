@@ -1,0 +1,36 @@
+.creation {
+    margin: 1%;
+    display: inline-block;
+}
+
+.corgiboard {
+    width: 300px;
+    height: 260px;
+    overflow: scroll;
+    border-radius: 10px;
+}
+
+.dogname {
+    text-align: left;
+    font-size: 1em;
+    margin-left: 1%;
+    margin-top: 1%;
+    margin-bottom: 0;
+    display: block;
+}
+
+.address {
+    text-align: left;
+    font-size: 0.7em;
+    margin-left: 1%;
+    font-weight: lighter;
+    display: block;
+}
+
+.orange {
+    color: orange;
+}
+
+.blue {
+    color: lightblue;
+}

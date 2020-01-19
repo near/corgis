@@ -1,0 +1,24 @@
+.corgi {
+  display: flex;
+  justify-content: "center";
+  width: 80%;
+}
+
+.head, 
+.tail,
+.body {
+  margin:0;
+  display: inline-block;
+}
+
+.body {
+  position: relative;
+  bottom: -63px;
+  left: -1px;
+}
+
+.tail {
+  position: relative;
+  bottom: -8px;
+  left: -2px;
+}

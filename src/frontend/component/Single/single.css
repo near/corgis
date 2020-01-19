@@ -1,0 +1,44 @@
+.wrapperS {
+    width: 70%;
+    max-width: 800px;
+    margin: 2% auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card {
+    background-color: azure;
+    margin: 3%;
+    padding: 2%;
+    display: flex;
+    flex-flow: row wrap;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.cardChar {
+    color: #2b73c7;
+}
+
+.text {
+    margin-left: 10px;
+    display: inline-block;
+    width: 200px;
+}
+
+.small {
+    display: none;
+}
+
+@media all and (max-width: 415px) {
+    .text {
+        display: none;
+    }
+
+    .small {
+        font-size: 1rem;
+        display: inline;
+        color: #2b73c7;
+    }
+}

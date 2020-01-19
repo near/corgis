@@ -1,0 +1,44 @@
+.footer {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7em;
+    font-weight: light;
+    color: #4A4F54;
+    display: flex;
+    justify-content: space-between;
+    background-color: #f8f8f8;
+    width: 100%;
+    margin-top: 3%;
+    padding: 3%;
+    vertical-align: middle;
+    margin-bottom: 0 !important;
+}
+
+.footer p {
+    margin:0;
+}
+
+.text {
+    padding: 10px;
+}
+
+.left {
+    text-align: start;
+    margin-left: 15px;
+    display: inline-flex;
+    justify-content: flex-start;
+}
+
+.right {
+    display: block;
+    text-align: end;
+    margin-right: 15px;
+    padding-top: 10px;
+}
+
+.blue {
+    color: lightblue;
+}
+
+.black {
+    color: black;
+}

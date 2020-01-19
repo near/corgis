@@ -1,0 +1,14 @@
+body {
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+button {
+  all: unset;
+  outline:none;
+}
+
+input {
+  all:unset;
+  padding: 5px;
+}
