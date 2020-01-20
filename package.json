@@ -10,9 +10,10 @@
         "gh-pages": "^2.1.1",
         "gulp": "^4.0.2",
         "js-cookie": "^2.2.1",
+        "near-bindgen-as": "^1.2.0",
         "near-runtime-ts": "^0.5.1",
-        "near-shell": "^0.17.2",
-        "nearlib": "^0.19.1",
+        "near-shell": "^0.20.0",
+        "nearlib": "^0.20.0",
         "project-name-generator": "^2.1.7",
         "randomcolor": "^0.5.4",
         "react": "^16.11.0",
@@ -26,7 +27,7 @@
         "yarn": "^1.21.1"
     },
     "scripts": {
-        "prestart": "gulp build && near deploy ",
+        "prestart": "gulp && near deploy ",
         "start": "react-scripts start",
         "build:frontend": "react-scripts build",
         "test": "react-scripts test",
