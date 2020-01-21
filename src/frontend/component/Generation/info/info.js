@@ -32,24 +32,25 @@ class Info extends Component {
     }
 
     render() {
-        let {color, backgroundColor, handleChange} = this.props
+        let { color, backgroundColor, handleChange } = this.props
         return (
             <div className="inputboard">
                 <p className="title">My Corgi is called</p>
                 <form onSubmit={this.handleSubmit}>
                     <div>
-                        <input
-                            className="inputname"
-                            name="Name"
-                            type="text"
-                            placeholder="Corgi name"
-                            onChange={this.handleNameChange}
-                            value={this.state.Name}
-                            required />
+                        <div>
+                            <input
+                                className="inputname"
+                                name="Name"
+                                type="text"
+                                placeholder="Corgi name"
+                                onChange={this.handleNameChange}
+                                value={this.state.Name}
+                                required /></div>
                         <span><GiGreekSphinx
                             onClick={this.handleRandomName}
                             style={{
-                                marginLeft: "8px",
+                                marginLeft: "3px",
                                 color: "#a51cea",
                                 fontSize: "2rem",
                                 borderRadius: "50%",

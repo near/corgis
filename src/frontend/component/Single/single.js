@@ -125,7 +125,7 @@ const Rate = ({ rate }) => {
 
 
     return (
-        <div>
+        <div style={{width: "200px"}}>
             <h5>Congrats! Your corgi is...</h5>
             <div>
                 <div>{common}<span>Common</span></div>
@@ -138,9 +138,9 @@ const Rate = ({ rate }) => {
 }
 
 const SendAndShare = ({ backdropShowHandler, backShowHandler }) => {
-    let style = { display: "flex", flexDirection: "column" }
+    let style = { display: "flex", flexDirection: "column", textAlign: "left" }
     return (
-        <div>
+        <div style={{width:"300px"}}>
             <h5>What would you like to do with </h5>
             <div style={style}>
                 <Send clicked={backdropShowHandler} />
@@ -215,7 +215,7 @@ const Send = ({ clicked }) => {
             {send}
             <div className="small">Send</div>
             <div className="text">
-                <h4 className="cardChar">Send as a gift</h4>
+                <h3 className="cardChar">Send as a gift</h3>
                 <p>The perfect gift for any occasion</p>
             </div>
         </button>
@@ -240,7 +240,7 @@ const Share = ({ clicked }) => {
             {share}
             <div className="small">Share</div>
             <div className="text">
-                <h4 className="cardChar">Share on Social</h4>
+                <h3 className="cardChar">Share on Social</h3>
                 <p>Got something rare? It is time to brag a bit.</p>
             </div>
         </div>

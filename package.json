@@ -33,7 +33,7 @@
         "test": "react-scripts test",
         "eject": "react-scripts eject",
         "deploy:contract": "gulp build && near deploy",
-        "build": "react-scripts build && gulp build ",
+        "build": "react-scripts build && gulp",
         "deploy:pages": "gh-pages -d build",
         "fix": "eslint --fix"
     },
