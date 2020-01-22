@@ -138,21 +138,21 @@ const Rate = ({ rate }) => {
 }
 
 const SendAndShare = ({ backdropShowHandler, backShowHandler }) => {
-    let style = { display: "flex", flexDirection: "column", textAlign: "left" }
+    let style = { display: "flex", flexDirection: "column", width:"300px" }
     return (
-        <div style={{width:"300px"}}>
+        <div>
             <h5>What would you like to do with </h5>
-            <div style={style}>
+            <span style={style}>
                 <Send clicked={backdropShowHandler} />
                 <Share clicked={backShowHandler} />
-            </div>
+            </span>
         </div>
     )
 }
 
 const Send = ({ clicked }) => {
     let send = (
-        <svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+        <svg width="45px" height="45px" viewBox="0 0 45 45" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
             <defs>
                 <linearGradient x1="0%" y1="50.0039354%" x2="100%" y2="50.0039354%" id="linearGradient-1">
                     <stop stopColor="#231F20" offset="0%"></stop>
@@ -224,7 +224,7 @@ const Send = ({ clicked }) => {
 
 const Share = ({ clicked }) => {
     let share = (
-        <svg width="50px" height="50px" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+        <svg width="45px" height="45px" viewBox="0 0 45 45" version="1.1" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
             <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
                 <g id="result" transform="translate(-965.000000, -1067.000000)" fillRule="nonzero">
                     <g id="share" transform="translate(965.000000, 1067.000000)">
@@ -236,13 +236,13 @@ const Share = ({ clicked }) => {
             </g>
         </svg>)
     return (
-        <div className="card" onClick={clicked}>
+        <button className="card" onClick={clicked}>
             {share}
             <div className="small">Share</div>
             <div className="text">
                 <h3 className="cardChar">Share on Social</h3>
                 <p>Got something rare? It is time to brag a bit.</p>
             </div>
-        </div>
+        </button>
     )
 }

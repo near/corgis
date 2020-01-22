@@ -97,7 +97,7 @@ class CreationProfile extends Component {
             : <div><GiGlassBall style={{ color: "#9437ff" }} />{corgi.rate}<GiJumpingDog style={{ color: "#9437ff" }} />{corgi.name} <GiDogBowl style={{ color: "#9437ff" }} />from: NEAR<TiDelete onClick={this.deleteCorgi} style={{ marginLeft: "5px", color: "#ff4143", fontSize: "2rem" }} /></div>
         let message = corgi.message ?
             <p><GiDiscussion style={{ color: "#9437ff" }} />{corgi.message}</p>
-            : <p><GiDiscussion style={{ color: "#9437ff" }} />give this lovely corgi to you</p>
+            : <p><GiDiscussion style={{ color: "#9437ff" }} />this lovely corgi is for you</p>
         return (
             <div style={{ margin: "5px", display: "flex", flexBasis: "row wrap", justifyContent: "center" }}>
                 {show}

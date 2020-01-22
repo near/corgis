@@ -11,7 +11,6 @@
     margin: 3%;
     padding: 2%;
     display: flex;
-    flex-flow: row wrap;
     border-radius: 5px;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
     cursor: pointer;
@@ -25,6 +24,8 @@
     margin-left: 10px;
     display: inline-block;
     width: 200px;
+    text-align: left;
+    padding: 0;
 }
 
 .small {

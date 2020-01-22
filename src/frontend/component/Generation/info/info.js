@@ -38,26 +38,26 @@ class Info extends Component {
                 <p className="title">My Corgi is called</p>
                 <form onSubmit={this.handleSubmit}>
                     <div>
-                        <div>
-                            <input
-                                className="inputname"
-                                name="Name"
-                                type="text"
-                                placeholder="Corgi name"
-                                onChange={this.handleNameChange}
-                                value={this.state.Name}
-                                required /></div>
-                        <span><GiGreekSphinx
+                        <input
+                            className="inputname"
+                            name="Name"
+                            type="text"
+                            placeholder="Corgi name"
+                            onChange={this.handleNameChange}
+                            value={this.state.Name}
+                            required />
+                        <GiGreekSphinx
                             onClick={this.handleRandomName}
                             style={{
-                                marginLeft: "3px",
+                                marginLeft: "5px",
                                 color: "#a51cea",
-                                fontSize: "2rem",
+                                fontSize: "1.5rem",
                                 borderRadius: "50%",
                                 boxShadow: "0 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 0 5px 2px #ffffff",
                                 background: "#f5ebff",
-                                cursor: "pointer"
-                            }} /></span>
+                                cursor: "pointer",
+                                marginTop: "10px"
+                            }} />
                     </div>
                     <p className="title">Colors</p>
                     <ColorPicker
