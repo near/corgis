@@ -8,7 +8,7 @@
 <br />
 <br />
 
-# Explore (Corgis)[http://corgis.nearprotocol.com] when you first see this!
+# Explore [Corgis](http://corgis.nearprotocol.com) when you first see this!
 
 ### To run on main Testnet
 #### Requirements
