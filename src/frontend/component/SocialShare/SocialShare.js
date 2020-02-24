@@ -31,7 +31,8 @@ class SocialShare extends Component {
         let {
             load,
             login,
-            requestSignIn
+            requestSignIn,
+            location
         } = this.props
         let { loading, corgi } = this.state
         if (!load) { return <Spinner /> }
@@ -41,7 +42,7 @@ class SocialShare extends Component {
             color={corgi.color}
             sausage={corgi.sausage}
             quote={corgi.quote} />
-        let address = window.location.origin + "/share" // + location.hash
+        let address = window.location.origin + "/share" + location.hash
         let sausage = Number(corgi.sausage).toFixed(4)
         let style = {
             width: "70%",
