@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom';
 import { Keyframes, Frame } from 'react-keyframes';
 import SampleH from '../../common/sample/sample_h';
-import Spinner from '../../common/spinner/spinner'
+import Spinner from '../../common/spinner/spinner';
+import {DEFAULT_GAS_VALUE} from "../../../container/App/App";
 
 import './animation.css';
 class Animation extends Component {
@@ -18,7 +19,7 @@ class Animation extends Component {
             name: newCorgiName,
             quote: quote,
             color: color,
-        }, 10000000000000).then(response => {
+        }, DEFAULT_GAS_VALUE).then(response => {
             console.log("[animation.js] generation", response)
             let corgi = response
             let newCorgis = corgis.concat(corgi)

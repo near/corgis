@@ -18,6 +18,8 @@ import './App.css';
 let randomColor = require('randomcolor');
 let generate = require('project-name-generator');
 
+export const DEFAULT_GAS_VALUE = 10000000000000;
+
 class App extends Component {
     constructor(props) {
         super(props);

@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
-import { IoIosCheckmarkCircleOutline, IoIosCloseCircleOutline } from "react-icons/io";
+
 import * as nearlib from 'nearlib';
 
 import Button from '../common/Button/Button';
+
+import { IoIosCheckmarkCircleOutline, IoIosCloseCircleOutline } from "react-icons/io";
+
+import {DEFAULT_GAS_VALUE} from "../../container/App/App";
 
 //message needs to be added
 class TransferCorgi extends Component {
@@ -53,7 +57,7 @@ class TransferCorgi extends Component {
       tokenId: dna,
       message,
       sender: accountId
-    }, 10000000000000)
+    }, DEFAULT_GAS_VALUE)
       .then(response => {
         console.log("[transfer.js] corgis", response.len)
         let newCorgis = response.corgis

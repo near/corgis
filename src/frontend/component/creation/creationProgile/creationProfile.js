@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 import { TiDelete } from "react-icons/ti";
 import { GiDiscussion, GiJumpingDog, GiDogBowl, GiGlassBall } from "react-icons/gi";
+import {DEFAULT_GAS_VALUE} from "../../../container/App/App";
 
 class CreationProfile extends Component {
     deleteCorgi = () => {
@@ -9,7 +10,7 @@ class CreationProfile extends Component {
         handleDelete()
         contract.deleteCorgiProfile({
             tokenId: corgi.dna
-        }, 10000000000000).then(response => {
+        }, DEFAULT_GAS_VALUE).then(response => {
             console.log("[profile.js] corgis", response.len)
             let newCorgis = response.corgis
             handleChange({ name: "corgis", value: newCorgis })
