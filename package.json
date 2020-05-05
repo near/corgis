@@ -2,17 +2,20 @@
     "name": "new-corgi",
     "version": "0.1.0",
     "private": true,
+    "scripts": {
+        "build": "npm run build:contract && npm run build:web",
+        "build:contract": "node asconfig.js",
+        "build:web": "parcel build src/index.html --public-url ./",
+        "dev:deploy:contract": "near dev-deploy",
+        "deploy:contract": "near deploy",
+        "deploy": "npm run build && npm run deploy:contract",
+        "prestart": "npm run build:contract && npm run dev:deploy:contract",
+        "start": "parcel src/index.html",
+        "dev": "nodemon --watch assembly -e ts --exec \"npm run start\"",
+        "test": "asp && npm run build:contract && jest test --runInBand"
+    },
     "dependencies": {
-        "bignum": "github:MaxGraey/bignum.wasm",
-        "eslint": "^6.8.0",
-        "eslint-plugin-import": "^2.20.0",
-        "gh-pages": "^2.1.1",
-        "gulp": "^4.0.2",
-        "js-cookie": "^2.2.1",
-        "near-bindgen-as": "^1.2.0",
-        "near-runtime-ts": "^0.6.0",
-        "near-shell": "^0.20.0",
-        "nearlib": "^0.20.0",
+        "near-api-js": "^0.23.2",
         "project-name-generator": "^2.1.7",
         "randomcolor": "^0.5.4",
         "react": "^16.11.0",
@@ -22,23 +25,47 @@
         "react-keyframes": "^0.2.3",
         "react-router-dom": "^5.1.2",
         "react-scripts": "3.4.0",
-        "tinycolor2": "^1.4.1",
-        "yarn": "^1.21.1"
+        "regenerator-runtime": "^0.13.5",
+        "tinycolor2": "^1.4.1"
     },
-    "scripts": {
-        "prestart": "gulp && near deploy",
-        "start": "react-scripts start",
-        "build:frontend": "react-scripts build",
-        "dev:deploy:contract": "near dev-deploy",
-        "test": "react-scripts test",
-        "eject": "react-scripts eject",
-        "deploy:contract": "gulp && near deploy",
-        "build": "react-scripts build && gulp",
-        "deploy:pages": "gh-pages -d build",
-        "fix": "eslint --fix"
+    "devDependencies": {
+        "@babel/core": "^7.9.6",
+        "@babel/plugin-proposal-class-properties": "^7.8.3",
+        "assemblyscript": "^0.9.4",
+        "babel-jest": "^26.0.0",
+        "jest": "^26.0.1",
+        "jest-environment-node": "^26.0.0",
+        "near-sdk-as": "^0.3.1",
+        "near-shell": "^0.21.0",
+        "nodemon": "^2.0.3",
+        "parcel-bundler": "^1.12.4",
+        "react-test-renderer": "^16.13.1"
+    },
+    "babel": {
+        "presets": [
+            "@babel/preset-env",
+            "@babel/preset-react"
+        ],
+        "plugins": [
+            "@babel/plugin-proposal-class-properties"
+        ]
     },
     "eslintConfig": {
         "extends": "react-app"
+    },
+    "jest": {
+        "moduleNameMapper": {
+            "\\.(jpg|ico|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/src/__mocks__/fileMock.js",
+            "\\.(css|less)$": "<rootDir>/src/__mocks__/fileMock.js"
+        },
+        "setupFiles": [
+            "<rootDir>/src/jest.init.js"
+        ],
+        "testEnvironment": "near-shell/test_environment",
+        "testPathIgnorePatterns": [
+            "<rootDir>/assembly/",
+            "<rootDir>/node_modules/"
+        ]
     },
     "browserslist": {
         "production": [

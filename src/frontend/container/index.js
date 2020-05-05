@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import "regenerator-runtime/runtime";
+import React, { Component } from "react";
+import { BrowserRouter } from "react-router-dom";
 
-import App from './App/App'
+import App from "./App/App";
 
 class AppBuilder extends Component {
-    render() {
-        return (
-            <BrowserRouter basename={process.env.PUBLIC_URL}>
-                <App contract={this.props.contract} wallet={this.props.wallet} />
-            </BrowserRouter>
-        )
-    }
-
+  render() {
+    return (
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <App contract={this.props.contract} wallet={this.props.wallet} />
+      </BrowserRouter>
+    );
+  }
 }
 
-export default AppBuilder
+export default AppBuilder;
