@@ -18,6 +18,7 @@
         "big.js": "^5.2.2",
         "near-api-js": "^0.25.1",
         "project-name-generator": "^2.1.7",
+        "prop-types": "^15.7.2",
         "randomcolor": "^0.5.4",
         "react": "^16.11.0",
         "react-copy-to-clipboard": "^5.0.2",

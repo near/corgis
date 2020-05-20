@@ -1,54 +1,64 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { BrowserRouter } from "react-router-dom";
+
 import getConfig from "./config.js";
 import * as nearlib from "near-api-js";
-import AppBuilder from "./frontend/container/index";
 
+import App from "./App";
 // Initializing contract
 async function InitContract() {
-  window.nearConfig = getConfig("development");
-  console.log("nearConfig", window.nearConfig);
+  const nearConfig = getConfig(process.env.NODE_ENV || "development");
 
-  // Initializing connection to the NEAR DevNet.
-  window.near = await nearlib.connect(
-    Object.assign(
-      {
-        deps: { keyStore: new nearlib.keyStores.BrowserLocalStorageKeyStore() },
-      },
-      window.nearConfig
-    )
-  );
+  // Initializing connection to the NEAR DevNet
+  const near = await nearlib.connect({
+    deps: {
+      keyStore: new nearlib.keyStores.BrowserLocalStorageKeyStore(),
+    },
+    ...nearConfig,
+  });
 
-  // Needed to access wallet login
-  window.walletAccount = new nearlib.WalletAccount(window.near);
+  // Needed to access wallet
+  const walletConnection = new nearlib.WalletConnection(near);
 
-  // Getting the Account ID. If unauthorized yet, it's just empty string.
-  window.accountId = window.walletAccount.getAccountId();
+  // Load in account data
+  let currentUser;
+  if (walletConnection.getAccountId()) {
+    currentUser = {
+      accountId: walletConnection.getAccountId(),
+      balance: (await walletConnection.account().state()).amount,
+    };
+  }
 
   // Initializing our contract APIs by contract name and configuration.
-  let acct = await new nearlib.Account(
-    window.near.connection,
-    window.accountId
-  );
-  window.contract = await new nearlib.Contract(
-    acct,
-    window.nearConfig.contractName,
+  const contract = await new nearlib.Contract(
+    walletConnection.account(),
+    nearConfig.contractName,
     {
       // View methods are read only. They don't modify the state, but usually return some value.
-      viewMethods: ["getCorgi", "getCorgis"],
+      viewMethods: ["getCorgi", "getCorgisList", "displayGolbalCorgis"],
       // Change methods can modify the state. But you don't receive the returned value when called.
-      changeMethods: ["transfer", "createRandomCorgi", "deleteCorgi"],
+      changeMethods: ["transferCorgi", "createCorgi", "deleteCorgi"],
       // Sender is the account ID to initialize transactions.
-      sender: window.accountId,
+      sender: walletConnection.getAccountId(),
     }
   );
+  return { contract, currentUser, nearConfig, walletConnection };
 }
 
 window.nearInitPromise = InitContract()
-  .then(() => {
-    ReactDOM.render(
-      <AppBuilder contract={window.contract} wallet={window.walletAccount} />,
-      document.getElementById("root")
+  .then(({ contract, currentUser, nearConfig, walletConnection }) => {
+    const app = (
+      <BrowserRouter basename={process.env.PUBLIC_URL}>
+        <App
+          contract={contract}
+          currentUser={currentUser}
+          nearConfig={nearConfig}
+          wallet={walletConnection}
+        />
+      </BrowserRouter>
     );
+
+    ReactDOM.render(app, document.getElementById("root"));
   })
   .catch(console.error);

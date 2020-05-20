@@ -21,7 +21,7 @@ const ORDER_LIMIT = 8;
 
 // //Methods for owner
 
-export function getCorgis(owner: string): Corgi[] {
+export function getCorgisList(owner: string): Corgi[] {
   logging.log("get corgis");
   let corgisDNA = getCorgisByOwner(owner);
   let corgisList = new Array<Corgi>();
@@ -74,7 +74,11 @@ export function deleteCorgi(dna: string): void {
 }
 
 //Transfer between users
-export function transfer(receiver: string, dna: string, message: string): void {
+export function transferCorgi(
+  receiver: string,
+  dna: string,
+  message: string
+): void {
   let corgi = getCorgi(dna);
   assert(
     corgi.owner !== context.sender,
@@ -94,7 +98,7 @@ export function transfer(receiver: string, dna: string, message: string): void {
 }
 
 // display global corgis
-export function displayGolbalOrders(): Corgi[] {
+export function displayGolbalCorgis(): Corgi[] {
   const corgiNum = min(ORDER_LIMIT, displayOrders.length);
   const startIndex = displayOrders.length - corgiNum;
   const result = new Array<Corgi>(corgiNum);
@@ -105,7 +109,7 @@ export function displayGolbalOrders(): Corgi[] {
 }
 
 // // Create unique Corgi
-export function createRandomCorgi(
+export function createCorgi(
   name: string,
   color: string,
   backgroundColor: string,
@@ -114,10 +118,10 @@ export function createRandomCorgi(
   let dna = generateRandomDna();
   let rate = generateRate();
   let sausage = generateSausage(rate);
-  return _createCorgi(name, dna, color, rate, sausage, backgroundColor, quote);
+  return generateCorgi(name, dna, color, rate, sausage, backgroundColor, quote);
 }
 
-function _createCorgi(
+function generateCorgi(
   name: string,
   dna: string,
   color: string,
