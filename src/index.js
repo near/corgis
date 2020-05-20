@@ -35,21 +35,9 @@ async function InitContract() {
     window.nearConfig.contractName,
     {
       // View methods are read only. They don't modify the state, but usually return some value.
-      viewMethods: [
-        "ownerOf",
-        "getCorgisByOwner",
-        "getCorgi",
-        "getSender",
-        "getCorgis",
-      ],
+      viewMethods: ["getCorgi", "getCorgis"],
       // Change methods can modify the state. But you don't receive the returned value when called.
-      changeMethods: [
-        "transfer",
-        "createRandomCorgi",
-        "setCorgi",
-        "setCorgisByOwner",
-        "deleteCorgiProfile",
-      ],
+      changeMethods: ["transfer", "createRandomCorgi", "deleteCorgi"],
       // Sender is the account ID to initialize transactions.
       sender: window.accountId,
     }
