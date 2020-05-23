@@ -2,12 +2,13 @@ import { context, PersistentMap, PersistentVector } from "near-sdk-as";
 
 @nearBindgen
 export class CorgiList {
-  constructor(public dna: Array<string>) {}
+  constructor(public id: Array<string>) {}
 }
 @nearBindgen
 export class Corgi {
   owner: string;
   constructor(
+    public id: string,
     public name: string,
     public quote: string,
     public color: string,
@@ -23,7 +24,7 @@ export class Corgi {
 
 // Collections where we store data
 // store all corgis with unique dna
-export const corgis = new PersistentMap<string, Corgi>("corgis");
+export const corgis = new PersistentMap<Uint8Array, Corgi>("corgis");
 //store all corgis dna of a owner
 export const corgisByOwner = new PersistentMap<string, CorgiList>(
   "corigsByOwner"

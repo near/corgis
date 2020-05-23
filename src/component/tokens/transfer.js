@@ -10,7 +10,7 @@ import {
   IoIosCloseCircleOutline,
 } from "react-icons/io";
 
-import { DEFAULT_GAS_VALUE } from "../../container/App/App";
+import { BOATLOAD_OF_GAS } from "../../container/App/App";
 
 //message needs to be added
 class TransferCorgi extends Component {
@@ -70,7 +70,7 @@ class TransferCorgi extends Component {
           message,
           sender: accountId,
         },
-        DEFAULT_GAS_VALUE
+        BOATLOAD_OF_GAS
       )
       .then((response) => {
         console.log("[transfer.js] corgis", response.len);

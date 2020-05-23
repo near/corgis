@@ -6,6 +6,8 @@ import getConfig from "./config.js";
 import * as nearlib from "near-api-js";
 
 import App from "./App";
+import NearContextProvider from "./context/NearContext";
+
 // Initializing contract
 async function InitContract() {
   const nearConfig = getConfig(process.env.NODE_ENV || "development");
@@ -49,14 +51,16 @@ async function InitContract() {
 window.nearInitPromise = InitContract()
   .then(({ contract, currentUser, nearConfig, walletConnection }) => {
     const app = (
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
-        <App
-          contract={contract}
-          currentUser={currentUser}
-          nearConfig={nearConfig}
-          wallet={walletConnection}
-        />
-      </BrowserRouter>
+      <NearContextProvider
+        contract={contract}
+        currentUser={currentUser}
+        nearConfig={nearConfig}
+        wallet={walletConnection}
+      >
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
+          <App />
+        </BrowserRouter>
+      </NearContextProvider>
     );
 
     ReactDOM.render(app, document.getElementById("root"));
