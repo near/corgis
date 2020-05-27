@@ -35,9 +35,8 @@ const characterReducer = (currentState, action) => {
         backgroundColor: action.backgroundColor,
       };
     case "CLEAR":
-      return initialState;
     default:
-      throw new Error("Should not be reached!");
+      return initialState;
   }
 };
 

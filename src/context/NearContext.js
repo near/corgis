@@ -15,10 +15,12 @@ const NearContextProvider = ({
   currentUser,
   nearConfig,
   wallet,
+  near,
   children,
 }) => {
   const user = useState(currentUser)[0];
   const nearContract = useState(contract)[0];
+  const nearContent = useState(near)[0];
   const [isLoading, setLoading] = useState(false);
 
   const signIn = useCallback(() => {
@@ -34,7 +36,15 @@ const NearContextProvider = ({
 
   return (
     <NearContext.Provider
-      value={{ user, nearContract, signIn, signOut, isLoading, setLoading }}
+      value={{
+        user,
+        nearContract,
+        signIn,
+        signOut,
+        isLoading,
+        setLoading,
+        nearContent,
+      }}
     >
       {children}
     </NearContext.Provider>
@@ -60,6 +70,9 @@ NearContextProvider.propTypes = {
   wallet: PropTypes.shape({
     requestSignIn: PropTypes.func.isRequired,
     signOut: PropTypes.func.isRequired,
+  }).isRequired,
+  near: PropTypes.shape({
+    connection: PropTypes.object.isRequired,
   }).isRequired,
   children: PropTypes.element.isRequired,
 };

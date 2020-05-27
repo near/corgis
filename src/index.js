@@ -12,7 +12,7 @@ import NearContextProvider from "./context/NearContext";
 async function InitContract() {
   const nearConfig = getConfig(process.env.NODE_ENV || "development");
 
-  // Initializing connection to the NEAR DevNet
+  // Initializing connection to the NEAR
   const near = await nearlib.connect({
     deps: {
       keyStore: new nearlib.keyStores.BrowserLocalStorageKeyStore(),
@@ -45,17 +45,18 @@ async function InitContract() {
       sender: walletConnection.getAccountId(),
     }
   );
-  return { contract, currentUser, nearConfig, walletConnection };
+  return { contract, currentUser, nearConfig, walletConnection, near };
 }
 
 window.nearInitPromise = InitContract()
-  .then(({ contract, currentUser, nearConfig, walletConnection }) => {
+  .then(({ contract, currentUser, nearConfig, walletConnection, near }) => {
     const app = (
       <NearContextProvider
         contract={contract}
         currentUser={currentUser}
         nearConfig={nearConfig}
         wallet={walletConnection}
+        near={near}
       >
         <BrowserRouter basename={process.env.PUBLIC_URL}>
           <App />

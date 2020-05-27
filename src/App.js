@@ -13,7 +13,7 @@ import Profile from "./component/Profile/Profile";
 import Generation from "./component/Generation/generation";
 import Animation from "./component/Generation/animation/animation";
 
-import SinglePage from "./component/Single/single";
+import SinglePage from "./component/SinglePage/SinglePage";
 import SharePage from "./component/SocialShare/SocialShare";
 
 // let randomColor = require("randomcolor");

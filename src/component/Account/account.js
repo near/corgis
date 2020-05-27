@@ -5,7 +5,7 @@ import { NearContext } from "../../context/NearContext";
 import useContract from "../../hooks/contract";
 
 import Spinner from "../common/spinner/spinner";
-import CreationAccount from "../creation/creationAccount/creationAccount";
+import AccountCard from "./AccountCard/AccountCard";
 
 export default () => {
   const nearContext = useContext(NearContext);
@@ -30,14 +30,7 @@ export default () => {
           }}
           key={corgi.id}
         >
-          <CreationAccount
-            backgroundColor={corgi.backgroundColor}
-            color={corgi.color}
-            sausage={corgi.sausage}
-            corgiName={corgi.name}
-            quote={corgi.quote}
-            rate={corgi.rate}
-          />
+          <AccountCard corgi={corgi} />
         </Link>
       );
     });
