@@ -14,7 +14,7 @@ import Generation from "./component/Generation/generation";
 import Animation from "./component/Generation/animation/animation";
 
 import SinglePage from "./component/SinglePage/SinglePage";
-import SharePage from "./component/SocialShare/SocialShare";
+import SharePage from "./component/SharePage/SharePage";
 
 // let randomColor = require("randomcolor");
 // let generate = require("project-name-generator");

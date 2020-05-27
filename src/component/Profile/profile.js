@@ -16,6 +16,7 @@ export default () => {
     deleteCorgi,
     getCorgisList,
     deleting,
+    error,
   } = useContract();
   useEffect(() => {
     getCorgisList(nearContext.user.accountId);
@@ -45,6 +46,7 @@ export default () => {
     <div>
       <h1>Your Corgis</h1>
       <p>look and delete</p>
+      {error && <p>{error}</p>}
       <div>{Corgis}</div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 
-import Corgi from "./corgi/corgi";
-import Dialogue from "./dialogue/dialogue";
+import Corgi from "../../../CorgiCard/Corgi/Corgi";
+import { Dialogue } from "../../../CorgiCard/Card";
 
 export default ({ corgi }) => {
   return (

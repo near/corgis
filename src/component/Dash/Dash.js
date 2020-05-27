@@ -5,22 +5,12 @@ import { NearContext } from "../../context/NearContext";
 import useContract from "../../hooks/contract";
 
 import Poster from "./Poster/Poster";
-import ShowCase from "./Showcase/Showcase";
+import ShowCase from "./ShowCase/ShowCase";
 
 export default () => {
   const nearContext = useContext(NearContext);
-  const {
-    getCorgisList,
-    corgis,
-    getDisplayCorgis,
-    displayCorgis,
-  } = useContract();
+  const { corgis, getDisplayCorgis, displayCorgis } = useContract();
   useEffect(() => getDisplayCorgis(), [getDisplayCorgis]);
-  useEffect(() => {
-    if (nearContext.user) {
-      getCorgisList(nearContext.user.accountId);
-    }
-  }, [getCorgisList, nearContext]);
 
   const signIn = () => {
     nearContext.signIn();

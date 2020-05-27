@@ -1,25 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Creation from "../../creation/creationHome";
-
+import React from "./node_modules/react";
+import { Link } from "./node_modules/react-router-dom";
+import DashCard from "./DashCard/DashCard";
 export default ({ displayCorgis }) => {
   let Corgis = displayCorgis.map((corgi) => {
     return (
       <Link
         to={{
-          pathname: "/showcase",
+          pathname: "/share",
           hash: corgi.id,
         }}
         key={corgi.id}
       >
-        <Creation
-          backgroundColor={corgi.backgroundColor}
-          color={corgi.color}
-          sausage={corgi.sausage}
-          name={corgi.name}
-          owner={corgi.owner}
-          quote={corgi.quote}
-        />
+        <DashCard corgi={corgi} />
       </Link>
     );
   });
