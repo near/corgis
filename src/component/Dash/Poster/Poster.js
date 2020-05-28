@@ -3,8 +3,8 @@ import React from "react";
 import Button from "../../utils/Button";
 import Spinner from "../../utils/Spinner";
 
-import corgiFull from "../../../../assets/corgi-full.png";
-import sample from "../../../assets/images/rarity-sample.png";
+import corgiFull from "../../../assets/images/corgi-full.png";
+import sample from "../../../assets/images/rarity-sample.svg";
 
 export default ({ requestSignIn, isLoading, user }) => {
   let showButton;
