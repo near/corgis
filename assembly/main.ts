@@ -119,7 +119,7 @@ export function createCorgi(
   color: string,
   backgroundColor: string,
   quote: string
-): void {
+): string[] {
   let dna = generateRandomDna();
   let id = base64.encode(dna);
   let rate = generateRate();
@@ -145,11 +145,13 @@ function generateCorgi(
   backgroundColor: string,
   rate: string,
   sausage: string
-): void {
+): string[] {
   let corgi = new Corgi(id, name, quote, color, backgroundColor, rate, sausage);
   setCorgi(dna, corgi);
   setCorgisByOwner(context.sender, id);
   logging.log("create a new corgi");
+  logging.log(id);
+  return [name, id];
 }
 
 function generateRandomDna(): Uint8Array {

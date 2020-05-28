@@ -10,10 +10,11 @@ const initialState = {
   loading: false,
   error: null,
   corgis: [],
-  create: false,
+  creating: false,
   transfering: false,
   deleting: false,
   corgi: null,
+  info: null,
   displayCorgis: [],
 };
 
@@ -28,6 +29,9 @@ const contractReducer = (currentState, action) => {
       return {
         ...currentState,
         loading: false,
+        creating: false,
+        transfering: false,
+        deleting: false,
         error: action.error,
       };
     case "GET_DISPLAY_CORGIS":
@@ -48,11 +52,16 @@ const contractReducer = (currentState, action) => {
         loading: false,
         corgi: action.corgi,
       };
+    case "CREATE_START":
+      return {
+        ...currentState,
+        creating: true,
+      };
     case "CREATE_CORGI_SUCCESS":
       return {
         ...currentState,
-        loading: false,
-        create: true,
+        creating: false,
+        info: action.info,
       };
     case "TRANSFER_START":
       return {
@@ -75,9 +84,12 @@ const contractReducer = (currentState, action) => {
         deleting: false,
       };
     case "CLEAR":
-      return initialState;
+      return {
+        ...currentState,
+        error: null,
+      };
     default:
-      throw new Error("Should not be reached!");
+      return initialState;
   }
 };
 
@@ -93,12 +105,14 @@ const useContract = () => {
 
   const createCorgi = useCallback(
     (name, color, backgroundColor, quote) => {
-      dispatchContract({ type: "START" });
+      dispatchContract({ type: "CREATE_START" });
       Contract.createCorgi(
         { name, color, backgroundColor, quote },
         BOATLOAD_OF_GAS
       )
-        .then(() => dispatchContract({ type: "CREATE_CORGI_SUCCESS" }))
+        .then((info) =>
+          dispatchContract({ type: "CREATE_CORGI_SUCCESS", info })
+        )
         .catch((error) => dispatchContract({ type: "FAIL", error }));
     },
     [Contract]
@@ -160,11 +174,11 @@ const useContract = () => {
     error: contractState.error,
     corgis: contractState.corgis,
     displayCorgis: contractState.displayCorgis,
-    create: contractState.create,
+    creating: contractState.creating,
     transfering: contractState.transfering,
     deleting: contractState.deleting,
     corgi: contractState.corgi,
-    receiver: contractState.receiver,
+    info: contractState.info,
     clear,
     getCorgi,
     getCorgisList,

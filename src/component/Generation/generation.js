@@ -1,27 +1,70 @@
-import React, { Component } from 'react';
-import { Redirect } from 'react-router-dom';
+import React, { useContext, useEffect } from "react";
+import { Redirect } from "react-router-dom";
 
-import Spinner from '../common/spinner/spinner';
-import Info from './info/info'
-import Screen from './screen/screen'
+import useCharacter from "../../hooks/character";
+import useContract from "../../hooks/contract";
+import { NearContext } from "../../context/NearContext";
 
-import './generation.css'
+import Info from "./Info/Info";
+import Screen from "./Screen/Screen";
+import Animation from "./Animation/Animation";
 
-class Generation extends Component {
-    render() {
-        let {login, load, color, backgroundColor, handleChange,newCorgiName} = this.props
-        if (!load) {return <Spinner />}
-        if (load && !login) {return <Redirect to="/" />}
-        return (
-            <div className="generation">
-                <h1 className="head">Create a Corgi</h1>
-                <div className="content">
-                    <Info  color={color} backgroundColor={backgroundColor} handleChange={handleChange} newCorgiName={newCorgiName}/>
-                    <Screen color={color} backgroundColor={backgroundColor} />
-                </div>
-            </div>
-        )
-    }
-}
+export default () => {
+  const nearContext = useContext(NearContext);
+  const { color, backgroundColor, setQuote } = useCharacter();
+  const { creating, info, error } = useContract();
+  useEffect(() => setQuote(), [setQuote]);
 
-export default Generation
+  if (!nearContext.user) {
+    return <Redirect to="/" />;
+  }
+
+  if (creating) {
+    return <Animation color={color} backgroundColor={backgroundColor} />;
+  }
+
+  if (info) {
+    const [name, id] = info;
+    return (
+      <Redirect
+        to={{
+          pathname: "/@" + name,
+          hash: id,
+        }}
+      />
+    );
+  }
+
+  return (
+    <div className="generation">
+      <h1 className="head">Create a Corgi</h1>
+      <div className="content">
+        <Info />
+        <Screen color={color} backgroundColor={backgroundColor} />
+      </div>
+      <style>{`
+        .generation {
+            max-width: 1100px;
+            width: 96%;
+            text-align: center;
+            margin: auto;
+          }
+          
+          .head {
+            font-weight: 600;
+          }
+          
+          .content {
+            display: flex;
+            flex-direction: row;
+          }
+          
+          @media all and (max-width: 765px) {
+            .content {
+              flex-direction: column;
+            }
+          }
+        `}</style>
+    </div>
+  );
+};

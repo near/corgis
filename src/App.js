@@ -10,8 +10,7 @@ import Dash from "./component/Dash/Dash";
 import Account from "./component/Account/Account";
 import Profile from "./component/Profile/Profile";
 
-import Generation from "./component/Generation/generation";
-import Animation from "./component/Generation/animation/animation";
+import Generation from "./component/Generation/Generation";
 
 import SinglePage from "./component/SinglePage/SinglePage";
 import SharePage from "./component/SharePage/SharePage";
@@ -28,8 +27,6 @@ export default () => {
       <Switch>
         <Route exact path="/" component={Dash} />
         <Route exact path="/generation" component={Generation} />
-        )} />
-        <Route exact path="/generating" component={Animation} />
         <Route exact path="/account" component={Account} />
         <Route exact path="/profile" component={Profile} />
         <Route exact path="/@:name" component={SinglePage} />
