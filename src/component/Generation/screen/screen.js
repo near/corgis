@@ -1,10 +1,10 @@
-import React from "./node_modules/react";
+import React from "react";
 
 import raritySample from "../../../assets/images/rarity-sample.svg";
 import egg from "../../../assets/images/egg.svg";
 import shadow from "../../../assets/images/shadow.svg";
 
-let tinycolor = require("./node_modules/tinycolor2");
+let tinycolor = require("tinycolor2");
 
 export default ({ backgroundColor, color }) => {
   let corgiEgg = (

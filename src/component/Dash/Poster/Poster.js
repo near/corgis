@@ -1,7 +1,7 @@
-import React from "./node_modules/react";
+import React from "react";
 
-import Button from "../../common/Button/Button";
-import Spinner from "../../common/spinner/spinner";
+import Button from "../../utils/Button";
+import Spinner from "../../utils/Spinner";
 
 import corgiFull from "../../../../assets/corgi-full.png";
 import sample from "../../../assets/images/rarity-sample.png";

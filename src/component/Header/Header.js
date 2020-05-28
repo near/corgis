@@ -6,7 +6,7 @@ import useContract from "../../hooks/contract";
 
 import Nav from "./Nav/Nav";
 
-import logo from "../../../assets/logo.png";
+import logo from "../../assets/images/logo.png";
 import Spinner from "../utils/Spinner";
 import Button from "../utils/Button";
 

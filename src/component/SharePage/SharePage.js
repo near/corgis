@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import { GiBowTieRibbon, GiImperialCrown } from "react-icons/gi";
 
 import useContract from "../../hooks/contract";
 import { NearContext } from "../../context/NearContext";
+
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { GiBowTieRibbon, GiImperialCrown } from "react-icons/gi";
 
 import { BigCard } from "../CorgiCard/Card";
 import Spinner from "../utils/Spinner";

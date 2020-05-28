@@ -1,7 +1,6 @@
 import React from "react";
 
-import nearLogo from "../../../assets/near_logo_stack.png";
-import "./footer.css";
+import nearLogo from "../../assets/images/near_logo_stack.png";
 
 export default () => (
   <div className="footer">

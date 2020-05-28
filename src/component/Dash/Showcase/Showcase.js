@@ -1,6 +1,8 @@
-import React from "./node_modules/react";
-import { Link } from "./node_modules/react-router-dom";
+import React from "react";
+import { Link } from "react-router-dom";
+
 import DashCard from "./DashCard/DashCard";
+
 export default ({ displayCorgis }) => {
   let Corgis = displayCorgis.map((corgi) => {
     return (

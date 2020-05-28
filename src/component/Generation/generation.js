@@ -38,6 +38,7 @@ export default () => {
   return (
     <div className="generation">
       <h1 className="head">Create a Corgi</h1>
+      {error && <p>{error}</p>}
       <div className="content">
         <Info />
         <Screen color={color} backgroundColor={backgroundColor} />

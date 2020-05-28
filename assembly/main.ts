@@ -51,9 +51,13 @@ function setCorgisByOwner(owner: string, id: string): void {
 }
 
 function deleteCorgiByOwner(owner: string, id: string): void {
-  const corgisDNA = getCorgisByOwner(owner);
-  const newCorgiDNA = corgisDNA.filter((s) => s !== id);
-  let newList = new CorgiList(newCorgiDNA);
+  const corgiIdList = getCorgisByOwner(owner);
+  for (let i = 0; i < corgiIdList.length; i++) {
+    if (id == corgiIdList[i]) {
+      corgiIdList.splice(i, 1);
+    }
+  }
+  let newList = new CorgiList(corgiIdList);
   corgisByOwner.set(owner, newList);
 }
 

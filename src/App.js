@@ -3,7 +3,7 @@ import React from "react";
 import { Route, Switch } from "react-router-dom";
 
 import Header from "./component/Header/Header";
-import Footer from "./component/footer/footer";
+import Footer from "./component/Footer/Footer";
 
 import Dash from "./component/Dash/Dash";
 

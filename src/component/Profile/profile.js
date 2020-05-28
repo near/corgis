@@ -5,9 +5,10 @@ import { NearContext } from "../../context/NearContext";
 import useContract from "../../hooks/contract";
 
 import ProfileRow from "./ProfileRow/ProfileRow";
-import Spinner from "../common/spinner/spinner";
+import Spinner from "../utils/Spinner";
 
 import goodbye from "../../assets/images/good-bye.svg";
+
 export default () => {
   const nearContext = useContext(NearContext);
   const {

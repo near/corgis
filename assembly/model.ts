@@ -15,8 +15,8 @@ export class Corgi {
     public backgroundColor: string,
     public rate: string,
     public sausage: string,
-    public sender?: string,
-    public message?: string
+    public sender: string = "",
+    public message: string = ""
   ) {
     this.owner = context.sender;
   }

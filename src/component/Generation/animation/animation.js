@@ -1,5 +1,5 @@
-import React from "./node_modules/react";
-import { Keyframes, Frame } from "./node_modules/react-keyframes";
+import React from "react";
+import { Keyframes, Frame } from "react-keyframes";
 
 import {
   corgiOne,
