@@ -15,11 +15,6 @@ import Generation from "./component/Generation/Generation";
 import SinglePage from "./component/SinglePage/SinglePage";
 import SharePage from "./component/SharePage/SharePage";
 
-// let randomColor = require("randomcolor");
-// let generate = require("project-name-generator");
-// backgroundColor: randomColor(),
-// newCorgiName: generate({ words: 2, alliterative: true }).spaced,
-
 export default () => {
   return (
     <div className="App">
