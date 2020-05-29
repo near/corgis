@@ -1,7 +1,7 @@
 import React, { useContext, useReducer, useCallback } from "react";
 
 import { NearContext } from "../../../../context/NearContext";
-import useContract from "../../../../hooks/contract";
+import { ContractContext } from "../../../../hooks/contract";
 
 import * as nearlib from "near-api-js";
 
@@ -44,7 +44,8 @@ const transferReducer = (currentState, action) => {
 export default () => {
   const nearContext = useContext(NearContext);
   const connection = nearContext.nearContent.connection;
-  const { transferCorgi, error } = useContract();
+  const useContract = useContext(ContractContext);
+  const { transferCorgi, error } = useContract;
 
   const [transfer, dispatchTransfer] = useReducer(
     transferReducer,

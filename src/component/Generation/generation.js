@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
 
 import useCharacter from "../../hooks/character";
-import useContract from "../../hooks/contract";
+import { ContractContext } from "../../hooks/contract";
 import { NearContext } from "../../context/NearContext";
 
 import Info from "./Info/Info";
@@ -11,9 +11,14 @@ import Animation from "./Animation/Animation";
 
 export default () => {
   const nearContext = useContext(NearContext);
-  const { color, backgroundColor, setQuote } = useCharacter();
-  const { creating, info, error } = useContract();
-  useEffect(() => setQuote(), [setQuote]);
+  const {
+    color,
+    backgroundColor,
+    setColor,
+    setBackgroundColor,
+  } = useCharacter();
+  const useContract = useContext(ContractContext);
+  const { creating, info, error } = useContract;
 
   if (!nearContext.user) {
     return <Redirect to="/" />;
@@ -40,7 +45,12 @@ export default () => {
       <h1 className="head">Create a Corgi</h1>
       {error && <p>{error}</p>}
       <div className="content">
-        <Info />
+        <Info
+          setColor={setColor}
+          color={color}
+          backgroundColor={backgroundColor}
+          setBackgroundColor={setBackgroundColor}
+        />
         <Screen color={color} backgroundColor={backgroundColor} />
       </div>
       <style>{`

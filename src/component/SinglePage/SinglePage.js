@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 
 import { NearContext } from "../../context/NearContext";
-import useContract from "../../hooks/contract";
+import { ContractContext } from "../../hooks/contract";
 
 import { BigCard } from "../CorgiCard/Card";
 import Send from "./Send/Send";
@@ -13,7 +13,8 @@ import Rate from "../utils/Rate";
 
 export default () => {
   const nearContext = useContext(NearContext);
-  const { corgi, loading, getCorgi, transfering } = useContract();
+  const useContract = useContext(ContractContext);
+  const { corgi, loading, getCorgi, transfering } = useContract;
   const id = window.location.hash.slice(1);
   useEffect(() => {
     if (id) {

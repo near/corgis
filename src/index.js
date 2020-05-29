@@ -7,6 +7,7 @@ import * as nearlib from "near-api-js";
 
 import App from "./App";
 import NearContextProvider from "./context/NearContext";
+import ContractContextProvider from "./hooks/contract";
 
 // Initializing contract
 async function InitContract() {
@@ -52,15 +53,16 @@ window.nearInitPromise = InitContract()
   .then(({ contract, currentUser, nearConfig, walletConnection, near }) => {
     const app = (
       <NearContextProvider
-        contract={contract}
         currentUser={currentUser}
         nearConfig={nearConfig}
         wallet={walletConnection}
         near={near}
       >
-        <BrowserRouter basename={process.env.PUBLIC_URL}>
-          <App />
-        </BrowserRouter>
+        <ContractContextProvider Contract={contract}>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </ContractContextProvider>
       </NearContextProvider>
     );
 

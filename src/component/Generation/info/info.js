@@ -1,25 +1,18 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 
 import useCharacter from "../../../hooks/character";
-import useContract from "../../../hooks/contract";
+import { ContractContext } from "../../../hooks/contract";
 
 import Button from "../../utils/Button";
 
 import { GiGreekSphinx } from "react-icons/gi";
 let generate = require("project-name-generator");
 
-export default () => {
-  const {
-    color,
-    backgroundColor,
-    name,
-    quote,
-    setBackgroundColor,
-    setColor,
-    setName,
-  } = useCharacter();
-
-  const { createCorgi } = useContract();
+export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
+  const { name, quote, setName, setQuote } = useCharacter();
+  useEffect(() => setQuote(), [setQuote]);
+  const useContract = useContext(ContractContext);
+  const { createCorgi } = useContract;
 
   const generateName = (e) => {
     setName(e.target.value);
@@ -37,6 +30,7 @@ export default () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    console.log("come here");
     createCorgi(name, color, backgroundColor, quote);
   };
   return (

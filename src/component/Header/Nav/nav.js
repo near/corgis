@@ -1,21 +1,10 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 
-import useCharacter from "../../../hooks/character";
-
 import Button from "../../utils/Button";
 import IconNav from "../../../assets/images/icon-nav.svg";
 
-const randomColor = require("randomcolor");
-
 export default ({ number, accountName, requestSignOut }) => {
-  const { setColor, setBackgroundColor } = useCharacter();
-  const colorHandler = () => {
-    const color = randomColor();
-    const backgroundColor = randomColor();
-    setColor(color);
-    setBackgroundColor(backgroundColor);
-  };
   return (
     <div className="wrap">
       <div className="account">
@@ -25,7 +14,7 @@ export default ({ number, accountName, requestSignOut }) => {
         <Card accountName={accountName} requestSignOut={requestSignOut} />
       </div>
       <NavLink to="/generation">
-        <AddCorgi colorHandler={colorHandler} />
+        <AddCorgi />
       </NavLink>
       <style>{`
         .wrap {
@@ -119,7 +108,7 @@ const Card = ({ accountName, requestSignOut }) => {
   };
   return (
     <div className="dropdown">
-      <button className="menutop">@ {accountName} ▾</button>
+      <button className="menutop">@{accountName}▾</button>
       <div className="dropdown-content">
         <ul style={{ textAlign: "center", padding: "2px", marginBottom: "0" }}>
           <li style={style}>
@@ -136,7 +125,7 @@ const Card = ({ accountName, requestSignOut }) => {
   );
 };
 
-const AddCorgi = ({ colorHandler }) => (
+const AddCorgi = () => (
   <div
     style={{
       boxShadow: "0 2px 2px 0 rgba(0, 0, 0, 0.5)",
@@ -144,7 +133,6 @@ const AddCorgi = ({ colorHandler }) => (
       height: "40px",
       width: "40px",
     }}
-    onClick={colorHandler}
   >
     <img src={IconNav} alt="" />
   </div>

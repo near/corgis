@@ -1,39 +1,26 @@
 import React from "react";
 
+import Egg from "../../utils/Egg";
 import raritySample from "../../../assets/images/rarity-sample.svg";
-import egg from "../../../assets/images/egg.svg";
 import shadow from "../../../assets/images/shadow.svg";
 
 let tinycolor = require("tinycolor2");
 
 export default ({ backgroundColor, color }) => {
-  let corgiEgg = (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        margin: "auto",
-        position: "relative",
-        zIndex: "10",
-      }}
-    >
-      <img src={egg} alt="" />
-    </div>
-  );
-  let corgiShadow = (
-    <div
+  const corgiShadow = (
+    <img
+      src={shadow}
+      alt=""
       style={{
         width: "60%",
         position: "relative",
         top: "-10px",
         margin: "auto",
       }}
-    >
-      <img src={shadow} alt="" />
-    </div>
+    />
   );
 
-  let style = {
+  const style = {
     backgroundColor,
     borderRadius: "10px",
     padding: "5%",
@@ -43,6 +30,7 @@ export default ({ backgroundColor, color }) => {
   let textColor = tinycolor
     .mostReadable(backgroundColor, [color, "#fff", "#000"])
     .toHexString();
+
   return (
     <div className="board">
       <div style={style}>
@@ -55,7 +43,7 @@ export default ({ backgroundColor, color }) => {
         >
           Just choose a name and a few colors and we’ll do the rest.
         </p>
-        {corgiEgg}
+        <Egg color={color} />
         {corgiShadow}
       </div>
       <img src={raritySample} alt="" />

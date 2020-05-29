@@ -11,7 +11,6 @@ export const NearContext = React.createContext({
 });
 
 const NearContextProvider = ({
-  contract,
   currentUser,
   nearConfig,
   wallet,
@@ -19,7 +18,6 @@ const NearContextProvider = ({
   children,
 }) => {
   const user = useState(currentUser)[0];
-  const nearContract = useState(contract)[0];
   const nearContent = useState(near)[0];
   const [isLoading, setLoading] = useState(false);
 
@@ -38,7 +36,6 @@ const NearContextProvider = ({
     <NearContext.Provider
       value={{
         user,
-        nearContract,
         signIn,
         signOut,
         isLoading,
@@ -52,14 +49,6 @@ const NearContextProvider = ({
 };
 
 NearContextProvider.propTypes = {
-  contract: PropTypes.shape({
-    getCorgi: PropTypes.func.isRequired,
-    getCorgisList: PropTypes.func.isRequired,
-    displayGolbalCorgis: PropTypes.func.isRequired,
-    transferCorgi: PropTypes.func.isRequired,
-    createCorgi: PropTypes.func.isRequired,
-    deleteCorgi: PropTypes.func.isRequired,
-  }).isRequired,
   currentUser: PropTypes.shape({
     accountId: PropTypes.string.isRequired,
     balance: PropTypes.string.isRequired,

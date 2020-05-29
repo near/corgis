@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { Redirect } from "react-router-dom";
 
 import { NearContext } from "../../context/NearContext";
-import useContract from "../../hooks/contract";
+import { ContractContext } from "../../hooks/contract";
 
 import ProfileRow from "./ProfileRow/ProfileRow";
 import Spinner from "../utils/Spinner";
@@ -11,6 +11,7 @@ import goodbye from "../../assets/images/good-bye.svg";
 
 export default () => {
   const nearContext = useContext(NearContext);
+  const useContract = useContext(ContractContext);
   const {
     corgis,
     loading,
@@ -18,7 +19,7 @@ export default () => {
     getCorgisList,
     deleting,
     error,
-  } = useContract();
+  } = useContract;
   useEffect(() => {
     getCorgisList(nearContext.user.accountId);
   }, [getCorgisList, nearContext]);

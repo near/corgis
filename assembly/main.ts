@@ -22,9 +22,9 @@ const ORDER_LIMIT = 8;
 // //Methods for owner
 
 export function getCorgisList(owner: string): Corgi[] {
-  logging.log("get corgis");
   let corgiIdList = getCorgisByOwner(owner);
   let corgisList = new Array<Corgi>();
+  logging.log(corgiIdList.length.toString());
   for (let i = 0; i < corgiIdList.length; i++) {
     let corgiDNA = base64.decode(corgiIdList[i]);
     if (corgis.contains(corgiDNA)) {

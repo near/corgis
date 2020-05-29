@@ -2,14 +2,15 @@ import React, { useContext } from "react";
 import { Redirect, Link } from "react-router-dom";
 
 import { NearContext } from "../../context/NearContext";
-import useContract from "../../hooks/contract";
+import { ContractContext } from "../../hooks/contract";
 
 import Spinner from "../utils/Spinner";
 import AccountCard from "./AccountCard/AccountCard";
 
 export default () => {
   const nearContext = useContext(NearContext);
-  const { corgis, loading } = useContract();
+  const useContract = useContext(ContractContext);
+  const { corgis, loading } = useContract;
   if (!nearContext.user) {
     return <Redirect to="/" />;
   }

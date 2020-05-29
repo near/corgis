@@ -35,8 +35,9 @@ const characterReducer = (currentState, action) => {
         backgroundColor: action.backgroundColor,
       };
     case "CLEAR":
-    default:
       return initialState;
+    default:
+      throw new Error("Should not come here, something is wrong!");
   }
 };
 
@@ -47,21 +48,12 @@ const useCharacter = () => {
   );
   const clear = useCallback(() => dispatchCharacter({ type: "CLEAR" }), []);
 
-  const setName = useCallback(
-    (name) => dispatchCharacter({ type: "NAME", name }),
-    []
-  );
+  const setName = (name) => dispatchCharacter({ type: "NAME", name });
 
-  const setColor = useCallback(
-    (color) => dispatchCharacter({ type: "COLOR", color }),
-    []
-  );
+  const setColor = (color) => dispatchCharacter({ type: "COLOR", color });
 
-  const setBackgroundColor = useCallback(
-    (backgroundColor) =>
-      dispatchCharacter({ type: "BACKGROUND_COLOR", backgroundColor }),
-    []
-  );
+  const setBackgroundColor = (backgroundColor) =>
+    dispatchCharacter({ type: "BACKGROUND_COLOR", backgroundColor });
 
   const setQuote = useCallback(() => {
     let randomNumber = Math.floor(Math.random() * TotalQuotes.length + 1);

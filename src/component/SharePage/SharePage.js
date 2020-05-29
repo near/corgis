@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 
-import useContract from "../../hooks/contract";
+import { ContractContext } from "../../hooks/contract";
 import { NearContext } from "../../context/NearContext";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -13,7 +13,8 @@ import Rate from "../utils/Rate";
 export default () => {
   const nearContext = useContext(NearContext);
   const [copied, setCopied] = useState(false);
-  const { corgi, getCorgi, loading } = useContract();
+  const useContract = useContext(ContractContext);
+  const { corgi, getCorgi, loading } = useContract;
   const id = window.location.hash.slice(1);
   useEffect(() => {
     if (id) {

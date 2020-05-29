@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 import { NearContext } from "../../context/NearContext";
-import useContract from "../../hooks/contract";
+import { ContractContext } from "../../hooks/contract";
 
 import Nav from "./Nav/Nav";
 
@@ -12,7 +12,8 @@ import Button from "../utils/Button";
 
 export default () => {
   const nearContext = useContext(NearContext);
-  const { getCorgisList, corgis } = useContract();
+  const useContract = useContext(ContractContext);
+  const { getCorgisList, corgis } = useContract;
   useEffect(() => {
     if (nearContext.user) {
       getCorgisList(nearContext.user.accountId);

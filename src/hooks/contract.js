@@ -1,5 +1,5 @@
-import { useContext, useReducer, useCallback } from "react";
-import { NearContext } from "../context/NearContext";
+import React, { useReducer, useCallback } from "react";
+import PropTypes from "prop-types";
 import Big from "big.js";
 
 const BOATLOAD_OF_GAS = Big(1)
@@ -93,9 +93,9 @@ const contractReducer = (currentState, action) => {
   }
 };
 
-const useContract = () => {
-  const nearContext = useContext(NearContext);
-  const Contract = nearContext.nearContract;
+export const ContractContext = React.createContext(initialState);
+
+const ContractContextProvider = ({ Contract, children }) => {
   const [contractState, dispatchContract] = useReducer(
     contractReducer,
     initialState
@@ -110,9 +110,9 @@ const useContract = () => {
         { name, color, backgroundColor, quote },
         BOATLOAD_OF_GAS
       )
-        .then((info) =>
-          dispatchContract({ type: "CREATE_CORGI_SUCCESS", info })
-        )
+        .then((info) => {
+          dispatchContract({ type: "CREATE_CORGI_SUCCESS", info });
+        })
         .catch((error) => dispatchContract({ type: "FAIL", error }));
     },
     [Contract]
@@ -169,7 +169,7 @@ const useContract = () => {
       .catch((error) => dispatchContract({ type: "FAIL", error }));
   }, [Contract]);
 
-  return {
+  const value = {
     loading: contractState.loading,
     error: contractState.error,
     corgis: contractState.corgis,
@@ -187,6 +187,24 @@ const useContract = () => {
     transferCorgi,
     getDisplayCorgis,
   };
+
+  return (
+    <ContractContext.Provider value={value}>
+      {children}
+    </ContractContext.Provider>
+  );
 };
 
-export default useContract;
+ContractContextProvider.propTypes = {
+  Contract: PropTypes.shape({
+    getCorgi: PropTypes.func.isRequired,
+    getCorgisList: PropTypes.func.isRequired,
+    displayGolbalCorgis: PropTypes.func.isRequired,
+    transferCorgi: PropTypes.func.isRequired,
+    createCorgi: PropTypes.func.isRequired,
+    deleteCorgi: PropTypes.func.isRequired,
+  }).isRequired,
+  children: PropTypes.element.isRequired,
+};
+
+export default ContractContextProvider;
