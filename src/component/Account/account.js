@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Redirect, Link } from "react-router-dom";
 
 import { NearContext } from "../../context/NearContext";
@@ -11,17 +11,18 @@ export default () => {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
   const { corgis, loading } = useContract;
+  useEffect(() => window.localStorage.removeItem("create"));
   if (!nearContext.user) {
     return <Redirect to="/" />;
   }
   let Corgis;
-  if (loading) {
+  if (!corgis || loading) {
     Corgis = <Spinner />;
   }
   if (corgis && corgis.length === 0) {
     return <Redirect to="/generation" />;
   }
-  if (corgis.length > 0) {
+  if (corgis && corgis.length > 0) {
     Corgis = corgis.map((corgi) => {
       return (
         <Link

@@ -30,7 +30,6 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    console.log("come here");
     createCorgi(name, color, backgroundColor, quote);
   };
   return (

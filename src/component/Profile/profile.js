@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
 
 import { NearContext } from "../../context/NearContext";
@@ -7,42 +7,51 @@ import { ContractContext } from "../../hooks/contract";
 import ProfileRow from "./ProfileRow/ProfileRow";
 import Spinner from "../utils/Spinner";
 
-import goodbye from "../../assets/images/good-bye.svg";
+import { CorgiTwo } from "../utils/corgiAnimation";
 
 export default () => {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
-  const {
-    corgis,
-    loading,
-    deleteCorgi,
-    getCorgisList,
-    deleting,
-    error,
-  } = useContract;
-  useEffect(() => {
-    getCorgisList(nearContext.user.accountId);
-  }, [getCorgisList, nearContext]);
+  const { corgis, loading, deleteCorgi, deleting, error } = useContract;
   if (!nearContext.user) {
     return <Redirect to="/" />;
   }
-  if (!nearContext.user) {
-    return <Redirect to="/" />;
-  }
-  if (loading) {
+  if (!corgis || loading) {
     return <Spinner />;
   }
   if (corgis && corgis.length === 0) {
     return <Redirect to="/generation" />;
   }
   let Corgis;
-  if (corgis.length > 0) {
+  if (corgis && corgis.length > 0) {
     Corgis = corgis.map((corgi) => {
-      return <ProfileRow deleteCorgi={deleteCorgi} corgi={corgi} />;
+      return (
+        <ProfileRow deleteCorgi={deleteCorgi} corgi={corgi} key={corgi.id} />
+      );
     });
   }
   if (deleting) {
-    return <img src={goodbye} alt="Good Bye" />;
+    return (
+      <div className="box">
+        <CorgiTwo color={"black"} />
+        <style>{`
+      .box {
+        animation-name: spin;
+        animation-duration: 5000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear; 
+      }
+      @keyframes spin {
+        from {
+            transform:rotate(0deg);
+        }
+        to {
+            transform:rotate(360deg);
+        }
+      }
+    `}</style>
+      </div>
+    );
   }
   return (
     <div>

@@ -18,7 +18,7 @@ export default () => {
     setBackgroundColor,
   } = useCharacter();
   const useContract = useContext(ContractContext);
-  const { creating, info, error } = useContract;
+  const { creating } = useContract;
 
   if (!nearContext.user) {
     return <Redirect to="/" />;
@@ -28,22 +28,14 @@ export default () => {
     return <Animation color={color} backgroundColor={backgroundColor} />;
   }
 
-  if (info) {
-    const [name, id] = info;
-    return (
-      <Redirect
-        to={{
-          pathname: "/@" + name,
-          hash: id,
-        }}
-      />
-    );
+  const create = window.localStorage.getItem("create");
+  if (create) {
+    return <Redirect to="/account" />;
   }
 
   return (
     <div className="generation">
       <h1 className="head">Create a Corgi</h1>
-      {error && <p>{error}</p>}
       <div className="content">
         <Info
           setColor={setColor}
@@ -60,16 +52,16 @@ export default () => {
             text-align: center;
             margin: auto;
           }
-          
+
           .head {
             font-weight: 600;
           }
-          
+
           .content {
             display: flex;
             flex-direction: row;
           }
-          
+
           @media all and (max-width: 765px) {
             .content {
               flex-direction: column;

@@ -9,12 +9,11 @@ const BOATLOAD_OF_GAS = Big(1)
 const initialState = {
   loading: false,
   error: null,
-  corgis: [],
+  corgis: null,
   creating: false,
   transfering: false,
   deleting: false,
   corgi: null,
-  info: null,
   displayCorgis: [],
 };
 
@@ -61,7 +60,6 @@ const contractReducer = (currentState, action) => {
       return {
         ...currentState,
         creating: false,
-        info: action.info,
       };
     case "TRANSFER_START":
       return {
@@ -106,12 +104,13 @@ const ContractContextProvider = ({ Contract, children }) => {
   const createCorgi = useCallback(
     (name, color, backgroundColor, quote) => {
       dispatchContract({ type: "CREATE_START" });
+      window.localStorage.setItem("create", "create");
       Contract.createCorgi(
         { name, color, backgroundColor, quote },
         BOATLOAD_OF_GAS
       )
-        .then((info) => {
-          dispatchContract({ type: "CREATE_CORGI_SUCCESS", info });
+        .then(() => {
+          dispatchContract({ type: "CREATE_CORGI_SUCCESS" });
         })
         .catch((error) => dispatchContract({ type: "FAIL", error }));
     },

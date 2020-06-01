@@ -4,7 +4,7 @@ import {
   CorgiList,
   corgis,
   corgisByOwner,
-  displayOrders,
+  displayCorgis,
 } from "./model";
 
 const DNA_DIGITS: u32 = 16;
@@ -24,7 +24,6 @@ const ORDER_LIMIT = 8;
 export function getCorgisList(owner: string): Corgi[] {
   let corgiIdList = getCorgisByOwner(owner);
   let corgisList = new Array<Corgi>();
-  logging.log(corgiIdList.length.toString());
   for (let i = 0; i < corgiIdList.length; i++) {
     let corgiDNA = base64.decode(corgiIdList[i]);
     if (corgis.contains(corgiDNA)) {
@@ -69,12 +68,13 @@ export function getCorgi(id: string): Corgi {
 
 function setCorgi(dna: Uint8Array, corgi: Corgi): void {
   corgis.set(dna, corgi);
-  displayOrders.push(corgi);
+  setGlobalCorgis(corgi.id);
 }
 
 export function deleteCorgi(id: string): void {
   let corgi = getCorgi(id);
   deleteCorgiByOwner(corgi.owner, id);
+  deleteGlobalCorgi(id);
   const dna = base64.decode(id);
   corgis.delete(dna);
   logging.log("after delete");
@@ -108,13 +108,43 @@ export function transferCorgi(
 
 // display global corgis
 export function displayGolbalCorgis(): Corgi[] {
-  const corgiNum = min(ORDER_LIMIT, displayOrders.length);
-  const startIndex = displayOrders.length - corgiNum;
+  let corgiIdList = getGlobalCorgis();
+  const corgiNum = min(ORDER_LIMIT, corgiIdList.length);
   const result = new Array<Corgi>(corgiNum);
-  for (let i = 0; i < corgiNum; i++) {
-    result[i] = displayOrders[i + startIndex];
+  for (
+    let i = corgiIdList.length - 1;
+    i >= corgiIdList.length - corgiNum;
+    i--
+  ) {
+    result[i] = getCorgi(corgiIdList[i]);
   }
   return result;
+}
+
+function getGlobalCorgis(): Array<string> {
+  let corgiIdList = displayCorgis.get("global");
+  if (!corgiIdList) {
+    return new Array<string>();
+  }
+  return corgiIdList.id;
+}
+
+function setGlobalCorgis(id: string): void {
+  let corgiIdList = getGlobalCorgis();
+  corgiIdList.push(id);
+  let newList = new CorgiList(corgiIdList);
+  displayCorgis.set("global", newList);
+}
+
+function deleteGlobalCorgi(id: string): void {
+  const corgiIdList = getGlobalCorgis();
+  for (let i = 0; i < corgiIdList.length; i++) {
+    if (id == corgiIdList[i]) {
+      corgiIdList.splice(i, 1);
+    }
+  }
+  let newList = new CorgiList(corgiIdList);
+  displayCorgis.set("global", newList);
 }
 
 // // Create unique Corgi
@@ -132,11 +162,11 @@ export function createCorgi(
     dna,
     id,
     name,
+    quote,
     color,
-    rate,
-    sausage,
     backgroundColor,
-    quote
+    rate,
+    sausage
   );
 }
 

@@ -39,7 +39,7 @@ export default () => {
         </NavLink>
         <Nav
           accountName={nearContext.user.accountId}
-          number={corgis.length}
+          number={corgis ? corgis.length : "..."}
           requestSignOut={signOut}
         />
       </div>

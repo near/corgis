@@ -16,38 +16,49 @@ export default () => {
   const useContract = useContext(ContractContext);
   const { corgi, loading, getCorgi, transfering } = useContract;
   const id = window.location.hash.slice(1);
+
   useEffect(() => {
     if (id) {
       getCorgi(id);
     }
   }, [getCorgi, id]);
 
-  const [show, setShow] = useState(false);
-  const openModal = () => {
-    setShow(true);
+  const [showSend, setSend] = useState(false);
+  const [showShare, setShare] = useState(false);
+  const openSendModal = () => {
+    setSend(true);
+  };
+  const openShareModal = () => {
+    setShare(true);
   };
   const closeModal = () => {
-    setShow(false);
+    setSend(false);
+    setShare(false);
   };
+
+  if (corgi && corgi.owner !== nearContext.user.accountId) {
+    return <Redirect to="/account" />;
+  }
 
   if (!nearContext.user) {
     return <Redirect to="/" />;
   }
-  if (loading) {
+  if (!corgi || loading) {
     return <Spinner />;
   }
   if (!id) {
     return <Redirect to="/account" />;
   }
+
   return (
     <div>
       <Send
         corgi={corgi}
         transfering={transfering}
-        show={show}
+        show={showSend}
         closeModal={closeModal}
       />
-      <Share corgi={corgi} closeModal={closeModal} show={show} />
+      <Share corgi={corgi} closeModal={closeModal} show={showShare} />
       <div>
         <h1>Meet {corgi.name}!</h1>
         <div>
@@ -60,7 +71,10 @@ export default () => {
         </div>
         <div className="wrapperS">
           <Rate rate={corgi.rate} />
-          <SendAndShare openModal={openModal} />
+          <SendAndShare
+            openSendModal={openSendModal}
+            openShareModal={openShareModal}
+          />
         </div>
       </div>
       <style>{`
@@ -114,14 +128,14 @@ export default () => {
   );
 };
 
-const SendAndShare = ({ openModal }) => {
+const SendAndShare = ({ openShareModal, openSendModal }) => {
   let style = { display: "flex", flexDirection: "column", width: "300px" };
   return (
     <div>
       <h5>What would you like to do with </h5>
       <span style={style}>
-        <SendCard clicked={openModal} />
-        <ShareCard clicked={openModal} />
+        <SendCard clicked={openSendModal} />
+        <ShareCard clicked={openShareModal} />
       </span>
     </div>
   );

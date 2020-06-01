@@ -22,7 +22,7 @@ const NearContextProvider = ({
   const [isLoading, setLoading] = useState(false);
 
   const signIn = useCallback(() => {
-    wallet.requestSignIn(nearConfig.contractName, "NEAR Guest Book");
+    wallet.requestSignIn(nearConfig.contractName, "NEAR Corgi");
   }, [wallet, nearConfig]);
 
   const signOut = useCallback(() => {

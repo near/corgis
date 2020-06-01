@@ -1,4 +1,4 @@
-import { context, PersistentMap, PersistentVector } from "near-sdk-as";
+import { context, PersistentMap } from "near-sdk-as";
 
 @nearBindgen
 export class CorgiList {
@@ -30,4 +30,4 @@ export const corgisByOwner = new PersistentMap<string, CorgiList>(
   "corigsByOwner"
 );
 
-export const displayOrders = new PersistentVector<Corgi>("display");
+export const displayCorgis = new PersistentMap<string, CorgiList>("show");

@@ -1,7 +1,8 @@
 import React from "react";
 import { Redirect, Link } from "react-router-dom";
 
-import { TiDelete } from "react-icons/ti";
+import Button from "../../utils/Button";
+import { Common, Uncommon, Rare, VeryRare } from "../../utils/Photo";
 import {
   GiDiscussion,
   GiJumpingDog,
@@ -9,18 +10,12 @@ import {
   GiGlassBall,
 } from "react-icons/gi";
 
-import Common from "../../utils/corgiPhoto/Common";
-import Uncommon from "../../utils/corgiPhoto/Uncommon";
-import Rare from "../../utils/corgiPhoto/Rare";
-import VeryRare from "../../utils/corgiPhoto/VeryRare";
-
 export default ({ corgi, deleteCorgi }) => {
   if (!corgi) {
     return <Redirect to="/profile" />;
   }
   const rate = corgi.rate;
-  let show = "ULTRA RARE";
-
+  let show;
   if (rate === "COMMON") {
     show = <Common color={corgi.color} />;
   } else if (rate === "UNCOMMON") {
@@ -29,7 +24,14 @@ export default ({ corgi, deleteCorgi }) => {
     show = <Rare color={corgi.color} />;
   } else if (rate === "VERY RARE") {
     show = <VeryRare color={corgi.color} />;
+  } else if (rate === "ULTRA RARE") {
+    show = "ULTRA RARE";
   }
+
+  const DeleteCorgi = () => {
+    deleteCorgi(corgi.id);
+  };
+
   return (
     <div
       style={{
@@ -54,16 +56,15 @@ export default ({ corgi, deleteCorgi }) => {
           <GiJumpingDog style={{ color: "#9437ff" }} />
           {corgi.name}
           <GiDogBowl style={{ color: "#9437ff" }} />
-          from: {corgi.sneder ? corgi.sender : "NEAR"}
-          <TiDelete
-            onClick={deleteCorgi}
-            style={{ marginLeft: "5px", color: "#ff4143", fontSize: "2rem" }}
-          />
+          from: {corgi.sender.length > 0 ? corgi.sender : "NEAR"}
+          <p>
+            <GiDiscussion style={{ color: "#9437ff" }} />
+            {corgi.message ? corgi.message : "This lovely corgi is for you"}
+          </p>
+          <div style={{ marginLeft: "5px" }}>
+            <Button description="X" action={DeleteCorgi} />
+          </div>
         </div>
-        <p>
-          <GiDiscussion style={{ color: "#9437ff" }} />
-          {corgi.message ? corgi.message : "This lovely corgi is for you"}
-        </p>
       </div>
     </div>
   );

@@ -11,7 +11,6 @@ export default () => {
   const useContract = useContext(ContractContext);
   const { getDisplayCorgis, displayCorgis } = useContract;
   useEffect(() => getDisplayCorgis(), [getDisplayCorgis]);
-
   const signIn = () => {
     nearContext.signIn();
   };
