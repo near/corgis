@@ -5,8 +5,10 @@ import { ContractContext } from "../../../hooks/contract";
 
 import Button from "../../utils/Button";
 
-import { GiGreekSphinx } from "react-icons/gi";
-let generate = require("project-name-generator");
+import { GiGreekSphinx, GiBeachBall } from "react-icons/gi";
+
+const generate = require("project-name-generator");
+const randomColor = require("randomcolor");
 
 export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
   const { name, quote, setName, setQuote } = useCharacter();
@@ -27,15 +29,21 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
   const generateBackgroundColor = (e) => {
     setBackgroundColor(e.target.value);
   };
-
+  const generateRandomColor = () => {
+    const color = randomColor();
+    const backgroundColor = randomColor();
+    setColor(color);
+    setBackgroundColor(backgroundColor);
+  };
   const onSubmit = (e) => {
     e.preventDefault();
     createCorgi(name, color, backgroundColor, quote);
   };
   return (
     <div className="inputboard">
-      <p className="title">My Corgi is called</p>
       <form onSubmit={onSubmit}>
+        <p className="title">My Corgi is called</p>
+        <GiGreekSphinx onClick={generateRandomName} className="icon" />
         <div>
           <input
             className="inputname"
@@ -44,22 +52,9 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
             onChange={generateName}
             required
           />
-          <GiGreekSphinx
-            onClick={generateRandomName}
-            style={{
-              marginLeft: "5px",
-              color: "#a51cea",
-              fontSize: "1.5rem",
-              borderRadius: "50%",
-              boxShadow:
-                "0 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 0 5px 2px #ffffff",
-              background: "#f5ebff",
-              cursor: "pointer",
-              marginTop: "10px",
-            }}
-          />
         </div>
         <p className="title">Colors</p>
+        <GiBeachBall onClick={generateRandomColor} className="icon" />
         <div>
           <div className="colorpicker">
             <label>
@@ -77,16 +72,8 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
               </div>
             </label>
             <div>
-              <p
-                style={{
-                  marginBottom: "0",
-                  marginLeft: "2px",
-                  fontWeight: "600",
-                }}
-              >
-                Corgi
-              </p>
-              <p style={{ marginBottom: "0", marginLeft: "2px" }}>{color}</p>
+              <p className="icon-title">Corgi</p>
+              <p className="icon-text">{color}</p>
             </div>
           </div>
           <div className="colorpicker">
@@ -108,18 +95,8 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
               </div>
             </label>
             <div>
-              <p
-                style={{
-                  marginBottom: "0",
-                  marginLeft: "2px",
-                  fontWeight: "600",
-                }}
-              >
-                Background
-              </p>
-              <p style={{ marginBottom: "0", marginLeft: "2px" }}>
-                {backgroundColor}
-              </p>
+              <p className="icon-title">Background</p>
+              <p className="icon-text">{backgroundColor}</p>
             </div>
           </div>
         </div>
@@ -190,6 +167,26 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
                 left: 29px;
                 top: 24px;
                 z-index: 10;
+              }
+
+              .icon-title {
+                  margin: 0 2px;
+                  font-weight: 600;
+              }
+
+              .icon-text {
+                margin-top: 0;
+                margin-left: 2px;
+              }
+
+              .icon {
+                margin-top: 10px;
+                color: #a51cea;
+                font-size: 1.5rem;
+                border-radius: 50%;
+                box-shadow:0 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 0 5px 2px #ffffff;
+                background: #f5ebff;
+                cursor: pointer;
               }
             `}</style>
     </div>

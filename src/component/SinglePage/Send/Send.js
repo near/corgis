@@ -2,9 +2,9 @@ import React from "react";
 
 import { SmallCard } from "../../CorgiCard/Card";
 import Modal from "../../utils/Modal";
-import Spinner from "../../utils/Spinner";
 
 import Transfer from "./Transafer/Transfer";
+import { CorgiThree } from "../../utils/corgiAnimation";
 
 export default ({ corgi, show, closeModal, transfering }) => {
   return (
@@ -13,13 +13,12 @@ export default ({ corgi, show, closeModal, transfering }) => {
         <div style={{ width: "100%", height: "100%" }}>
           <h3>Send a Corgi</h3>
           <div>
-            <div style={{ overflowX: "scroll", width: "100%", height: "90%" }}>
+            <div style={{ width: "100%", height: "90%" }}>
               <SmallCard
-                style={{ width: "100%", height: "100%" }}
                 backgroundColor={corgi.backgroundColor}
                 color={corgi.color}
                 sausage={corgi.sausage}
-                quote={corgi.uote}
+                quote={corgi.quote}
               />
             </div>
             <p style={{ margin: "0" }}>{corgi.name}</p>
@@ -31,7 +30,27 @@ export default ({ corgi, show, closeModal, transfering }) => {
           <Transfer />
         </div>
       ) : (
-        <Spinner />
+        <div className="box">
+          <CorgiThree color={corgi.color} />
+          <style>{`
+            .box {
+
+              padding-top: 30px;
+              animation-name: spin;
+              animation-duration: 1000ms;
+              animation-iteration-count: infinite;
+              animation-timing-function: linear; 
+            }
+            @keyframes spin {
+              from {
+                  transform:rotate(0deg);
+              }
+              to {
+                  transform:rotate(360deg);
+              }
+            }
+          `}</style>
+        </div>
       )}
     </Modal>
   );

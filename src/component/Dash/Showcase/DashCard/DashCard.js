@@ -32,7 +32,6 @@ export default ({ corgi }) => {
             .corgiboard {
                 width: 300px;
                 height: 260px;
-                overflow: scroll;
                 border-radius: 10px;
             }
             

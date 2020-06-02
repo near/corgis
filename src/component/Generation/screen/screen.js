@@ -7,33 +7,13 @@ import shadow from "../../../assets/images/shadow.svg";
 let tinycolor = require("tinycolor2");
 
 export default ({ backgroundColor, color }) => {
-  const corgiShadow = (
-    <img
-      src={shadow}
-      alt=""
-      style={{
-        width: "60%",
-        position: "relative",
-        top: "-10px",
-        margin: "auto",
-      }}
-    />
-  );
-
-  const style = {
-    backgroundColor,
-    borderRadius: "10px",
-    padding: "5%",
-    marginBottom: "5%",
-    textAlign: "center",
-  };
   let textColor = tinycolor
     .mostReadable(backgroundColor, [color, "#fff", "#000"])
     .toHexString();
 
   return (
     <div className="board">
-      <div style={style}>
+      <div className="screen">
         <p style={{ color: textColor, fontWeight: "600" }}>
           All corgis come equipped with built-in cuteness and an unlimited
           capacity to love.
@@ -44,10 +24,27 @@ export default ({ backgroundColor, color }) => {
           Just choose a name and a few colors and we’ll do the rest.
         </p>
         <Egg color={color} />
-        {corgiShadow}
+        <img
+          src={shadow}
+          alt=""
+          style={{
+            position: "relative",
+            top: "-10px",
+            margin: "10px auto",
+            width: "147px",
+          }}
+        />
       </div>
       <img src={raritySample} alt="" />
       <style>{`
+            .screen {
+              background-color: ${backgroundColor};
+              border-radius: 10px;
+              padding: 5%;
+              margin-bottom: 5%;
+              text-align: center;
+            }
+
             .board {
                 width: 100%;
                 margin: 1% ;

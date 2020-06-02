@@ -16,33 +16,32 @@ export default ({ show, Close, children }) => {
       <style>{`
                     .Modal {
                         position: fixed;
-                        z-index: 500;
+                        z-index: 20;
                         background-color: #f8f8f8;
                         max-width: 600px;
-                        min-width: 270px;
                         width: 60%;
                         height: 70%;
+                        max-height: 570px;
                         border: 1px solid #ccc;
-                        border-radius: 5px 10px;
+                        border-radius: 10px;
                         box-shadow: 1px 1px 1px black;
                         padding: 16px;
-                        top: 20%;
-                        left: 30%;
+                        top: 15%;
+                        left: calc((100% - 600px)/2);
                         transition: all 0.3s ease-out;
-                        overflow: scroll;
+                        overflow-y: scroll;
                     }
                     
-                    @media (max-width: 374px) {
+                    @media (max-width:416px) {
                         .Modal {
-                            width: 300px;
-                            left: 10%;
+                            left: 2%;
                         }
                     }
                     .Backdrop {
                         width: 100%;
                         height: 100%;
                         position: fixed;
-                        z-index: 100;
+                        z-index: 10;
                         left: 0;
                         top: 0;
                         background-color: rgba(0, 0, 0, 0.5);

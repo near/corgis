@@ -101,7 +101,7 @@ const CorgiGroup = ({ color, sausage, width = "100%", height = "100%" }) => {
         fillRule="evenodd"
       >
         <g id="Group-12" fillRule="nonzero">
-          <g id="corgi-mid" transform="translate(220, 138.793201)">
+          <g id="corgi-mid" transform="translate(220, 139)">
             <polygon
               id="Path"
               fill="#FFFFFF"
@@ -117,9 +117,9 @@ const CorgiGroup = ({ color, sausage, width = "100%", height = "100%" }) => {
               id="Rectangle"
               fill="#231F20"
               opacity="0.2"
-              x="0"
+              x="1.5"
               y="210.077867"
-              width={sausage}
+              width={sausage - 1.5}
               height="25.1289315"
             ></rect>
             <path
@@ -149,7 +149,7 @@ const CorgiGroup = ({ color, sausage, width = "100%", height = "100%" }) => {
               height="2.01031452"
             ></rect>
           </g>
-          <g id="corgi-back" transform={`translate(${len}, 19.070822)`}>
+          <g id="corgi-back" transform={`translate(${len}, 18.5)`}>
             <path
               d="M0,354.929178 C109.065062,354.929178 194.34855,349.526479 194.34855,342.863597 C194.34855,336.200715 109.065062,330.798016 0,330.798016 L0,354.929178 Z"
               id="Path"

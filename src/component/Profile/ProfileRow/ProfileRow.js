@@ -61,9 +61,7 @@ export default ({ corgi, deleteCorgi }) => {
             <GiDiscussion style={{ color: "#9437ff" }} />
             {corgi.message ? corgi.message : "This lovely corgi is for you"}
           </p>
-          <div style={{ marginLeft: "5px" }}>
-            <Button description="X" action={DeleteCorgi} />
-          </div>
+          <Button description="^ delete" action={DeleteCorgi} />
         </div>
       </div>
     </div>

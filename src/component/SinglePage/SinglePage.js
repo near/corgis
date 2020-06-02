@@ -11,6 +11,9 @@ import Share from "./Share/Share";
 import Spinner from "../utils/Spinner";
 import Rate from "../utils/Rate";
 
+import iconSend from "../../assets/images/icon-send.svg";
+import iconShare from "../../assets/images/icon-share.svg";
+
 export default () => {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
@@ -112,7 +115,7 @@ export default () => {
           display: none;
       }
       
-      @media all and (max-width: 415px) {
+      @media all and (max-width: 416px) {
           .text {
               display: none;
           }
@@ -121,6 +124,14 @@ export default () => {
               font-size: 1rem;
               display: inline;
               color: #2b73c7;
+          }
+
+          .card {
+            width: 100px;
+          }
+
+          .icontext {
+            display: none;
           }
       }
       `}</style>
@@ -132,7 +143,7 @@ const SendAndShare = ({ openShareModal, openSendModal }) => {
   let style = { display: "flex", flexDirection: "column", width: "300px" };
   return (
     <div>
-      <h5>What would you like to do with </h5>
+      <h5 className="icontext">What would you like to do with </h5>
       <span style={style}>
         <SendCard clicked={openSendModal} />
         <ShareCard clicked={openShareModal} />
@@ -144,7 +155,11 @@ const SendAndShare = ({ openShareModal, openSendModal }) => {
 const SendCard = ({ clicked }) => {
   return (
     <button className="card" onClick={clicked}>
-      send icon
+      <img
+        src={iconSend}
+        alt="Send"
+        style={{ height: "60%", paddingTop: "20px" }}
+      />
       <div className="small">Send</div>
       <div className="text">
         <h3 className="cardChar">Send as a gift</h3>
@@ -157,7 +172,11 @@ const SendCard = ({ clicked }) => {
 const ShareCard = ({ clicked }) => {
   return (
     <button className="card" onClick={clicked}>
-      share icon
+      <img
+        src={iconShare}
+        alt="Share"
+        style={{ height: "60%", paddingTop: "20px" }}
+      />
       <div className="small">Share</div>
       <div className="text">
         <h3 className="cardChar">Share on Social</h3>

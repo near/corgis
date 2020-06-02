@@ -42,7 +42,7 @@ export default ({ corgi, show, closeModal }) => {
         <h3>Share a Corgi</h3>
         <p>Click the card to see the share page</p>
         <div>
-          <div style={{ overflowX: "scroll", width: "100%", height: "90%" }}>
+          <div style={{ width: "100%", height: "90%" }}>
             <Link
               to={{
                 pathname: "/share",
@@ -93,7 +93,7 @@ export default ({ corgi, show, closeModal }) => {
             <span style={{ color: "#961be0", marginLeft: "5px" }}>Copied.</span>
           )}
         </div>
-        <div>
+        <div style={{ marginBottom: "10px" }}>
           <p style={{ color: "#999" }}>or share directly on</p>
           <div style={{ display: "flex", justifyContent: "space between" }}>
             <Button description="Twitter" action={shareOnTwitter} />

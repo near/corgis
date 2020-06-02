@@ -34,7 +34,7 @@ export default () => (
       .footer {
         font-family: 'Poppins', sans-serif;
         font-size: 0.7em;
-        font-weight: light;
+        font-weight: 200;
         color: #4A4F54;
         display: flex;
         justify-content: space-between;
@@ -42,8 +42,7 @@ export default () => (
         max-width: 100%;
         margin-top: 1%;
         padding: 3%;
-        vertical-align: middle;
-        margin-bottom: 0 !important;
+        height: 80px;
     }
     
     .footer p {
