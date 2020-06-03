@@ -15,14 +15,15 @@
         "test": "asp && npm run build:contract && jest test --runInBand"
     },
     "dependencies": {
-        "near-api-js": "^0.23.2",
+        "big.js": "^5.2.2",
+        "near-api-js": "^0.25.1",
         "project-name-generator": "^2.1.7",
+        "prop-types": "^15.7.2",
         "randomcolor": "^0.5.4",
         "react": "^16.11.0",
         "react-copy-to-clipboard": "^5.0.2",
         "react-dom": "^16.11.0",
         "react-icons": "^3.8.0",
-        "react-keyframes": "^0.2.3",
         "react-router-dom": "^5.1.2",
         "react-scripts": "3.4.0",
         "regenerator-runtime": "^0.13.5",
@@ -36,7 +37,7 @@
         "jest": "^26.0.1",
         "jest-environment-node": "^26.0.0",
         "near-sdk-as": "^0.3.1",
-        "near-shell": "^0.21.0",
+        "near-shell": "^0.23.0",
         "nodemon": "^2.0.3",
         "parcel-bundler": "^1.12.4",
         "react-test-renderer": "^16.13.1"

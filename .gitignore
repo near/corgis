@@ -2,13 +2,11 @@
 # dependencies
 .cache
 /node_modules
-/.pnp
-.pnp.js
 /out
+/dist
 
 #keys
 /neardev
-
 
 # testing
 /coverage

@@ -1,25 +1,33 @@
-// @nearfile
+import { context, PersistentMap } from "near-sdk-as";
 
-export class CorgiMetaData {
-  dna: Array<string>;
+@nearBindgen
+export class CorgiList {
+  constructor(public id: Array<string>) {}
 }
-
+@nearBindgen
 export class Corgi {
   owner: string;
-  sender:string;
-  message:string;
-  dna: string;
-  name: string;
-  color:string;
-  backgroundColor: string;
-  rate: string;
-  sausage : string;
-  quote: string;
-  level: i32;
-  metadata: CorgiMetaData;
+  constructor(
+    public id: string,
+    public name: string,
+    public quote: string,
+    public color: string,
+    public backgroundColor: string,
+    public rate: string,
+    public sausage: string,
+    public sender: string = "",
+    public message: string = ""
+  ) {
+    this.owner = context.sender;
+  }
 }
 
-export class CorgiArray {
-  corgis: Array<Corgi>;
-  len: i32;
-}
+// Collections where we store data
+// store all corgis with unique dna
+export const corgis = new PersistentMap<Uint8Array, Corgi>("corgis");
+//store all corgis dna of a owner
+export const corgisByOwner = new PersistentMap<string, CorgiList>(
+  "corigsByOwner"
+);
+
+export const displayCorgis = new PersistentMap<string, CorgiList>("show");

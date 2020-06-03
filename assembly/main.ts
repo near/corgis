@@ -1,14 +1,14 @@
+import { context, logging, base64, math } from "near-sdk-as";
 import {
-  context,
-  storage,
-  PersistentMap,
-  logging,
-  base64,
-  math,
-} from "near-sdk-as";
-import { Corgi, CorgiArray, CorgiMetaData } from "./model";
+  Corgi,
+  CorgiList,
+  corgis,
+  corgisByOwner,
+  displayCorgis,
+} from "./model";
 
 const DNA_DIGITS: u32 = 16;
+const ORDER_LIMIT = 8;
 
 // RARITY:
 // common: "COMMON", 0.1-1
@@ -17,184 +17,179 @@ const DNA_DIGITS: u32 = 16;
 // veryRare: "VERY RARE", 0-0.01
 // ultraRare: "ULTRA RARE" 0
 
-// Collections where we store data
-// store all corgis with unique dna
-let corgis = new PersistentMap<string, Corgi>("corgis");
-//store all corgis dna of a owner
-let corgisByOwner = new PersistentMap<string, CorgiMetaData>("corigsByOwner");
-
 // *********************************************************
 
 // //Methods for owner
 
-export function ownerOf(tokenId: string): string {
-  let corgi = getCorgi(tokenId);
-  let owner = corgi.owner;
-  return owner;
-}
-
-export function getCorgis(owner: string): CorgiArray {
-  logging.log("get corgis");
-  let _corgisDNA = getCorgisByOwner(owner);
-  let _corgisList = new Array<Corgi>();
-  for (let i = 0; i < _corgisDNA.length; i++) {
-    if (corgis.contains(_corgisDNA[i])) {
-      let _corgi = getCorgi(_corgisDNA[i]);
-      _corgisList.push(_corgi);
+export function getCorgisList(owner: string): Corgi[] {
+  let corgiIdList = getCorgisByOwner(owner);
+  let corgisList = new Array<Corgi>();
+  for (let i = 0; i < corgiIdList.length; i++) {
+    let corgiDNA = base64.decode(corgiIdList[i]);
+    if (corgis.contains(corgiDNA)) {
+      let corgi = corgis.getSome(corgiDNA);
+      corgisList.push(corgi);
     }
   }
-  let cl = new CorgiArray();
-  cl.corgis = _corgisList;
-  cl.len = _corgisList.length;
-  return cl;
+  return corgisList;
 }
 
-export function getCorgisByOwner(owner: string): Array<string> {
-  let corgiDNA = corgisByOwner.get(owner);
-  if (!corgiDNA) {
+function getCorgisByOwner(owner: string): Array<string> {
+  let corgiIdList = corgisByOwner.get(owner);
+  if (!corgiIdList) {
     return new Array<string>();
   }
-  let dna = corgiDNA.dna;
-
-  return dna;
+  return corgiIdList.id;
 }
 
-export function setCorgisByOwner(corgi: Corgi): void {
-  let _corgisDNA = getCorgisByOwner(corgi.owner);
-  if (_corgisDNA == null) {
-    _corgisDNA = new Array<string>();
-    _corgisDNA.push(corgi.dna);
-  } else {
-    _corgisDNA.push(corgi.dna);
+function setCorgisByOwner(owner: string, id: string): void {
+  let corgiIdList = getCorgisByOwner(owner);
+  corgiIdList.push(id);
+  let newList = new CorgiList(corgiIdList);
+  corgisByOwner.set(owner, newList);
+}
+
+function deleteCorgiByOwner(owner: string, id: string): void {
+  const corgiIdList = getCorgisByOwner(owner);
+  for (let i = 0; i < corgiIdList.length; i++) {
+    if (id == corgiIdList[i]) {
+      corgiIdList.splice(i, 1);
+    }
   }
-  let co = new CorgiMetaData();
-  co.dna = _corgisDNA;
-  corgisByOwner.set(corgi.owner, co);
+  let newList = new CorgiList(corgiIdList);
+  corgisByOwner.set(owner, newList);
 }
 
 // // Methods for Corgi
-export function getCorgi(tokenId: string): Corgi {
-  let corgi = corgis.getSome(tokenId);
-  return corgi;
+export function getCorgi(id: string): Corgi {
+  const dna = base64.decode(id);
+  return corgis.getSome(dna);
 }
 
-export function setCorgi(corgi: Corgi): void {
-  corgis.set(corgi.dna, corgi);
+function setCorgi(dna: Uint8Array, corgi: Corgi): void {
+  corgis.set(dna, corgi);
+  setGlobalCorgis(corgi.id);
 }
 
-export function getSender(): string {
-  return context.sender;
-}
-
-function deleteCorgi(tokenId: string): void {
-  corgis.delete(tokenId);
-}
-
-export function deleteCorgiProfile(tokenId: string): CorgiArray {
-  let corgi = getCorgi(tokenId);
-  decrementOldOwnerCorgis(corgi.owner, tokenId);
-  let leftCorgis = getCorgis(corgi.owner);
+export function deleteCorgi(id: string): void {
+  let corgi = getCorgi(id);
+  deleteCorgiByOwner(corgi.owner, id);
+  deleteGlobalCorgi(id);
+  const dna = base64.decode(id);
+  corgis.delete(dna);
   logging.log("after delete");
-  return leftCorgis;
 }
 
 //Transfer between users
-export function transfer(
-  to: string,
-  tokenId: string,
-  message: string,
-  sender: string
-): CorgiArray {
-  let corgi = getCorgi(tokenId);
-  corgi.message = message;
-  corgi.sender = sender;
-  let corgi_temp = corgi;
-  setCorgi(corgi);
+export function transferCorgi(
+  receiver: string,
+  id: string,
+  message: string
+): void {
+  let corgi = getCorgi(id);
   assert(
     corgi.owner !== context.sender,
-    "corgi does not belong to " + context.sender
+    "This corgi does not belong to " + context.sender
   );
-  decrementOldOwnerCorgis(corgi.owner, tokenId);
-  incrementNewOwnerCorgis(to, corgi_temp);
-  let leftCorgis = getCorgis(corgi.sender);
+  corgi.message = message;
+  corgi.sender = context.sender;
+
+  deleteCorgiByOwner(corgi.owner, id);
+  setCorgisByOwner(receiver, id);
+
+  corgi.owner = receiver;
+  const dna = base64.decode(id);
+  setCorgi(dna, corgi);
+
   logging.log("after transfer");
-  return leftCorgis;
+  logging.log("send corgi to");
+  logging.log(receiver);
 }
 
-function incrementNewOwnerCorgis(to: string, corgi: Corgi): void {
-  corgi.owner = to;
-  logging.log("send to another account");
-  logging.log(to);
-  setCorgisByOwner(corgi);
-  setCorgi(corgi);
+// display global corgis
+export function displayGolbalCorgis(): Corgi[] {
+  let corgiIdList = getGlobalCorgis();
+  const corgiNum = min(ORDER_LIMIT, corgiIdList.length);
+  const result = new Array<Corgi>(corgiNum);
+  for (
+    let i = corgiIdList.length - 1;
+    i >= corgiIdList.length - corgiNum;
+    i--
+  ) {
+    result[i] = getCorgi(corgiIdList[i]);
+  }
+  return result;
 }
 
-function decrementOldOwnerCorgis(from: string, tokenId: string): void {
-  let _corgisDNA = getCorgisByOwner(from);
-  for (let i = 0; i < _corgisDNA.length; i++) {
-    if (tokenId == _corgisDNA[i]) {
-      _corgisDNA.splice(i, 1);
-      logging.log("match");
-      break;
+function getGlobalCorgis(): Array<string> {
+  let corgiIdList = displayCorgis.get("global");
+  if (!corgiIdList) {
+    return new Array<string>();
+  }
+  return corgiIdList.id;
+}
+
+function setGlobalCorgis(id: string): void {
+  let corgiIdList = getGlobalCorgis();
+  corgiIdList.push(id);
+  let newList = new CorgiList(corgiIdList);
+  displayCorgis.set("global", newList);
+}
+
+function deleteGlobalCorgi(id: string): void {
+  const corgiIdList = getGlobalCorgis();
+  for (let i = 0; i < corgiIdList.length; i++) {
+    if (id == corgiIdList[i]) {
+      corgiIdList.splice(i, 1);
     }
   }
-  let co = new CorgiMetaData();
-  co.dna = _corgisDNA;
-  corgisByOwner.set(from, co);
-  deleteCorgi(tokenId);
+  let newList = new CorgiList(corgiIdList);
+  displayCorgis.set("global", newList);
 }
 
 // // Create unique Corgi
-export function createRandomCorgi(
+export function createCorgi(
   name: string,
   color: string,
   backgroundColor: string,
   quote: string
-): Corgi {
-  let randDna = generateRandomDna();
-  let rate = generateRandomrate();
-  let sausage = generateRandomLength(rate);
-  logging.log("get into generating corgi");
-  return _createCorgi(
+): string[] {
+  let dna = generateRandomDna();
+  let id = base64.encode(dna);
+  let rate = generateRate();
+  let sausage = generateSausage(rate);
+  return generateCorgi(
+    dna,
+    id,
     name,
-    randDna,
+    quote,
     color,
-    rate,
-    sausage,
     backgroundColor,
-    quote
+    rate,
+    sausage
   );
 }
 
-function _createCorgi(
+function generateCorgi(
+  dna: Uint8Array,
+  id: string,
   name: string,
-  dna: string,
+  quote: string,
   color: string,
-  rate: string,
-  sausage: string,
   backgroundColor: string,
-  quote: string
-): Corgi {
-  logging.log("start generating corgi");
-  let corgi = new Corgi();
-  corgi.owner = context.sender;
-  corgi.dna = dna;
-  corgi.name = name;
-  corgi.color = color;
-  corgi.sausage = sausage;
-  corgi.backgroundColor = backgroundColor;
-  corgi.quote = quote;
-  corgi.rate = rate;
-  setCorgi(corgi);
-  setCorgisByOwner(corgi);
+  rate: string,
+  sausage: string
+): string[] {
+  let corgi = new Corgi(id, name, quote, color, backgroundColor, rate, sausage);
+  setCorgi(dna, corgi);
+  setCorgisByOwner(context.sender, id);
   logging.log("create a new corgi");
-  return corgi;
+  logging.log(id);
+  return [name, id];
 }
 
-function generateRandomDna(): string {
-  let buf = math.randomBuffer(DNA_DIGITS);
-  let b64 = base64.encode(buf);
-  return b64;
+function generateRandomDna(): Uint8Array {
+  return math.randomBuffer(DNA_DIGITS);
 }
 
 function randomNum(): u32 {
@@ -208,7 +203,7 @@ function randomNum(): u32 {
   );
 }
 
-function generateRandomrate(): string {
+function generateRate(): string {
   let rand = randomNum();
   if (rand > 10) {
     return "COMMON";
@@ -223,7 +218,7 @@ function generateRandomrate(): string {
   }
 }
 
-function generateRandomLength(rarity: string): string {
+function generateSausage(rarity: string): string {
   let l = (randomNum() * 50) / 100;
   let sausage = 0;
   if (rarity == "VERY RARE") {
@@ -236,9 +231,4 @@ function generateRandomLength(rarity: string): string {
     sausage = l;
   }
   return sausage.toString();
-}
-
-//ERROR handling
-function _corgiDNEError(corgi: Corgi): boolean {
-  return assert(corgi == null, "This corgi does not exist");
 }
