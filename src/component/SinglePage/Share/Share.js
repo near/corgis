@@ -5,37 +5,11 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import { SmallCard } from "../../CorgiCard/Card";
 import Modal from "../../utils/Modal";
-import Button from "../../utils/Button";
 
 export default ({ corgi, show, closeModal }) => {
   const [copied, setCopied] = useState(false);
-
-  const shareOnTwitter = () => {
-    // found on https://gist.github.com/McKinneyDigital/2884508#file-share-twitter-js
-    let shareURL = "http://twitter.com/share?url="; //url base
-    let params = {
-      text: "This lovely corgi is mine",
-      via: "NEARProtocol",
-    };
-    for (let prop in params)
-      shareURL += "&" + prop + "=" + encodeURIComponent(params[prop]);
-    window.open(
-      shareURL,
-      "",
-      "left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0"
-    );
-  };
-
-  const shareOnFacebook = () => {
-    let shareURL = "https://www.facebook.com/sharer/sharer.php?"; //url base
-    window.open(
-      shareURL,
-      "",
-      "left=0,top=0,width=550,height=450,personalbar=0,toolbar=0,scrollbars=0,resizable=0"
-    );
-  };
-
   const address = window.location.origin + "/share" + window.location.hash;
+
   return (
     <Modal show={show} Close={closeModal}>
       <div style={{ width: "100%", height: "100%", marginBottom: "10px" }}>
@@ -96,8 +70,7 @@ export default ({ corgi, show, closeModal }) => {
         <div style={{ marginBottom: "10px" }}>
           <p style={{ color: "#999" }}>or share directly on</p>
           <div style={{ display: "flex", justifyContent: "space between" }}>
-            <Button description="Twitter" action={shareOnTwitter} />
-            <Button description="Facebook" action={shareOnFacebook} />
+            <div class="sharethis-inline-share-buttons"></div>
           </div>
         </div>
       </div>
