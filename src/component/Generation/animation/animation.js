@@ -1,4 +1,4 @@
-import React from "react";
+import React from "./node_modules/react";
 
 import { CorgiFour } from "../../utils/corgiAnimation";
 import raritySample from "../../../assets/images/rarity-sample.svg";

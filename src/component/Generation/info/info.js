@@ -1,14 +1,14 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext } from "./node_modules/react";
 
 import useCharacter from "../../../hooks/character";
 import { ContractContext } from "../../../hooks/contract";
 
 import Button from "../../utils/Button";
 
-import { GiGreekSphinx, GiBeachBall } from "react-icons/gi";
+import { GiGreekSphinx, GiBeachBall } from "./node_modules/react-icons/gi";
 
-const generate = require("project-name-generator");
-const randomColor = require("randomcolor");
+const generate = require("./node_modules/project-name-generator");
+const randomColor = require("./node_modules/randomcolor");
 
 export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
   const { name, quote, setName, setQuote } = useCharacter();

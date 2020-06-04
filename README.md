@@ -1,14 +1,4 @@
-<br />
-<br />
-
-<p>
-<img src="https://corgis.nearprotocol.com/static/media/logo.6b6d06b2.png" width="340">
-</p>
-
-<br />
-<br />
-
-# Explore [Corgis](http://corgis.nearprotocol.com) when you first see this!
+# Explore [Corgis](http://corgis.near.org) when you first see this!
 
 ### To run on main Testnet
 #### Requirements
