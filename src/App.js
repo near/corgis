@@ -2,9 +2,6 @@ import "regenerator-runtime/runtime";
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 
-import Header from "./component/Header/Header";
-import Footer from "./component/Footer/Footer";
-
 import Dash from "./component/Dash/Dash";
 
 import Account from "./component/Account/Account";
@@ -14,6 +11,9 @@ import Generation from "./component/Generation/Generation";
 
 import SinglePage from "./component/SinglePage/SinglePage";
 import SharePage from "./component/SharePage/SharePage";
+
+import Header from "./component/Header/Header";
+import Footer from "./component/Footer/Footer";
 
 export default () => {
   return (
