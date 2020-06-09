@@ -1,4 +1,4 @@
-import React from "./node_modules/react";
+import React from "react";
 
 import nearLogo from "../../assets/images/near_logo_stack.png";
 
