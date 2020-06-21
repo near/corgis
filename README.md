@@ -22,7 +22,7 @@ near login
 click the link and create your own contract ID
 
 Step 2:
-Modify src/config.js line that sets the contractName. Set it to id from step 1.
+Modify src/config.js line that sets the contractName. Set it to id from step 1. Note that if you are on testnet, please write "corgis" instead of "corgis.testnet".
 ```
 const CONTRACT_NAME = "contractId"; /* TODO: fill this in! */
 ```

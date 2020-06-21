@@ -19,9 +19,9 @@ export default () => {
   if (!corgis || loading) {
     Corgis = <Spinner />;
   }
-  if (corgis && corgis.length === 0) {
-    return <Redirect to="/generation" />;
-  }
+  //if (corgis && corgis.length === 0) {
+  //  return <Redirect to="/generation" />;
+  //}
   if (corgis && corgis.length > 0) {
     Corgis = corgis.map((corgi) => {
       return (

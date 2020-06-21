@@ -11,6 +11,7 @@ const initialState = {
   error: null,
   corgis: null,
   creating: false,
+  create: false,
   transfering: false,
   deleting: false,
   corgi: null,
@@ -29,6 +30,7 @@ const contractReducer = (currentState, action) => {
         ...currentState,
         loading: false,
         creating: false,
+        create: false,
         transfering: false,
         deleting: false,
         error: action.error,
@@ -60,6 +62,7 @@ const contractReducer = (currentState, action) => {
       return {
         ...currentState,
         creating: false,
+        create: true,
       };
     case "TRANSFER_START":
       return {
@@ -111,6 +114,7 @@ const ContractContextProvider = ({ Contract, children }) => {
       )
         .then(() => {
           dispatchContract({ type: "CREATE_CORGI_SUCCESS" });
+          window.location.reload(true);
         })
         .catch((error) => dispatchContract({ type: "FAIL", error }));
     },
@@ -174,6 +178,7 @@ const ContractContextProvider = ({ Contract, children }) => {
     corgis: contractState.corgis,
     displayCorgis: contractState.displayCorgis,
     creating: contractState.creating,
+    create: contractState.create,
     transfering: contractState.transfering,
     deleting: contractState.deleting,
     corgi: contractState.corgi,

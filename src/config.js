@@ -1,5 +1,5 @@
 /* TODO: fill this in!*/
-const CONTRACT_NAME = process.env.CONTRACT_NAME || "new-corgis";
+const CONTRACT_NAME = process.env.anaiscorgis || "new-corgis";
 
 function getConfig(env) {
   switch (env) {
