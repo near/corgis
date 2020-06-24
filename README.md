@@ -4,30 +4,39 @@
 #### Requirements
 ##### IMPORTANT: Make sure you have the latest version of NEAR Shell and Node Version > 10.x 
 1. node and npm
+
 2. near shell
 Install with 
 ```
 npm i -g near-shell
 ```
+
 3.(optional) install yarn to build
 ```
 npm i -g yarn
 ```
-#### procedure
-Step 1: Create account for the contract and deploy the contract.
+
+#### Procedure (deploy the contract for your own project)
+Step 1: Create account for the contract.
+
 In the terminal
 ```
 near login
 ```
-click the link and create your own contract ID
+click the link and create your own contract ID on NEAR Testnet
 
-Step 2:
-Modify src/config.js line that sets the contractName. Set it to id from step 1.
+*After you see the context, "Logged in as [ YOUR_NAME ] with public key [ ed25519:XXXXXX... ] successfully", you are done.*
+
+Step 2: Deploy the contract on the account
+
+Modify src/config.js line that sets the contractName. Set it with Id from step 1.
 ```
-const CONTRACT_NAME = "contractId"; /* TODO: fill this in! */
+const CONTRACT_NAME = process.env.CONTRACT_NAME || "new-corgis"; /* TODO: fill this in! */
 ```
 
-Step 3:
+Step 3: 
+
+(For Mac and Ubuntu):
 Finally, run the command in your terminal.
 ```
 npm install && npm run start
@@ -36,7 +45,15 @@ with yarn:
 ```
 yarn install && yarn start
 ```
-The server that starts is for static assets and by default serves them to localhost:3000. Navigate there in your browser to see the app running!
+
+(For Windows):
+```
+yarn install
+yarn start
+```
+
+
+The server that starts is for static assets and by default serves them to localhost:1234. Navigate there in your browser to see the app running!
 
 ## To Explore
 
@@ -45,7 +62,7 @@ The server that starts is for static assets and by default serves them to localh
 - `src/main.js` for the JavaScript front-end code and how to integrate contracts
 - `src/app.js` for the first react component
 
-### To run on Local Node
+### To run on Local Node (May in the old version and need update)
 
 Step 1:
 Get nearcore
