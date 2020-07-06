@@ -8,6 +8,7 @@ import { NearContext } from "../../context/NearContext";
 import Info from "./Info/Info";
 import Screen from "./Screen/Screen";
 import Animation from "./Animation/Animation";
+import Account from "../Account/Account"
 
 export default () => {
   const nearContext = useContext(NearContext);
@@ -29,7 +30,7 @@ export default () => {
   }
 
   if (created) {
-    return <Redirect to="/account" />;
+    return <Account />;
   }
 
   return (

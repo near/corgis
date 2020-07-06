@@ -6,6 +6,7 @@ import { ContractContext } from "../../hooks/contract";
 
 import Spinner from "../utils/Spinner";
 import AccountCard from "./AccountCard/AccountCard";
+import Generation from "../Generation/Generation"
 
 export default () => {
   const nearContext = useContext(NearContext);
@@ -26,7 +27,7 @@ export default () => {
     Corgis = <Spinner />;
   }
   if (corgis && corgis.length === 0) {
-     return <Redirect to="/generation" />;
+     return <Generation />;
   }
   if (corgis && corgis.length > 0) {
     corgiUpdateKey = corgiUpdateKey + 1;

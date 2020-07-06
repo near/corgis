@@ -108,7 +108,6 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const createCorgi = useCallback(
     (name, color, backgroundColor, quote) => {
       dispatchContract({ type: "CREATE_START" });
-      window.localStorage.setItem("create", "create");
       Contract.createCorgi(
         { name, color, backgroundColor, quote },
         BOATLOAD_OF_GAS
