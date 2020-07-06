@@ -18,7 +18,7 @@ export default () => {
     setBackgroundColor,
   } = useCharacter();
   const useContract = useContext(ContractContext);
-  const { creating } = useContract;
+  const { creating, created } = useContract;
 
   if (!nearContext.user) {
     return <Redirect to="/" />;
@@ -28,8 +28,7 @@ export default () => {
     return <Animation color={color} backgroundColor={backgroundColor} />;
   }
 
-  const create = window.localStorage.getItem("create");
-  if (create) {
+  if (created) {
     return <Redirect to="/account" />;
   }
 

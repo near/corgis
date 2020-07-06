@@ -16,6 +16,7 @@
         "test": "asp && npm run build:contract && jest test --runInBand"
     },
     "dependencies": {
+        "@babel/runtime": "^7.10.4",
         "big.js": "^5.2.2",
         "near-api-js": "^0.25.1",
         "project-name-generator": "^2.1.7",
@@ -33,6 +34,7 @@
     "devDependencies": {
         "@babel/core": "^7.9.6",
         "@babel/plugin-proposal-class-properties": "^7.8.3",
+        "@babel/plugin-transform-runtime": "^7.10.4",
         "assemblyscript": "^0.9.4",
         "babel-jest": "^26.0.0",
         "jest": "^26.0.1",
@@ -45,7 +47,16 @@
     },
     "babel": {
         "presets": [
-            "@babel/preset-env",
+            [
+                "env",
+                {
+                    "targets": {
+                        "browsers": [
+                            "last 2 Chrome versions"
+                        ]
+                    }
+                }
+            ],
             "@babel/preset-react"
         ],
         "plugins": [
@@ -76,7 +87,7 @@
             "not op_mini all"
         ],
         "development": [
-            "last 1 chrome version",
+            "last 1 Chrome versions",
             "last 1 firefox version",
             "last 1 safari version"
         ]

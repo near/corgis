@@ -10,30 +10,37 @@ import AccountCard from "./AccountCard/AccountCard";
 export default () => {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
-  const { corgis, loading } = useContract;
-  useEffect(() => window.localStorage.removeItem("create"));
+  const { loading, getCorgisList } = useContract;
+  let corgiUpdateKey = 0;
+  let {corgis} = useContract;
+  let Corgis;
+  
+   useEffect(() => {
+       corgis = getCorgisList(nearContext.user.accountId);
+   }, [corgiUpdateKey]);  
+  
   if (!nearContext.user) {
     return <Redirect to="/" />;
   }
-  let Corgis;
   if (!corgis || loading) {
     Corgis = <Spinner />;
   }
   if (corgis && corgis.length === 0) {
-    return <Redirect to="/generation" />;
+     return <Redirect to="/generation" />;
   }
   if (corgis && corgis.length > 0) {
+    corgiUpdateKey = corgiUpdateKey + 1;
     Corgis = corgis.map((corgi) => {
       return (
-        <Link
-          to={{
-            pathname: "/@" + corgi.name,
-            hash: corgi.id,
-          }}
-          key={corgi.id}
-        >
-          <AccountCard corgi={corgi} />
-        </Link>
+          <Link
+            to={{
+              pathname: "/@" + corgi.name,
+              hash: corgi.id,
+            }}
+            key={corgi.id}
+          >
+            <AccountCard corgi={corgi} />
+          </Link>
       );
     });
   }
