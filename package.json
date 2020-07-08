@@ -48,19 +48,27 @@
     "babel": {
         "presets": [
             [
-                "env",
+                "@babel/preset-env",
                 {
                     "targets": {
                         "browsers": [
                             "last 2 Chrome versions"
                         ]
-                    }
+                    },
+                    "exclude": [
+                        "transform-regenerator"
+                    ]
                 }
             ],
             "@babel/preset-react"
         ],
         "plugins": [
-            "@babel/plugin-proposal-class-properties"
+            [
+                "@babel/plugin-proposal-class-properties"
+            ],
+            [
+                "@babel/transform-runtime"
+            ]
         ]
     },
     "eslintConfig": {
