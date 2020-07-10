@@ -44,6 +44,7 @@ const contractReducer = (currentState, action) => {
       return {
         ...currentState,
         loading: false,
+        created: false,
         corgis: action.corgis,
       };
     case "GET_CORGI_SUCCESS":
@@ -60,7 +61,6 @@ const contractReducer = (currentState, action) => {
     case "CREATE_CORGI_SUCCESS":
       return {
         ...currentState,
-        loading: false,
         creating: false,
         created: true,
       };
@@ -95,7 +95,6 @@ const contractReducer = (currentState, action) => {
 };
 
 export const ContractContext = React.createContext();
-export const CorgiDispatchContext = React.createContext()
 
 export const ContractContextProvider = ({ Contract, children }) => {
   const [contractState, dispatchContract] = useReducer(
@@ -193,9 +192,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
 
   return (
     <ContractContext.Provider value={value}>
-      <CorgiDispatchContext.Provider value={dispatchContract}>
         {children}
-      </CorgiDispatchContext.Provider>
     </ContractContext.Provider>
   );
 };

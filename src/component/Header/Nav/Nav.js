@@ -13,9 +13,9 @@ export default ({ number, accountName, requestSignOut }) => {
         </NavLink>
         <Card accountName={accountName} requestSignOut={requestSignOut} />
       </div>
-      <a href="/generation">        
+      <NavLink to="/generation">       
         <AddCorgi />
-      </a>
+      </NavLink>
       <style>{`
         .wrap {
           margin: auto;

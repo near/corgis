@@ -12,13 +12,14 @@ export default () => {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
   const { loading, getCorgisList } = useContract;
-  let corgiUpdateKey = 0;
   let {corgis} = useContract;
   let Corgis;
   
-   useEffect(() => {
-       corgis = getCorgisList(nearContext.user.accountId);
-   }, [corgiUpdateKey]);  
+  useEffect(() => {
+    if (nearContext.user) {
+      getCorgisList(nearContext.user.accountId);
+    }
+  }, [getCorgisList, nearContext]);
   
   if (!nearContext.user) {
     return <Redirect to="/" />;
@@ -30,7 +31,6 @@ export default () => {
      return <Generation />;
   }
   if (corgis && corgis.length > 0) {
-    corgiUpdateKey = corgiUpdateKey + 1;
     Corgis = corgis.map((corgi) => {
       return (
           <Link
