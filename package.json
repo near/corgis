@@ -47,27 +47,34 @@
     },
     "babel": {
         "presets": [
+            "@babel/preset-env",
+            "@babel/preset-react"
+        ],
+        "plugins": [
             [
-                "@babel/preset-env",
+                "@babel/plugin-transform-runtime",
+                {
+                    "absoluteRuntime": false,
+                    "corejs": false,
+                    "helpers": true,
+                    "regenerator": true,
+                    "useESModules": false,
+                    "version": "7.0.0-beta.0"
+                }
+            ]
+        ]
+    },
+    "babelrc": {
+        "presets": [
+            [
+                "env",
                 {
                     "targets": {
                         "browsers": [
                             "last 2 Chrome versions"
                         ]
-                    },
-                    "exclude": [
-                        "transform-regenerator"
-                    ]
+                    }
                 }
-            ],
-            "@babel/preset-react"
-        ],
-        "plugins": [
-            [
-                "@babel/plugin-proposal-class-properties"
-            ],
-            [
-                "@babel/transform-runtime"
             ]
         ]
     },
