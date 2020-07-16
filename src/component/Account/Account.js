@@ -6,34 +6,42 @@ import { ContractContext } from "../../hooks/contract";
 
 import Spinner from "../utils/Spinner";
 import AccountCard from "./AccountCard/AccountCard";
+import Generation from "../Generation/Generation"
 
 export default () => {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
-  const { corgis, loading } = useContract;
-  useEffect(() => window.localStorage.removeItem("create"));
+  const { loading, getCorgisList } = useContract;
+  let {corgis} = useContract;
+  let Corgis;
+  
+  useEffect(() => {
+    if (nearContext.user) {
+      getCorgisList(nearContext.user.accountId);
+    }
+  }, [getCorgisList, nearContext]);
+  
   if (!nearContext.user) {
     return <Redirect to="/" />;
   }
-  let Corgis;
   if (!corgis || loading) {
     Corgis = <Spinner />;
   }
   if (corgis && corgis.length === 0) {
-    return <Redirect to="/generation" />;
+     return <Generation />;
   }
   if (corgis && corgis.length > 0) {
     Corgis = corgis.map((corgi) => {
       return (
-        <Link
-          to={{
-            pathname: "/@" + corgi.name,
-            hash: corgi.id,
-          }}
-          key={corgi.id}
-        >
-          <AccountCard corgi={corgi} />
-        </Link>
+          <Link
+            to={{
+              pathname: "/@" + corgi.name,
+              hash: corgi.id,
+            }}
+            key={corgi.id}
+          >
+            <AccountCard corgi={corgi} />
+          </Link>
       );
     });
   }

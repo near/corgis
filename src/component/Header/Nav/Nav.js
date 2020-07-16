@@ -13,7 +13,7 @@ export default ({ number, accountName, requestSignOut }) => {
         </NavLink>
         <Card accountName={accountName} requestSignOut={requestSignOut} />
       </div>
-      <NavLink to="/generation">
+      <NavLink to="/generation">       
         <AddCorgi />
       </NavLink>
       <style>{`

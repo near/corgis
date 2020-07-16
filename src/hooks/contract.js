@@ -11,6 +11,7 @@ const initialState = {
   error: null,
   corgis: null,
   creating: false,
+  created: false,
   transfering: false,
   deleting: false,
   corgi: null,
@@ -43,6 +44,7 @@ const contractReducer = (currentState, action) => {
       return {
         ...currentState,
         loading: false,
+        created: false,
         corgis: action.corgis,
       };
     case "GET_CORGI_SUCCESS":
@@ -60,6 +62,7 @@ const contractReducer = (currentState, action) => {
       return {
         ...currentState,
         creating: false,
+        created: true,
       };
     case "TRANSFER_START":
       return {
@@ -91,9 +94,9 @@ const contractReducer = (currentState, action) => {
   }
 };
 
-export const ContractContext = React.createContext(initialState);
+export const ContractContext = React.createContext();
 
-const ContractContextProvider = ({ Contract, children }) => {
+export const ContractContextProvider = ({ Contract, children }) => {
   const [contractState, dispatchContract] = useReducer(
     contractReducer,
     initialState
@@ -104,7 +107,6 @@ const ContractContextProvider = ({ Contract, children }) => {
   const createCorgi = useCallback(
     (name, color, backgroundColor, quote) => {
       dispatchContract({ type: "CREATE_START" });
-      window.localStorage.setItem("create", "create");
       Contract.createCorgi(
         { name, color, backgroundColor, quote },
         BOATLOAD_OF_GAS
@@ -174,6 +176,7 @@ const ContractContextProvider = ({ Contract, children }) => {
     corgis: contractState.corgis,
     displayCorgis: contractState.displayCorgis,
     creating: contractState.creating,
+    created: contractState.created,
     transfering: contractState.transfering,
     deleting: contractState.deleting,
     corgi: contractState.corgi,
@@ -189,7 +192,7 @@ const ContractContextProvider = ({ Contract, children }) => {
 
   return (
     <ContractContext.Provider value={value}>
-      {children}
+        {children}
     </ContractContext.Provider>
   );
 };
