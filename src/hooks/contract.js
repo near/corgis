@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import Big from "big.js";
 
 const BOATLOAD_OF_GAS = Big(1)
-  .times(10 ** 16)
+  .times(10 ** 14)
   .toFixed();
 
 const initialState = {
