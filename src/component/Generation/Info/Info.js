@@ -1,14 +1,14 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect, useContext } from 'react';
 
-import useCharacter from "../../../hooks/character";
-import { ContractContext } from "../../../hooks/contract";
+import useCharacter from '../../../hooks/character';
+import { ContractContext } from '../../../hooks/contract';
 
-import Button from "../../utils/Button";
+import Button from '../../utils/Button';
 
-import { GiGreekSphinx, GiBeachBall } from "react-icons/gi";
+import { GiGreekSphinx, GiBeachBall } from 'react-icons/gi';
 
-const generate = require("project-name-generator");
-const randomColor = require("randomcolor");
+const generate = require('project-name-generator');
+const randomColor = require('randomcolor');
 
 export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
   const { name, quote, setName, setQuote } = useCharacter();
@@ -65,7 +65,7 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
                   value={color}
                   onChange={generateColor}
                   style={{
-                    display: "none",
+                    display: 'none',
                   }}
                 />
                 <div className="select">w</div>
@@ -88,7 +88,7 @@ export default ({ setColor, color, setBackgroundColor, backgroundColor }) => {
                   value={backgroundColor}
                   onChange={generateBackgroundColor}
                   style={{
-                    display: "none",
+                    display: 'none',
                   }}
                 />
                 <div className="select">w</div>

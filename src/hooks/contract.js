@@ -1,6 +1,6 @@
-import React, { useReducer, useCallback } from "react";
-import PropTypes from "prop-types";
-import Big from "big.js";
+import React, { useReducer, useCallback } from 'react';
+import PropTypes from 'prop-types';
+import Big from 'big.js';
 
 const BOATLOAD_OF_GAS = Big(1)
   .times(10 ** 16)
@@ -20,12 +20,12 @@ const initialState = {
 
 const contractReducer = (currentState, action) => {
   switch (action.type) {
-    case "START":
+    case 'START':
       return {
         ...currentState,
         loading: true,
       };
-    case "FAIL":
+    case 'FAIL':
       return {
         ...currentState,
         loading: false,
@@ -34,57 +34,56 @@ const contractReducer = (currentState, action) => {
         deleting: false,
         error: action.error,
       };
-    case "GET_DISPLAY_CORGIS":
+    case 'GET_DISPLAY_CORGIS':
       return {
         ...currentState,
         loading: false,
         displayCorgis: action.corgis,
       };
-    case "GET_CORGISLIST_SUCCESS":
+    case 'GET_CORGISLIST_SUCCESS':
       return {
         ...currentState,
         loading: false,
-        created: false,
         corgis: action.corgis,
       };
-    case "GET_CORGI_SUCCESS":
+    case 'GET_CORGI_SUCCESS':
       return {
         ...currentState,
         loading: false,
         corgi: action.corgi,
       };
-    case "CREATE_START":
+    case 'CREATE_START':
       return {
         ...currentState,
         creating: true,
       };
-    case "CREATE_CORGI_SUCCESS":
+    case 'CREATE_CORGI_SUCCESS':
       return {
         ...currentState,
         creating: false,
         created: true,
       };
-    case "TRANSFER_START":
+    case 'TRANSFER_START':
       return {
         ...currentState,
         transfering: true,
       };
-    case "TRANSFER_CORGI_SUCCESS":
+    case 'TRANSFER_CORGI_SUCCESS':
       return {
         ...currentState,
         transfering: false,
       };
-    case "DELETE_START":
+    case 'DELETE_START':
       return {
         ...currentState,
         deleting: true,
       };
-    case "DELETE_CORGI_SUCCESS":
+    case 'DELETE_CORGI_SUCCESS':
       return {
         ...currentState,
         deleting: false,
       };
-    case "CLEAR":
+    case 'CLEAR':
       return {
         ...currentState,
         error: null,
@@ -102,72 +101,72 @@ export const ContractContextProvider = ({ Contract, children }) => {
     initialState
   );
 
-  const clear = useCallback(() => dispatchContract({ type: "CLEAR" }), []);
+  const clear = useCallback(() => dispatchContract({ type: 'CLEAR' }), []);
 
   const createCorgi = useCallback(
     (name, color, backgroundColor, quote) => {
-      dispatchContract({ type: "CREATE_START" });
+      dispatchContract({ type: 'CREATE_START' });
       Contract.createCorgi(
         { name, color, backgroundColor, quote },
         BOATLOAD_OF_GAS
       )
         .then(() => {
-          dispatchContract({ type: "CREATE_CORGI_SUCCESS" });
+          dispatchContract({ type: 'CREATE_CORGI_SUCCESS' });
         })
-        .catch((error) => dispatchContract({ type: "FAIL", error }));
+        .catch((error) => dispatchContract({ type: 'FAIL', error }));
     },
     [Contract]
   );
 
   const transferCorgi = useCallback(
     (receiver, id, message) => {
-      dispatchContract({ type: "TRANSFER_START" });
+      dispatchContract({ type: 'TRANSFER_START' });
       Contract.transferCorgi({ receiver, id, message }, BOATLOAD_OF_GAS)
-        .then(() => dispatchContract({ type: "TRANSFER_CORGI_SUCCESS" }))
-        .catch((error) => dispatchContract({ type: "FAIL", error }));
+        .then(() => dispatchContract({ type: 'TRANSFER_CORGI_SUCCESS' }))
+        .catch((error) => dispatchContract({ type: 'FAIL', error }));
     },
     [Contract]
   );
 
   const deleteCorgi = useCallback(
     (id) => {
-      dispatchContract({ type: "DELETE_START" });
+      dispatchContract({ type: 'DELETE_START' });
       Contract.deleteCorgi({ id }, BOATLOAD_OF_GAS)
-        .then(() => dispatchContract({ type: "DELETE_CORGI_SUCCESS" }))
-        .catch((error) => dispatchContract({ type: "FAIL", error }));
+        .then(() => dispatchContract({ type: 'DELETE_CORGI_SUCCESS' }))
+        .catch((error) => dispatchContract({ type: 'FAIL', error }));
     },
     [Contract]
   );
 
   const getCorgisList = useCallback(
     (owner) => {
-      dispatchContract({ type: "START" });
+      dispatchContract({ type: 'START' });
       Contract.getCorgisList({ owner })
         .then((corgis) =>
-          dispatchContract({ type: "GET_CORGISLIST_SUCCESS", corgis })
+          dispatchContract({ type: 'GET_CORGISLIST_SUCCESS', corgis })
         )
-        .catch((error) => dispatchContract({ type: "FAIL", error }));
+        .catch((error) => dispatchContract({ type: 'FAIL', error }));
     },
     [Contract]
   );
 
   const getCorgi = useCallback(
     (id) => {
-      dispatchContract({ type: "START" });
+      dispatchContract({ type: 'START' });
       Contract.getCorgi({ id })
-        .then((corgi) => dispatchContract({ type: "GET_CORGI_SUCCESS", corgi }))
-        .catch((error) => dispatchContract({ type: "FAIL", error }));
+        .then((corgi) => dispatchContract({ type: 'GET_CORGI_SUCCESS', corgi }))
+        .catch((error) => dispatchContract({ type: 'FAIL', error }));
     },
     [Contract]
   );
 
   const getDisplayCorgis = useCallback(() => {
-    dispatchContract({ type: "START" });
+    dispatchContract({ type: 'START' });
     Contract.displayGolbalCorgis()
       .then((corgis) =>
-        dispatchContract({ type: "GET_DISPLAY_CORGIS", corgis })
+        dispatchContract({ type: 'GET_DISPLAY_CORGIS', corgis })
       )
-      .catch((error) => dispatchContract({ type: "FAIL", error }));
+      .catch((error) => dispatchContract({ type: 'FAIL', error }));
   }, [Contract]);
 
   const value = {
@@ -192,7 +191,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
 
   return (
     <ContractContext.Provider value={value}>
-        {children}
+      {children}
     </ContractContext.Provider>
   );
 };

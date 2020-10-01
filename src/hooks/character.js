@@ -1,7 +1,7 @@
-import { useReducer, useCallback } from "react";
-import Quotes from "../assets/quotes/quotes.json";
-const randomColor = require("randomcolor");
-const generate = require("project-name-generator");
+import { useReducer, useCallback } from 'react';
+import Quotes from '../assets/quotes/quotes.json';
+const randomColor = require('randomcolor');
+const generate = require('project-name-generator');
 
 const TotalQuotes = Quotes.quotes;
 
@@ -14,30 +14,30 @@ const initialState = {
 
 const characterReducer = (currentState, action) => {
   switch (action.type) {
-    case "NAME":
+    case 'NAME':
       return {
         ...currentState,
         name: action.name,
       };
-    case "QUOTE":
+    case 'QUOTE':
       return {
         ...currentState,
         quote: action.quote,
       };
-    case "COLOR":
+    case 'COLOR':
       return {
         ...currentState,
         color: action.color,
       };
-    case "BACKGROUND_COLOR":
+    case 'BACKGROUND_COLOR':
       return {
         ...currentState,
         backgroundColor: action.backgroundColor,
       };
-    case "CLEAR":
+    case 'CLEAR':
       return initialState;
     default:
-      throw new Error("Should not come here, something is wrong!");
+      throw new Error('Should not come here, something is wrong!');
   }
 };
 
@@ -46,19 +46,19 @@ const useCharacter = () => {
     characterReducer,
     initialState
   );
-  const clear = useCallback(() => dispatchCharacter({ type: "CLEAR" }), []);
+  const clear = useCallback(() => dispatchCharacter({ type: 'CLEAR' }), []);
 
-  const setName = (name) => dispatchCharacter({ type: "NAME", name });
+  const setName = (name) => dispatchCharacter({ type: 'NAME', name });
 
-  const setColor = (color) => dispatchCharacter({ type: "COLOR", color });
+  const setColor = (color) => dispatchCharacter({ type: 'COLOR', color });
 
   const setBackgroundColor = (backgroundColor) =>
-    dispatchCharacter({ type: "BACKGROUND_COLOR", backgroundColor });
+    dispatchCharacter({ type: 'BACKGROUND_COLOR', backgroundColor });
 
   const setQuote = useCallback(() => {
     let randomNumber = Math.floor(Math.random() * TotalQuotes.length + 1);
     let quote = TotalQuotes[randomNumber].quote;
-    dispatchCharacter({ type: "QUOTE", quote });
+    dispatchCharacter({ type: 'QUOTE', quote });
   }, []);
 
   return {

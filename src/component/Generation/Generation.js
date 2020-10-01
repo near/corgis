@@ -1,13 +1,13 @@
-import React, { useContext } from "react";
-import { Redirect } from "react-router-dom";
+import React, { useContext } from 'react';
+import { Redirect } from 'react-router-dom';
 
-import useCharacter from "../../hooks/character";
-import { ContractContext } from "../../hooks/contract";
-import { NearContext } from "../../context/NearContext";
+import useCharacter from '../../hooks/character';
+import { ContractContext } from '../../hooks/contract';
+import { NearContext } from '../../context/NearContext';
 
-import Info from "./Info/Info";
-import Screen from "./Screen/Screen";
-import Animation from "./Animation/Animation";
+import Info from './Info/Info';
+import Screen from './Screen/Screen';
+import Animation from './Animation/Animation';
 
 export default () => {
   const nearContext = useContext(NearContext);
@@ -18,8 +18,8 @@ export default () => {
     setBackgroundColor,
   } = useCharacter();
   const useContract = useContext(ContractContext);
-  const { creating, created } = useContract;
-
+  const { creating, created, error } = useContract;
+  console.error(error);
   if (!nearContext.user) {
     return <Redirect to="/" />;
   }
