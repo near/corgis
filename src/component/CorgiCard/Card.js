@@ -1,6 +1,8 @@
 import React from "react";
 import Corgi from "./Corgi/Corgi";
 
+import { FaQuoteLeft } from 'react-icons/fa'
+
 export const BigCard = ({ backgroundColor, color, quote, sausage }) => {
   return (
     <div
@@ -49,7 +51,7 @@ const BigDialogue = ({ quote, color }) => {
       }}
     >
       <p style={{ color: color, filter: "brightness(50%)", margin: "0" }}>
-        <i className="fa fa-quote-left"></i> {quote}
+        <FaQuoteLeft size="0.8em" /> {quote}
       </p>
     </div>
   );
@@ -87,7 +89,7 @@ export const Dialogue = ({ quote, color }) => {
       }}
     >
       <p style={{ color: color, filter: "brightness(50%)", margin: "0" }}>
-        <i className="fa fa-quote-left"></i> {quote}
+        <FaQuoteLeft size="0.8em" /> {quote}
       </p>
     </div>
   );
