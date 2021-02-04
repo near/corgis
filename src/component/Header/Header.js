@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 import { NearContext } from "../../context/NearContext";
-import { ContractContext } from "../../hooks/contract";
+import { ContractContext } from "../../context/contract";
 
 import Nav from "./Nav/Nav";
 

@@ -1,7 +1,7 @@
 import React, { useContext, useReducer } from "react";
 
 import { NearContext } from "../../../../context/NearContext";
-import { ContractContext } from "../../../../hooks/contract";
+import { ContractContext } from "../../../../context/contract";
 
 import * as nearlib from "near-api-js";
 

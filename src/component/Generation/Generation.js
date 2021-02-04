@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import useCharacter from '../../hooks/character';
-import { ContractContext } from '../../hooks/contract';
+import useCharacter from '../../context/character';
+import { ContractContext } from '../../context/contract';
 import { NearContext } from '../../context/NearContext';
 
 import Info from './Info/Info';

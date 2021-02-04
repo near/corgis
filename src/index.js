@@ -7,7 +7,7 @@ import * as nearlib from "near-api-js";
 
 import App from "./App";
 import NearContextProvider from "./context/NearContext";
-import ContractContextProvider from "./hooks/contract";
+import ContractContextProvider from "./context/contract";
 
 // Initializing contract
 async function InitContract() {

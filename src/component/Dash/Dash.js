@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 
 import { NearContext } from "../../context/NearContext";
-import { ContractContext } from "../../hooks/contract";
+import { ContractContext } from "../../context/contract";
 
 import Poster from "./Poster/Poster";
 import ShowCase from "./ShowCase/ShowCase";

@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Redirect } from "react-router-dom";
 
 import { NearContext } from "../../context/NearContext";
-import { ContractContext } from "../../hooks/contract";
+import { ContractContext } from "../../context/contract";
 
 import ProfileRow from "./ProfileRow/ProfileRow";
 import Spinner from "../utils/Spinner";

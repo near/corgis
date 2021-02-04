@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Redirect } from "react-router-dom";
 
 import { NearContext } from "../../context/NearContext";
-import { ContractContext } from "../../hooks/contract";
+import { ContractContext } from "../../context/contract";
 
 import { BigCard } from "../CorgiCard/Card";
 import Send from "./Send/Send";
@@ -14,7 +14,7 @@ import Rate from "../utils/Rate";
 import iconSend from "../../assets/images/icon-send.svg";
 import iconShare from "../../assets/images/icon-share.svg";
 
-export default () => {
+export default function SinglePage () {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
   const { corgi, loading, getCorgi, transfering } = useContract;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 
-import { ContractContext } from "../../hooks/contract";
+import { ContractContext } from "../../context/contract";
 import { NearContext } from "../../context/NearContext";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";

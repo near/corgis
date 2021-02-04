@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 
-import useCharacter from '../../../hooks/character';
-import { ContractContext } from '../../../hooks/contract';
+import useCharacter from '../../../context/character';
+import { ContractContext } from '../../../context/contract';
 
 import Button from '../../utils/Button';
 
