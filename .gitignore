@@ -1,10 +1,10 @@
 
 # dependencies
-.cache
-/node_modules
-/out
-/dist
-/data
+/.cache/
+/node_modules/
+/out/
+/dist/
+/data/
 
 #keys
 /neardev

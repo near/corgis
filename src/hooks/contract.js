@@ -162,7 +162,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
 
   const getDisplayCorgis = useCallback(() => {
     dispatchContract({ type: 'START' });
-    Contract.displayGolbalCorgis()
+    Contract.displayGlobalCorgis()
       .then((corgis) =>
         dispatchContract({ type: 'GET_DISPLAY_CORGIS', corgis })
       )
@@ -200,7 +200,7 @@ ContractContextProvider.propTypes = {
   Contract: PropTypes.shape({
     getCorgi: PropTypes.func.isRequired,
     getCorgisList: PropTypes.func.isRequired,
-    displayGolbalCorgis: PropTypes.func.isRequired,
+    displayGlobalCorgis: PropTypes.func.isRequired,
     transferCorgi: PropTypes.func.isRequired,
     createCorgi: PropTypes.func.isRequired,
     deleteCorgi: PropTypes.func.isRequired,

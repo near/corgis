@@ -107,7 +107,7 @@ export function transferCorgi(
 }
 
 // display global corgis
-export function displayGolbalCorgis(): Corgi[] {
+export function displayGlobalCorgis(): Corgi[] {
   let corgiIdList = getGlobalCorgis();
   const corgiNum = min(ORDER_LIMIT, corgiIdList.length);
   const result = new Array<Corgi>(corgiNum);
