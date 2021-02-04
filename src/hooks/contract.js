@@ -88,6 +88,12 @@ const contractReducer = (currentState, action) => {
         ...currentState,
         error: null,
       };
+    case 'CLEAR_CREATED_CORGI_STATE':
+      return {
+        ...currentState,
+        creating: false,
+        created: false,
+      };
     default:
       return initialState;
   }
@@ -102,6 +108,8 @@ export const ContractContextProvider = ({ Contract, children }) => {
   );
 
   const clear = useCallback(() => dispatchContract({ type: 'CLEAR' }), []);
+
+  const clearCreatedCorgiState = useCallback(() => dispatchContract({ type: 'CLEAR_CREATED_CORGI_STATE' }), []);
 
   const createCorgi = useCallback(
     (name, color, backgroundColor, quote) => {
@@ -181,6 +189,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
     corgi: contractState.corgi,
     info: contractState.info,
     clear,
+    clearCreatedCorgiState,
     getCorgi,
     getCorgisList,
     createCorgi,

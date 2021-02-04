@@ -11,7 +11,7 @@ import Generation from "../Generation/Generation"
 export default () => {
   const nearContext = useContext(NearContext);
   const useContract = useContext(ContractContext);
-  const { loading, getCorgisList } = useContract;
+  const { created, loading, clearCreatedCorgiState, getCorgisList } = useContract;
   let {corgis} = useContract;
   let Corgis;
   
@@ -20,6 +20,10 @@ export default () => {
       getCorgisList(nearContext.user.accountId);
     }
   }, [getCorgisList, nearContext]);
+
+  if (created) {
+    clearCreatedCorgiState();
+  }
   
   if (!nearContext.user) {
     return <Redirect to="/" />;
