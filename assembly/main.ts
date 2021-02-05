@@ -17,10 +17,11 @@ const ORDER_LIMIT = 8;
 // veryRare: "VERY RARE", 0-0.01
 // ultraRare: "ULTRA RARE" 0
 
-// *********************************************************
-
-// //Methods for owner
-
+/**
+ * Gets the list of `Corgi`s belonging to `owner`.
+ * 
+ * @param owner The owner of the `Corgi`s to get.
+ */
 export function getCorgisList(owner: string): Corgi[] {
   let corgiIdList = getCorgisByOwner(owner);
   let corgisList = new Array<Corgi>();
@@ -35,6 +36,8 @@ export function getCorgisList(owner: string): Corgi[] {
 }
 
 function getCorgisByOwner(owner: string): Array<string> {
+  logging.log(`Getting Corgis for owner ` + owner);
+
   let corgiIdList = corgisByOwner.get(owner);
   if (!corgiIdList) {
     return new Array<string>();
@@ -60,7 +63,11 @@ function deleteCorgiByOwner(owner: string, id: string): void {
   corgisByOwner.set(owner, newList);
 }
 
-// // Methods for Corgi
+/**
+ * Gets the `Corgi` with the given `id`.
+ * 
+ * @param id The id of the `Corgi` to get.
+ */
 export function getCorgi(id: string): Corgi {
   const dna = base64.decode(id);
   return corgis.getSome(dna);
@@ -71,6 +78,11 @@ function setCorgi(dna: Uint8Array, corgi: Corgi): void {
   setGlobalCorgis(corgi.id);
 }
 
+/**
+ * Deletes the `Corgi` with the given `id`.
+ * 
+ * @param id The id of the `Corgi` to delete.
+ */
 export function deleteCorgi(id: string): void {
   let corgi = getCorgi(id);
   deleteCorgiByOwner(corgi.owner, id);
@@ -80,7 +92,13 @@ export function deleteCorgi(id: string): void {
   logging.log("after delete");
 }
 
-//Transfer between users
+/**
+ * Transfers the `Corgi` given by `id` to `receiver`.
+ * 
+ * @param receiver The receiver account of the transferred corgi.
+ * @param id The of the `Corgi` to transfer.
+ * @param message The new message belonging to the transferred corgi.
+ */
 export function transferCorgi(
   receiver: string,
   id: string,
@@ -106,18 +124,22 @@ export function transferCorgi(
   logging.log(receiver);
 }
 
-// display global corgis
+/**
+ * Returns the global list of existing `Corgi`s.
+ * This list contains all `Corgi`s from all users.
+ * 
+ * @returns all existing `Corgi`s.
+ */
 export function displayGlobalCorgis(): Corgi[] {
+  logging.log("Displaying global list of Corgis");
+
   let corgiIdList = getGlobalCorgis();
   const corgiNum = min(ORDER_LIMIT, corgiIdList.length);
   const result = new Array<Corgi>(corgiNum);
-  for (
-    let i = corgiIdList.length - 1;
-    i >= corgiIdList.length - corgiNum;
-    i--
-  ) {
-    result[i] = getCorgi(corgiIdList[i]);
+  for (let i = corgiIdList.length - 1; i >= corgiIdList.length - corgiNum; i--) {
+    result[i - corgiIdList.length + corgiNum] = getCorgi(corgiIdList[i]);
   }
+
   return result;
 }
 
@@ -147,7 +169,15 @@ function deleteGlobalCorgi(id: string): void {
   displayCorgis.set("global", newList);
 }
 
-// // Create unique Corgi
+/**
+ * Creates a unique `Corgi`.
+ * 
+ * @param name The name given to the newly created `Corgi`.
+ * @param color The color of the `Corgi`.
+ * @param backgroundColor The background color of the `Corgi`.
+ * @param quote A memorable quote attached to the `Corgi.
+ * @returns The `id` of the created `Corgi`.
+ */
 export function createCorgi(
   name: string,
   color: string,
@@ -183,8 +213,9 @@ function generateCorgi(
   let corgi = new Corgi(id, name, quote, color, backgroundColor, rate, sausage);
   setCorgi(dna, corgi);
   setCorgisByOwner(context.sender, id);
-  logging.log("create a new corgi");
-  logging.log(id);
+  logging.log(`Generate a new Corgi in account ` + id);
+  // logging.log(id);
+  // logging.log(`asd ${id}`)
   return [name, id];
 }
 
