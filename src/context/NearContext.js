@@ -1,5 +1,5 @@
-import React, { useState, useCallback } from "react";
-import PropTypes from "prop-types";
+import React, { useState, useCallback } from 'react';
+import PropTypes from 'prop-types';
 
 export const NearContext = React.createContext({
   user: null,
@@ -22,13 +22,13 @@ const NearContextProvider = ({
   const [isLoading, setLoading] = useState(false);
 
   const signIn = useCallback(() => {
-    wallet.requestSignIn(nearConfig.contractName, "NEAR Corgi");
+    wallet.requestSignIn(nearConfig.contractName, 'NEAR Corgi');
   }, [wallet, nearConfig]);
 
   const signOut = useCallback(() => {
     wallet.signOut();
     setTimeout(setLoading(true), 2000);
-    window.location = "/";
+    window.location = '/';
     setLoading(false);
   }, [wallet]);
 
@@ -53,16 +53,12 @@ NearContextProvider.propTypes = {
     accountId: PropTypes.string.isRequired,
     balance: PropTypes.string.isRequired,
   }),
-  nearConfig: PropTypes.shape({
-    contractName: PropTypes.string.isRequired,
-  }).isRequired,
+  nearConfig: PropTypes.shape({ contractName: PropTypes.string.isRequired }).isRequired,
   wallet: PropTypes.shape({
     requestSignIn: PropTypes.func.isRequired,
     signOut: PropTypes.func.isRequired,
   }).isRequired,
-  near: PropTypes.shape({
-    connection: PropTypes.object.isRequired,
-  }).isRequired,
+  near: PropTypes.shape({ connection: PropTypes.object.isRequired }).isRequired,
   children: PropTypes.element.isRequired,
 };
 

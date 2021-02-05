@@ -16,8 +16,8 @@ const useCharacter = () => {
   const setBackgroundColor = (backgroundColor) => dispatchCharacter({ type: BACKGROUND_COLOR, backgroundColor });
 
   const setQuote = useCallback(() => {
-    let randomNumber = Math.floor(Math.random() * TotalQuotes.length + 1);
-    let quote = TotalQuotes[randomNumber].quote;
+    const randomNumber = Math.floor(Math.random() * TotalQuotes.length + 1);
+    const { quote } = TotalQuotes[randomNumber];
     dispatchCharacter({ type: QUOTE, quote });
   }, []);
 

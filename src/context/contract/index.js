@@ -1,6 +1,7 @@
 import React, { useReducer, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
+import Big from 'big.js';
 import {
   CLEAR,
   CLEAR_CREATED_CORGI_STATE,
@@ -17,8 +18,6 @@ import {
   TRANSFER_START,
 } from './types';
 import { contractReducer, initialContractState } from './reducer';
-
-import Big from 'big.js';
 
 const BOATLOAD_OF_GAS = Big(1)
   .times(10 ** 14)
@@ -42,7 +41,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
         })
         .catch((error) => dispatchContract({ type: FAIL, error }));
     },
-    [Contract]
+    [Contract],
   );
 
   const transferCorgi = useCallback(
@@ -52,7 +51,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
         .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
         .catch((error) => dispatchContract({ type: FAIL, error }));
     },
-    [Contract]
+    [Contract],
   );
 
   const deleteCorgi = useCallback(
@@ -62,7 +61,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
         .then(() => dispatchContract({ type: DELETE_CORGI_SUCCESS }))
         .catch((error) => dispatchContract({ type: FAIL, error }));
     },
-    [Contract]
+    [Contract],
   );
 
   const getCorgisList = useCallback(
@@ -72,7 +71,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
         .then((corgis) => dispatchContract({ type: GET_CORGISLIST_SUCCESS, corgis }))
         .catch((error) => dispatchContract({ type: FAIL, error }));
     },
-    [Contract]
+    [Contract],
   );
 
   const getCorgi = useCallback(
@@ -82,7 +81,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
         .then((corgi) => dispatchContract({ type: GET_CORGI_SUCCESS, corgi }))
         .catch((error) => dispatchContract({ type: FAIL, error }));
     },
-    [Contract]
+    [Contract],
   );
 
   const getDisplayCorgis = useCallback(() => {
