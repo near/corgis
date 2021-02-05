@@ -13,7 +13,10 @@
         "prestart": "npm run build:contract && npm run deploy:contract",
         "start": "parcel src/index.html",
         "dev": "nodemon --watch assembly -e ts --exec \"npm run dev:start && npm run start\"",
-        "test": "asp && npm run build:contract && jest test --runInBand"
+        "test": "asp && npm run build:contract && jest test --runInBand",
+        "lint": "eslint --ext js,jsx src",
+        "lint:fix": "npm run lint -- --fix",
+        "lint:fix:dry": "npm run lint -- --fix-dry-run"
     },
     "dependencies": {
         "@babel/runtime": "^7.10.4",
@@ -38,12 +41,21 @@
         "@babel/preset-react": "^7.12.10",
         "assemblyscript": "^0.9.4",
         "babel-jest": "^26.0.0",
+        "eslint": "^7.19.0",
+        "eslint-config-airbnb": "^18.2.1",
+        "eslint-config-prettier": "^7.2.0",
+        "eslint-plugin-import": "^2.22.1",
+        "eslint-plugin-jsx": "^0.1.0",
+        "eslint-plugin-prettier": "^3.3.1",
+        "eslint-plugin-react": "^7.22.0",
+        "eslint-plugin-react-hooks": "^4.2.0",
         "jest": "^26.0.1",
         "jest-environment-node": "^26.0.0",
         "near-sdk-as": "^0.3.1",
         "near-shell": "^0.23.0",
         "nodemon": "^2.0.3",
         "parcel-bundler": "^1.12.4",
+        "prettier": "^2.2.1",
         "react-test-renderer": "^17.0.1"
     },
     "babel": {

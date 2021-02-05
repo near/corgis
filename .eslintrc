@@ -1,0 +1,36 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "globals": {
+    "window": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "extends": [
+    "eslint:recommended",
+    "airbnb-base",
+    "prettier/react",
+    "plugin:react/recommended"
+  ],
+  "plugins": [
+    "eslint-plugin-import",
+    "eslint-plugin-jsx",
+    "eslint-plugin-prettier",
+    "eslint-plugin-react",
+    "eslint-plugin-react-hooks"
+  ],
+  "rules": {
+    "import/no-named-as-default": 0,
+    "linebreak-style": ["warn", "windows"],
+    "max-len": ["error", { "code": 120, "ignorePattern": "d=\"([\\s\\S]*?)\"" }],
+    "quotes": ["error", "single"]
+  }
+}
