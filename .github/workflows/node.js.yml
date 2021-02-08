@@ -10,10 +10,12 @@ on:
     # But do no run the pipeline when only `md` files are modified.
     paths-ignore:
       - '**.md'
+  # We also want to trigger the pipeline on every PR.
+  pull_request:
+  #:
+    # branches: [ master ]
 
-#    branches: [ master ]
-#  pull_request:
-#    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -22,9 +24,8 @@ jobs:
 
     strategy:
       matrix:
-        #node-version: [10.x, 12.x, 14.x, 15.x]
-        node-version: [15.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [15.x]
         
     steps:
     - uses: actions/checkout@v2
