@@ -1,13 +1,21 @@
-import { useReducer, useCallback } from 'react';
+import React, { useCallback, useEffect, useReducer } from 'react';
+import ReactChildrenType from '../../types/ReactChildrenType';
 
 import { characterReducer, initialCharacterState } from './reducer';
 import { NAME, COLOR, BACKGROUND_COLOR, QUOTE, CLEAR } from './types';
 
-import { quotes as TotalQuotes } from '../../assets/quotes/quotes.json';
+import { genRandomQuote } from '../../helpers/generators';
 
-const useCharacter = () => {
+export const CharacterContext = React.createContext(initialCharacterState);
+
+const CharacterContextProviderPropTypes = {
+  children: ReactChildrenType,
+};
+
+export const CharacterContextProvider = ({ children }) => {
   const [characterState, dispatchCharacter] = useReducer(characterReducer, initialCharacterState);
-  const clear = useCallback(() => dispatchCharacter({ type: CLEAR }), []);
+
+  const clear = () => dispatchCharacter({ type: CLEAR });
 
   const setName = (name) => dispatchCharacter({ type: NAME, name });
 
@@ -15,13 +23,15 @@ const useCharacter = () => {
 
   const setBackgroundColor = (backgroundColor) => dispatchCharacter({ type: BACKGROUND_COLOR, backgroundColor });
 
-  const setQuote = useCallback(() => {
-    const randomNumber = Math.floor(Math.random() * TotalQuotes.length + 1);
-    const { quote } = TotalQuotes[randomNumber];
-    dispatchCharacter({ type: QUOTE, quote });
+  const generateQuote = useCallback(() => {
+    dispatchCharacter({ type: QUOTE, quote: genRandomQuote() });
   }, []);
 
-  return {
+  useEffect(() => {
+    generateQuote();
+  }, [generateQuote, characterState.name]);
+
+  const value = {
     name: characterState.name,
     color: characterState.color,
     backgroundColor: characterState.backgroundColor,
@@ -30,8 +40,9 @@ const useCharacter = () => {
     setName,
     setColor,
     setBackgroundColor,
-    setQuote,
   };
+
+  return <CharacterContext.Provider value={value}>{children}</CharacterContext.Provider>;
 };
 
-export default useCharacter;
+CharacterContextProvider.propTypes = CharacterContextProviderPropTypes;

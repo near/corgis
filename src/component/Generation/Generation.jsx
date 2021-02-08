@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import useCharacter from '../../context/character';
+import { CharacterContext } from '../../context/character';
 import { ContractContext } from '../../context/contract';
 import { NearContext } from '../../context/NearContext';
 
@@ -10,12 +10,11 @@ import Screen from './Screen/Screen';
 import Animation from './Animation/Animation';
 
 const Generation = () => {
-  const nearContext = useContext(NearContext);
-  const { color, backgroundColor, setColor, setBackgroundColor } = useCharacter();
-  const useContract = useContext(ContractContext);
-  const { creating, created, error } = useContract;
-  console.error(error);
-  if (!nearContext.user) {
+  const { user } = useContext(NearContext);
+  const { creating, created } = useContext(ContractContext);
+  const { color, backgroundColor } = useContext(CharacterContext);
+
+  if (!user) {
     return <Redirect to='/' />;
   }
 
@@ -31,12 +30,7 @@ const Generation = () => {
     <div className='generation'>
       <h1 className='head'>Create a Corgi</h1>
       <div className='content'>
-        <Info
-          setColor={setColor}
-          color={color}
-          backgroundColor={backgroundColor}
-          setBackgroundColor={setBackgroundColor}
-        />
+        <Info color={color} backgroundColor={backgroundColor} />
         <Screen color={color} backgroundColor={backgroundColor} />
       </div>
       <style>{`

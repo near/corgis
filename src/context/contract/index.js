@@ -126,5 +126,3 @@ ContractContextProvider.propTypes = {
   }).isRequired,
   children: PropTypes.element.isRequired,
 };
-
-export default ContractContextProvider;

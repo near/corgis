@@ -10,13 +10,7 @@ export const NearContext = React.createContext({
   setLoading: () => {},
 });
 
-const NearContextProvider = ({
-  currentUser,
-  nearConfig,
-  wallet,
-  near,
-  children,
-}) => {
+export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, children }) => {
   const user = useState(currentUser)[0];
   const nearContent = useState(near)[0];
   const [isLoading, setLoading] = useState(false);
@@ -61,5 +55,3 @@ NearContextProvider.propTypes = {
   near: PropTypes.shape({ connection: PropTypes.object.isRequired }).isRequired,
   children: PropTypes.element.isRequired,
 };
-
-export default NearContextProvider;

@@ -1,64 +1,63 @@
-import React, { useEffect, useContext } from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext } from 'react';
 
 import { GiGreekSphinx, GiBeachBall } from 'react-icons/gi';
 
-import useCharacter from '../../../context/character';
+import randomColor from 'randomcolor';
+
+import { CharacterContext } from '../../../context/character';
 import { ContractContext } from '../../../context/contract';
+
+import { genRandomName } from '../../../helpers/generators';
 
 import Button from '../../utils/Button';
 
 import { CorgiType } from '../../../types/CorgiTypes';
 
-const generate = require('project-name-generator');
-const randomColor = require('randomcolor');
-
 const InfoPropTypes = {
-  setColor: PropTypes.func.isRequired,
   color: CorgiType.color,
-  setBackgroundColor: PropTypes.func.isRequired,
   backgroundColor: CorgiType.backgroundColor,
 };
 
-const Info = ({ setColor, color, setBackgroundColor, backgroundColor }) => {
-  const { name, quote, setName, setQuote } = useCharacter();
-  useEffect(() => setQuote(), [setQuote]);
-  const useContract = useContext(ContractContext);
-  const { createCorgi } = useContract;
+const Info = ({ color, backgroundColor }) => {
+  const { createCorgi } = useContext(ContractContext);
+  const { name, quote, setName, setColor, setBackgroundColor } = useContext(CharacterContext);
 
-  const generateName = (e) => {
-    setName(e.target.value);
+  const handleName = (event) => {
+    setName(event.target.value);
   };
+
   const generateRandomName = () => {
-    const newName = generate({ words: 2, alliterative: true }).spaced;
-    setName(newName);
+    setName(genRandomName());
   };
-  const generateColor = (e) => {
-    setColor(e.target.value);
+
+  const handleColor = (event) => {
+    setColor(event.target.value);
   };
-  const generateBackgroundColor = (e) => {
-    setBackgroundColor(e.target.value);
+
+  const handleBackgroundColor = (event) => {
+    setBackgroundColor(event.target.value);
   };
+
   const generateRandomColor = () => {
-    const newColor = randomColor();
-    const newBackgroundColor = randomColor();
-    setColor(newColor);
-    setBackgroundColor(newBackgroundColor);
+    setColor(randomColor());
+    setBackgroundColor(randomColor());
   };
-  const onSubmit = (e) => {
-    e.preventDefault();
+
+  const onSubmit = (event) => {
+    event.preventDefault();
     createCorgi(name, color, backgroundColor, quote);
   };
+
   return (
     <div className='inputboard'>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={(event) => onSubmit(event)}>
         <p className='title'>My Corgi is called</p>
-        <GiGreekSphinx onClick={generateRandomName} className='icon' />
+        <GiGreekSphinx onClick={() => generateRandomName()} className='icon' />
         <div>
-          <input className='inputname' type='text' value={name} onChange={generateName} required />
+          <input className='inputname' type='text' value={name} onChange={(event) => handleName(event)} required />
         </div>
         <p className='title'>Colors</p>
-        <GiBeachBall onClick={generateRandomColor} className='icon' />
+        <GiBeachBall onClick={() => generateRandomColor()} className='icon' />
         <div>
           <div className='colorpicker'>
             <label>
@@ -67,7 +66,7 @@ const Info = ({ setColor, color, setBackgroundColor, backgroundColor }) => {
                   type='color'
                   id='colorPicker'
                   value={color}
-                  onChange={generateColor}
+                  onChange={(event) => handleColor(event)}
                   style={{ display: 'none' }}
                 />
                 <div className='select'>w</div>
@@ -85,7 +84,7 @@ const Info = ({ setColor, color, setBackgroundColor, backgroundColor }) => {
                   type='color'
                   id='backgroundcolorPicker'
                   value={backgroundColor}
-                  onChange={generateBackgroundColor}
+                  onChange={(event) => handleBackgroundColor(event)}
                   style={{ display: 'none' }}
                 />
                 <div className='select'>w</div>
