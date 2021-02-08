@@ -5,6 +5,7 @@
     "scripts": {
         "build": "npm run build:contract && npm run build:web",
         "build:contract": "node asconfig.js",
+        "test:contract": "asp",
         "build:web": "parcel build src/index.html --public-url ./",
         "dev:deploy:contract": "near dev-deploy --init",
         "deploy:contract": "near deploy",
