@@ -109,3 +109,38 @@ Now, open localhost:3000. Navigate there in your browser to see the app running!
 
 Step 5:
 Use wallet/login/index.html to create account and start exploring.
+
+## Interacing with Corgis contracts
+
+Here is a quick reference on how to interact with the NEAR Blockchain,
+using `near-cli`.
+The `near-cli` tool allows the developer to interact with contracts on the NEAR Blockchain.
+
+In the following sections,
+`$CONTRACT_NAME` refers to the developer account.
+This is the account that creates and deploys the contracts below.
+On the other hand, `$ACCOUNT_NAME` refers to the end user account that uses the
+corgi site.
+
+### Display global list of corgis
+
+```sh
+near view $CONTRACT_NAME displayGlobalCorgis
+```
+
+This command returns all corgis that have been created.
+
+### Create corgi
+
+In order to run the following command,
+you must be logged in with the `$ACCOUNT_NAME`.
+
+```sh
+near --accountId $ACCOUNT_NAME call $CONTRACT_NAME createCorgi '{"name":"doggydog", "color":"green", "backgroundColor":"red","quote":"Test contract from cli"}'
+```
+
+### Get corgi list
+
+```sh
+near view $CONTRACT_NAME getCorgisList '{"owner":"$ACCOUNT_NAME"}' 
+```
