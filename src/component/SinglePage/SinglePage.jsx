@@ -14,6 +14,7 @@ import Rate from '../utils/Rate';
 
 import iconSend from '../../assets/images/icon-send.svg';
 import iconShare from '../../assets/images/icon-share.svg';
+import { TransferContextProvider } from '../../context/transfer';
 
 const SinglePage = () => {
   const nearContext = useContext(NearContext);
@@ -56,23 +57,25 @@ const SinglePage = () => {
 
   return (
     <div>
-      <Send corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
-      <Share corgi={corgi} closeModal={closeModal} show={showShare} />
-      <div>
-        <h1>Meet {corgi.name}!</h1>
+      <TransferContextProvider>
+        <Send corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
+        <Share corgi={corgi} closeModal={closeModal} show={showShare} />
         <div>
-          <BigCard
-            backgroundColor={corgi.backgroundColor}
-            color={corgi.color}
-            sausage={corgi.sausage}
-            quote={corgi.quote}
-          />
+          <h1>Meet {corgi.name}!</h1>
+          <div>
+            <BigCard
+              backgroundColor={corgi.backgroundColor}
+              color={corgi.color}
+              sausage={corgi.sausage}
+              quote={corgi.quote}
+            />
+          </div>
+          <div className='wrapperS'>
+            <Rate rate={corgi.rate} />
+            <SendAndShare openSendModal={openSendModal} openShareModal={openShareModal} />
+          </div>
         </div>
-        <div className='wrapperS'>
-          <Rate rate={corgi.rate} />
-          <SendAndShare openSendModal={openSendModal} openShareModal={openShareModal} />
-        </div>
-      </div>
+      </TransferContextProvider>
       <style>{`
         .wrapperS {
           width: 70%;

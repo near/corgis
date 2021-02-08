@@ -1,109 +1,56 @@
-import React, { useContext, useReducer } from 'react';
+import React, { useContext } from 'react';
+import { IoIosCheckmarkCircleOutline, IoIosCloseCircleOutline } from 'react-icons/io';
 
 import * as nearlib from 'near-api-js';
-import { IoIosCheckmarkCircleOutline, IoIosCloseCircleOutline } from 'react-icons/io';
+
 import { NearContext } from '../../../../context/NearContext';
 import { ContractContext } from '../../../../context/contract';
+import { TransferContext } from '../../../../context/transfer';
 
 import Button from '../../../utils/Button';
 
-const initialState = {
-  found: false,
-  receiver: undefined,
-  message: undefined,
-  error: null,
-};
-
-const transferReducer = (currentState, action) => {
-  switch (action.type) {
-    case 'FOUND_RECEIVER':
-      return {
-        ...currentState,
-        found: true,
-        error: null,
-      };
-    case 'NOT_FOUND':
-      return {
-        ...currentState,
-        found: false,
-        error: action.error,
-      };
-    case 'RECEIVER':
-      return {
-        ...currentState,
-        receiver: action.receiver,
-      };
-    case 'MESSAGE':
-      return {
-        ...currentState,
-        message: action.message,
-      };
-    default:
-      return initialState;
-  }
-};
-
 const Transfer = () => {
-  const nearContext = useContext(NearContext);
-  const { connection } = nearContext.nearContent;
-  const useContract = useContext(ContractContext);
-  const { transferCorgi } = useContract;
-
-  const [transfer, dispatchTransfer] = useReducer(transferReducer, initialState);
+  const { nearContent } = useContext(NearContext);
+  const { transferCorgi } = useContext(ContractContext);
+  const transferContext = useContext(TransferContext);
 
   const id = window.location.hash.slice(1);
 
   const checkAccountLegit = async (value) => {
     try {
-      const result = !!(await new nearlib.Account(connection, value).state());
-      console.log(result);
-      if (result) {
-        dispatchTransfer({ type: 'FOUND_RECEIVER' });
+      const accountState = !!(await new nearlib.Account(nearContent.connection, value).state());
+      console.log(accountState);
+
+      if (!!accountState) {
+        transferContext.foundReceiverSuccess();
+        return true;
       }
     } catch (error) {
-      dispatchTransfer({ type: 'NOT_FOUND', error: error.message });
+      transferContext.foundReceiverError(error.message);
+    }
+
+    return false;
+  };
+
+  const setReceiver = async (event) => {
+    const receiver = event.target.value;
+
+    const isAccountLegit = await checkAccountLegit(receiver);
+
+    if (!isAccountLegit) {
+      transferContext.setReceiver(receiver);
     }
   };
 
-  const setReceiver = (e) => {
-    const receiver = e.target.value;
-    checkAccountLegit(receiver);
-    dispatchTransfer({ type: 'RECEIVER', receiver });
+  const setMessage = (event) => {
+    transferContext.setMessage(event.target.value);
   };
 
-  const setMessage = (e) => dispatchTransfer({ type: 'MESSAGE', message: e.target.value });
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    transferCorgi(transfer.receiver, id, transfer.message);
+  const onSubmit = (event) => {
+    event.preventDefault();
+    transferCorgi(transferContext.receiver, id, transferContext.message);
   };
 
-  let icon = (
-    <label>
-      <IoIosCloseCircleOutline
-        style={{
-          position: 'relative',
-          left: '-30px',
-          fontSize: '1.5rem',
-          color: 'Salmon',
-        }}
-      />
-    </label>
-  );
-  if (transfer.found) {
-    icon = (
-      <label>
-        <IoIosCheckmarkCircleOutline
-          style={{
-            position: 'relative',
-            left: '-30px',
-            fontSize: '1.5rem',
-            color: '#78e3a7',
-          }}
-        />
-      </label>
-    );
-  }
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -114,24 +61,46 @@ const Transfer = () => {
             required
             type='text'
             placeholder='Corgi receiver'
-            value={transfer.receiver}
+            value={transferContext.receiver}
             onChange={setReceiver}
             className='receiver'
           />
-          {icon}
+          {transferContext.found ? (
+            <label>
+              <IoIosCheckmarkCircleOutline
+                style={{
+                  position: 'relative',
+                  left: '-30px',
+                  fontSize: '1.5rem',
+                  color: '#78e3a7',
+                }}
+              />
+            </label>
+          ) : (
+            <label>
+              <IoIosCloseCircleOutline
+                style={{
+                  position: 'relative',
+                  left: '-30px',
+                  fontSize: '1.5rem',
+                  color: 'Salmon',
+                }}
+              />
+            </label>
+          )}
         </div>
         <div style={{ textAlign: 'left' }}>
           <label>Text: </label>
           <textarea
             placeholder='(Optional)Best wish to your friend!'
-            maxLength='140'
-            value={transfer.message}
+            maxLength={140}
+            value={transferContext.message}
             onChange={setMessage}
             className='message'
           />
         </div>
         <div style={{ marginTop: '5px', marginBottom: '10px' }}>
-          <Button description='Send' disabled={!transfer.found} />
+          <Button description='Send' disabled={!transferContext.found} />
         </div>
       </form>
       <style>{`
