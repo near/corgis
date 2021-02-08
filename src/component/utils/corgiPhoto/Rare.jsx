@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiType } from '../../../types/CorgiTypes';
+
+const RarePropTypes = { color: CorgiType.color };
 
 const Rare = ({ color }) => (
   <div>
@@ -23,7 +25,6 @@ const Rare = ({ color }) => (
     </svg>
   </div>
 );
-
-Rare.propTypes = { color: CorgiType.color };
+Rare.propTypes = RarePropTypes;
 
 export default Rare;

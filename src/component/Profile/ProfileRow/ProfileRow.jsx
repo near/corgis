@@ -7,7 +7,12 @@ import { GiDiscussion, GiJumpingDog, GiDogBowl, GiGlassBall } from 'react-icons/
 import Button from '../../utils/Button';
 import { Common, Uncommon, Rare, VeryRare } from '../../utils/Photo';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiTypeShape } from '../../../types/CorgiTypes';
+
+const ProfileRowPropTypes = {
+  corgi: CorgiTypeShape.isRequired,
+  deleteCorgi: PropTypes.func.isRequired,
+};
 
 const ProfileRow = ({ corgi, deleteCorgi }) => {
   if (!corgi) {
@@ -67,9 +72,6 @@ const ProfileRow = ({ corgi, deleteCorgi }) => {
   );
 };
 
-ProfileRow.propTypes = {
-  corgi: CorgiType.isRequired,
-  deleteCorgi: PropTypes.func.isRequired,
-};
+ProfileRow.propTypes = ProfileRowPropTypes;
 
 export default ProfileRow;

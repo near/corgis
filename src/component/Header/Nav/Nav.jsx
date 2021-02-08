@@ -5,6 +5,12 @@ import PropTypes from 'prop-types';
 import Button from '../../utils/Button';
 import IconNav from '../../../assets/images/icon-nav.svg';
 
+const NavPropTypes = {
+  number: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+  accountName: PropTypes.string.isRequired,
+  requestSignOut: PropTypes.func.isRequired,
+};
+
 const Nav = ({ number, accountName, requestSignOut }) => (
   <div className='wrap'>
     <div className='account'>
@@ -95,9 +101,9 @@ const Nav = ({ number, accountName, requestSignOut }) => (
       `}</style>
   </div>
 );
+Nav.propTypes = NavPropTypes;
 
-Nav.propTypes = {
-  number: PropTypes.number.isRequired,
+const CardPropTypes = {
   accountName: PropTypes.string.isRequired,
   requestSignOut: PropTypes.func.isRequired,
 };
@@ -129,11 +135,7 @@ const Card = ({ accountName, requestSignOut }) => {
     </div>
   );
 };
-
-Card.propTypes = {
-  accountName: PropTypes.string.isRequired,
-  requestSignOut: PropTypes.func.isRequired,
-};
+Card.propTypes = CardPropTypes;
 
 const AddCorgi = () => (
   <div

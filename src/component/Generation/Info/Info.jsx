@@ -8,10 +8,17 @@ import { ContractContext } from '../../../context/contract';
 
 import Button from '../../utils/Button';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiType } from '../../../types/CorgiTypes';
 
 const generate = require('project-name-generator');
 const randomColor = require('randomcolor');
+
+const InfoPropTypes = {
+  setColor: PropTypes.func.isRequired,
+  color: CorgiType.color,
+  setBackgroundColor: PropTypes.func.isRequired,
+  backgroundColor: CorgiType.backgroundColor,
+};
 
 const Info = ({ setColor, color, setBackgroundColor, backgroundColor }) => {
   const { name, quote, setName, setQuote } = useCharacter();
@@ -182,11 +189,6 @@ const Info = ({ setColor, color, setBackgroundColor, backgroundColor }) => {
   );
 };
 
-Info.propTypes = {
-  setColor: PropTypes.func.isRequired,
-  color: CorgiType.color,
-  setBackgroundColor: PropTypes.func.isRequired,
-  backgroundColor: CorgiType.backgroundColor,
-};
+Info.propTypes = InfoPropTypes;
 
 export default Info;

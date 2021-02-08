@@ -3,7 +3,9 @@ import React from 'react';
 import Corgi from '../../CorgiCard/Corgi/Corgi';
 import { Dialogue } from '../../CorgiCard/Card';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiTypeShape } from '../../../types/CorgiTypes';
+
+const AccountCardPropTypes = { corgi: CorgiTypeShape };
 
 const AccountCard = ({ corgi }) => (
   <div className='creation'>
@@ -62,6 +64,6 @@ const AccountCard = ({ corgi }) => (
   </div>
 );
 
-AccountCard.propTypes = { corgi: CorgiType };
+AccountCard.propTypes = AccountCardPropTypes;
 
 export default AccountCard;

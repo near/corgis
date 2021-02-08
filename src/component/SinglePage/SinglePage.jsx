@@ -132,6 +132,11 @@ const SinglePage = () => {
   );
 };
 
+const SendAndSharePropTypes = {
+  openShareModal: PropTypes.func.isRequired,
+  openSendModal: PropTypes.func.isRequired,
+};
+
 const SendAndShare = ({ openShareModal, openSendModal }) => {
   const style = { display: 'flex', flexDirection: 'column', width: '300px' };
   return (
@@ -144,11 +149,9 @@ const SendAndShare = ({ openShareModal, openSendModal }) => {
     </div>
   );
 };
+SendAndShare.propTypes = SendAndSharePropTypes;
 
-SendAndShare.propTypes = {
-  openShareModal: PropTypes.func.isRequired,
-  openSendModal: PropTypes.func.isRequired,
-};
+const SendCardPropTypes = { clicked: PropTypes.func.isRequired };
 
 const SendCard = ({ clicked }) => (
   <button className='card' onClick={clicked}>
@@ -160,8 +163,9 @@ const SendCard = ({ clicked }) => (
     </div>
   </button>
 );
+SendCard.propTypes = SendCardPropTypes;
 
-SendCard.propTypes = { clicked: PropTypes.func.isRequired };
+const ShareCardPropTypes = { clicked: PropTypes.func.isRequired };
 
 const ShareCard = ({ clicked }) => (
   <button className='card' onClick={clicked}>
@@ -173,7 +177,6 @@ const ShareCard = ({ clicked }) => (
     </div>
   </button>
 );
-
-ShareCard.propTypes = { clicked: PropTypes.func.isRequired };
+ShareCard.propTypes = ShareCardPropTypes;
 
 export default SinglePage;

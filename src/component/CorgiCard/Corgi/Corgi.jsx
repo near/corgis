@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiType } from '../../../types/CorgiTypes';
+
+const CorgiPropTypes = {
+  color: CorgiType.color,
+  sausage: CorgiType.sausage,
+};
 
 const Corgi = ({ color, sausage }) => (
   <div style={{ width: '100%', margin: 'auto' }}>
@@ -9,9 +14,12 @@ const Corgi = ({ color, sausage }) => (
   </div>
 );
 
-Corgi.propTypes = {
-  color: CorgiType.color,
-  sausage: CorgiType.sausage,
+Corgi.propTypes = CorgiPropTypes;
+
+const CorgiGroupPropTypes = {
+  ...CorgiPropTypes,
+  width: PropTypes.string,
+  height: PropTypes.string,
 };
 
 const CorgiGroup = ({ color, sausage, width = '100%', height = '100%' }) => {
@@ -390,10 +398,6 @@ const CorgiGroup = ({ color, sausage, width = '100%', height = '100%' }) => {
   );
 };
 
-CorgiGroup.propTypes = {
-  ...Corgi.propTypes,
-  width: PropTypes.string.isRequired,
-  height: PropTypes.string.isRequired,
-};
+CorgiGroup.propTypes = CorgiGroupPropTypes;
 
 export default Corgi;

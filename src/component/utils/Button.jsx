@@ -1,6 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const ButtonPropTypes = {
+  action: PropTypes.func,
+  description: PropTypes.string.isRequired,
+  disabled: PropTypes.bool,
+};
+
 const Button = ({ action, description, disabled = false }) => (
   <button className='Button' onClick={action} disabled={disabled}>
     {description}
@@ -33,10 +39,6 @@ const Button = ({ action, description, disabled = false }) => (
   </button>
 );
 
-Button.propTypes = {
-  action: PropTypes.func.isRequired,
-  description: PropTypes.string.isRequired,
-  disabled: PropTypes.bool,
-};
+Button.propTypes = ButtonPropTypes;
 
 export default Button;

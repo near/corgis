@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { CorgiType } from '../../types/corgi';
+import { CorgiType } from '../../types/CorgiTypes';
+
+const RatePropTypes = { rate: CorgiType.rate };
 
 const Rate = ({ rate }) => {
   const gray = '#E6E6E6';
@@ -118,6 +120,6 @@ const Rate = ({ rate }) => {
   );
 };
 
-Rate.propTypes = { rate: CorgiType.rate };
+Rate.propTypes = RatePropTypes;
 
 export default Rate;

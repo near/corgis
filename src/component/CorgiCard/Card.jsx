@@ -4,7 +4,14 @@ import { FaQuoteLeft } from 'react-icons/fa';
 
 import Corgi from './Corgi/Corgi';
 
-import { CorgiType } from '../../types/corgi';
+import { CorgiType } from '../../types/CorgiTypes';
+
+const BigCardPropTypes = {
+  backgroundColor: CorgiType.backgroundColor,
+  color: CorgiType.color,
+  quote: CorgiType.quote,
+  sausage: CorgiType.sausage,
+};
 
 export const BigCard = ({ backgroundColor, color, quote, sausage }) => (
   <div
@@ -22,10 +29,10 @@ export const BigCard = ({ backgroundColor, color, quote, sausage }) => (
   </div>
 );
 
-BigCard.propTypes = {
-  backgroundColor: CorgiType.backgroundColor,
+BigCard.propTypes = BigCardPropTypes;
+
+const BigCorgiPropTypes = {
   color: CorgiType.color,
-  quote: CorgiType.quote,
   sausage: CorgiType.sausage,
 };
 
@@ -41,9 +48,11 @@ const BigCorgi = ({ color, sausage }) => (
   </div>
 );
 
-BigCorgi.propTypes = {
+BigCorgi.propTypes = BigCorgiPropTypes;
+
+const BigDialoguePropTypes = {
   color: CorgiType.color,
-  sausage: CorgiType.sausage,
+  quote: CorgiType.quote,
 };
 
 const BigDialogue = ({ quote, color }) => (
@@ -66,9 +75,13 @@ const BigDialogue = ({ quote, color }) => (
   </div>
 );
 
-BigDialogue.propTypes = {
+BigDialogue.propTypes = BigDialoguePropTypes;
+
+const SmallCardPropTypes = {
+  backgroundColor: CorgiType.backgroundColor,
   color: CorgiType.color,
   quote: CorgiType.quote,
+  sausage: CorgiType.sausage,
 };
 
 export const SmallCard = ({ backgroundColor, color, quote, sausage }) => (
@@ -85,11 +98,11 @@ export const SmallCard = ({ backgroundColor, color, quote, sausage }) => (
   </div>
 );
 
-SmallCard.propTypes = {
-  backgroundColor: CorgiType.backgroundColor,
+SmallCard.propTypes = SmallCardPropTypes;
+
+const DialoguePropTypes = {
   color: CorgiType.color,
   quote: CorgiType.quote,
-  sausage: CorgiType.sausage,
 };
 
 export const Dialogue = ({ quote, color }) => (
@@ -112,7 +125,4 @@ export const Dialogue = ({ quote, color }) => (
   </div>
 );
 
-Dialogue.propTypes = {
-  color: CorgiType.color,
-  quote: CorgiType.quote,
-};
+Dialogue.propTypes = DialoguePropTypes;

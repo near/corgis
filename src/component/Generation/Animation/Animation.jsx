@@ -5,7 +5,12 @@ import { CorgiFour } from '../../utils/corgiAnimation';
 import raritySample from '../../../assets/images/rarity-sample.svg';
 import shadow from '../../../assets/images/shadow.svg';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiType } from '../../../types/CorgiTypes';
+
+const AnimationPropTypes = {
+  backgroundColor: CorgiType.backgroundColor,
+  color: CorgiType.color,
+};
 
 const Animation = ({ color, backgroundColor }) => (
   <div>
@@ -67,9 +72,6 @@ const Animation = ({ color, backgroundColor }) => (
   </div>
 );
 
-Animation.propTypes = {
-  backgroundColor: CorgiType.backgroundColor,
-  color: CorgiType.color,
-};
+Animation.propTypes = AnimationPropTypes;
 
 export default Animation;

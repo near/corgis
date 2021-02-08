@@ -7,6 +7,13 @@ import Spinner from '../../utils/Spinner';
 import corgiFull from '../../../assets/images/corgi-full.png';
 import sample from '../../../assets/images/rarity-sample.svg';
 
+const PosterPropTypes = {
+  requestSignIn: PropTypes.func.isRequired,
+  isLoading: PropTypes.bool.isRequired,
+  // TODO: user type
+  user: PropTypes.shape({ accountId: PropTypes.string.isRequired }),
+};
+
 const Poster = ({ requestSignIn, isLoading, user }) => {
   let showButton;
   if (isLoading) {
@@ -136,11 +143,6 @@ const Poster = ({ requestSignIn, isLoading, user }) => {
   );
 };
 
-Poster.propTypes = {
-  requestSignIn: PropTypes.func.isRequired,
-  isLoading: PropTypes.boolean.isRequired,
-  // TODO: user type
-  user: PropTypes.shape({ accountId: PropTypes.string.isRequired }),
-};
+Poster.propTypes = PosterPropTypes;
 
 export default Poster;

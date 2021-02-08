@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiType } from '../../../types/CorgiTypes';
+
+const UncommonPropTypes = { color: CorgiType.color };
 
 const Uncommon = ({ color }) => (
   <div>
@@ -23,7 +25,6 @@ const Uncommon = ({ color }) => (
     </svg>
   </div>
 );
-
-Uncommon.propTypes = { color: CorgiType.color };
+Uncommon.propTypes = UncommonPropTypes;
 
 export default Uncommon;

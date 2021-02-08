@@ -1,7 +1,9 @@
 /* eslint-disable max-len */
 import React from 'react';
 
-import { CorgiType } from '../../types/corgi';
+import { CorgiType } from '../../types/CorgiTypes';
+
+const CorgiOnePropTypes = { color: CorgiType.color };
 
 export const CorgiOne = ({ color }) => (
   <div style={{ width: '100%' }}>
@@ -46,8 +48,9 @@ export const CorgiOne = ({ color }) => (
     </svg>
   </div>
 );
+CorgiOne.propTypes = CorgiOnePropTypes;
 
-CorgiOne.propTypes = { color: CorgiType.color };
+const CorgiTwoPropTypes = { color: CorgiType.color };
 
 export const CorgiTwo = ({ color }) => (
   <div style={{ width: '100%' }}>
@@ -113,8 +116,9 @@ export const CorgiTwo = ({ color }) => (
     </svg>
   </div>
 );
+CorgiTwo.propTypes = CorgiTwoPropTypes;
 
-CorgiTwo.propTypes = { color: CorgiType.color };
+const CorgiThreePropTypes = { color: CorgiType.color };
 
 export const CorgiThree = ({ color }) => (
   <div style={{ width: '100%' }}>
@@ -189,8 +193,9 @@ export const CorgiThree = ({ color }) => (
     </svg>
   </div>
 );
+CorgiThree.propTypes = CorgiThreePropTypes;
 
-CorgiThree.propTypes = { color: CorgiType.color };
+const CorgiFourPropTypes = { color: CorgiType.color };
 
 export const CorgiFour = ({ color }) => (
   <div style={{ width: '100%' }}>
@@ -317,5 +322,4 @@ export const CorgiFour = ({ color }) => (
     </svg>
   </div>
 );
-
-CorgiFour.propTypes = { color: CorgiType.color };
+CorgiFour.propTypes = CorgiFourPropTypes;

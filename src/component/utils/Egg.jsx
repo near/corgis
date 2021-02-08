@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { CorgiType } from '../../types/corgi';
+import { CorgiType } from '../../types/CorgiTypes';
+
+const EggPropTypes = { color: CorgiType.color };
 
 const Egg = ({ color }) => (
   <div
@@ -54,6 +56,6 @@ const Egg = ({ color }) => (
   </div>
 );
 
-Egg.propTypes = { color: CorgiType.color };
+Egg.propTypes = EggPropTypes;
 
 export default Egg;

@@ -7,7 +7,13 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { SmallCard } from '../../CorgiCard/Card';
 import Modal from '../../utils/Modal';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiTypeShape } from '../../../types/CorgiTypes';
+
+const SharePropTypes = {
+  corgi: CorgiTypeShape.isRequired,
+  show: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
+};
 
 const Share = ({ corgi, show, closeModal }) => {
   const [copied, setCopied] = useState(false);
@@ -77,10 +83,6 @@ const Share = ({ corgi, show, closeModal }) => {
   );
 };
 
-Share.propTypes = {
-  corgi: CorgiType.isRequired,
-  show: PropTypes.boolean.isRequired,
-  closeModal: PropTypes.func.isRequired,
-};
+Share.propTypes = SharePropTypes;
 
 export default Share;

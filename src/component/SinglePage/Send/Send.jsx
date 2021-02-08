@@ -7,7 +7,14 @@ import Modal from '../../utils/Modal';
 import Transfer from './Transafer/Transfer';
 import { CorgiThree } from '../../utils/corgiAnimation';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiTypeShape } from '../../../types/CorgiTypes';
+
+const SendPropTypes = {
+  corgi: CorgiTypeShape.isRequired,
+  show: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
+  transfering: PropTypes.bool.isRequired,
+};
 
 const Send = ({ corgi, show, closeModal, transfering }) => (
   <Modal show={show} Close={closeModal}>
@@ -55,11 +62,6 @@ const Send = ({ corgi, show, closeModal, transfering }) => (
   </Modal>
 );
 
-Send.propTypes = {
-  corgi: CorgiType.isRequired,
-  show: PropTypes.boolean.isRequired,
-  closeModal: PropTypes.func.isRequired,
-  transfering: PropTypes.boolean.isRequired,
-};
+Send.propTypes = SendPropTypes;
 
 export default Send;

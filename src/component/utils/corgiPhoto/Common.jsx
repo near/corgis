@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiType } from '../../../types/CorgiTypes';
+
+const CommonPropTypes = { color: CorgiType.color };
 
 const Common = ({ color }) => (
   <div>
@@ -23,7 +25,6 @@ const Common = ({ color }) => (
     </svg>
   </div>
 );
-
-Common.propTypes = { color: CorgiType.color };
+Common.propTypes = CommonPropTypes;
 
 export default Common;

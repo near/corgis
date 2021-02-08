@@ -1,6 +1,8 @@
 import React from 'react';
 
-import { CorgiType } from '../../types/corgi';
+import { CorgiType } from '../../types/CorgiTypes';
+
+const CommonPropTypes = { color: CorgiType.color };
 
 export const Common = ({ color }) => (
   <div>
@@ -23,8 +25,9 @@ export const Common = ({ color }) => (
     </svg>
   </div>
 );
+Common.propTypes = CommonPropTypes;
 
-Common.propTypes = { color: CorgiType.color };
+const UncommonPropTypes = { color: CorgiType.color };
 
 export const Uncommon = ({ color }) => (
   <div>
@@ -47,8 +50,9 @@ export const Uncommon = ({ color }) => (
     </svg>
   </div>
 );
+Uncommon.propTypes = UncommonPropTypes;
 
-Uncommon.propTypes = { color: CorgiType.color };
+const RarePropTypes = { color: CorgiType.color };
 
 export const Rare = ({ color }) => (
   <div>
@@ -71,8 +75,9 @@ export const Rare = ({ color }) => (
     </svg>
   </div>
 );
+Rare.propTypes = RarePropTypes;
 
-Rare.propTypes = { color: CorgiType.color };
+const VeryRarePropTypes = { color: CorgiType.color };
 
 export const VeryRare = ({ color }) => (
   <div>
@@ -95,5 +100,4 @@ export const VeryRare = ({ color }) => (
     </svg>
   </div>
 );
-
-VeryRare.propTypes = { color: CorgiType.color };
+VeryRare.propTypes = VeryRarePropTypes;

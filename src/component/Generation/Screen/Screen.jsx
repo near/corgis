@@ -5,9 +5,14 @@ import Egg from '../../utils/Egg';
 import raritySample from '../../../assets/images/rarity-sample.svg';
 import shadow from '../../../assets/images/shadow.svg';
 
-import { CorgiType } from '../../../types/corgi';
+import { CorgiType } from '../../../types/CorgiTypes';
 
 const tinycolor = require('tinycolor2');
+
+const ScreenPropTypes = {
+  backgroundColor: CorgiType.backgroundColor,
+  color: CorgiType.color,
+};
 
 const Screen = ({ backgroundColor, color }) => {
   const textColor = tinycolor.mostReadable(backgroundColor, [color, '#fff', '#000']).toHexString();
@@ -65,9 +70,6 @@ const Screen = ({ backgroundColor, color }) => {
   );
 };
 
-Screen.propTypes = {
-  backgroundColor: CorgiType.backgroundColor,
-  color: CorgiType.color,
-};
+Screen.propTypes = ScreenPropTypes;
 
 export default Screen;

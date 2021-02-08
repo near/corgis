@@ -1,5 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import ReactChildrenType from '../../types/ReactChildrenType';
+
+const ModalPropTypes = {
+  show: PropTypes.bool.isRequired,
+  Close: PropTypes.func.isRequired,
+  children: ReactChildrenType,
+};
 
 const Modal = ({ show, Close, children }) => (
   <div>
@@ -50,10 +57,6 @@ const Modal = ({ show, Close, children }) => (
   </div>
 );
 
-Modal.propTypes = {
-  show: PropTypes.boolean.isRequired,
-  Close: PropTypes.func.isRequired,
-  children: PropTypes.children,
-};
+Modal.propTypes = ModalPropTypes;
 
 export default Modal;
