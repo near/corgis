@@ -6,9 +6,10 @@ import { BrowserRouter } from 'react-router-dom';
 import * as nearlib from 'near-api-js';
 import getConfig from './config';
 
+import { NearContextProvider } from './context/NearContext';
+import { ContractContextProvider } from './context/contract';
+import { CharacterContextProvider } from './context/character';
 import App from './App';
-import NearContextProvider from './context/NearContext';
-import ContractContextProvider from './context/contract';
 
 // Initializing contract
 async function InitContract() {
@@ -55,9 +56,11 @@ window.nearInitPromise = InitContract()
     const app = (
       <NearContextProvider currentUser={currentUser} nearConfig={nearConfig} wallet={walletConnection} near={near}>
         <ContractContextProvider Contract={contract}>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
+          <CharacterContextProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </CharacterContextProvider>
         </ContractContextProvider>
       </NearContextProvider>
     );
