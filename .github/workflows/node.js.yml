@@ -3,9 +3,14 @@
 
 name: Node.js CI
 
-on: push
-#on:
-#  push:
+on:
+  # We want to trigger the build & test pipelines in every branch.
+  # This will help us to detect errors earlier in the development process.
+  push:
+    # But do no run the pipeline when only `md` files are modified.
+    paths-ignore:
+      - '**.md'
+
 #    branches: [ master ]
 #  pull_request:
 #    branches: [ master ]
