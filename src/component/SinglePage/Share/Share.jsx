@@ -16,7 +16,8 @@ const SharePropTypes = {
 };
 
 const Share = ({ corgi, show, closeModal }) => {
-  const [copied, setCopied] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+
   const address = `${window.location.origin}/share${window.location.hash}`;
 
   return (
@@ -56,7 +57,7 @@ const Share = ({ corgi, show, closeModal }) => {
           >
             {address}
           </p>
-          <CopyToClipboard text={address} onCopy={() => setCopied(true)}>
+          <CopyToClipboard text={address} onCopy={() => setIsCopied(true)}>
             <button
               style={{
                 backgroundColor: '#fbb040',
@@ -70,7 +71,7 @@ const Share = ({ corgi, show, closeModal }) => {
               Copy Link
             </button>
           </CopyToClipboard>
-          {copied && <span style={{ color: '#961be0', marginLeft: '5px' }}>Copied.</span>}
+          {isCopied && <span style={{ color: '#961be0', marginLeft: '5px' }}>Copied.</span>}
         </div>
         <div style={{ marginBottom: '10px' }}>
           <p style={{ color: '#999' }}>or share directly on</p>

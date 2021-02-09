@@ -9,6 +9,7 @@ import getConfig from './config';
 import { NearContextProvider } from './context/NearContext';
 import { ContractContextProvider } from './context/contract';
 import { CharacterContextProvider } from './context/character';
+
 import App from './App';
 
 // Initializing contract
@@ -34,7 +35,7 @@ async function InitContract() {
   }
 
   // Initializing our contract APIs by contract name and configuration.
-  const contract = await new nearlib.Contract(walletConnection.account(), nearConfig.contractName, {
+  const contract = new nearlib.Contract(walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
     viewMethods: ['getCorgi', 'getCorgisList', 'displayGlobalCorgis'],
     // Change methods can modify the state. But you don't receive the returned value when called.

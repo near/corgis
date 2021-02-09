@@ -15,15 +15,10 @@ const PosterPropTypes = {
 };
 
 const Poster = ({ requestSignIn, isLoading, user }) => {
-  let showButton;
   if (isLoading) {
     return <Spinner />;
   }
-  if (!user) {
-    showButton = <Button description='Login with NEAR' action={requestSignIn} />;
-  } else {
-    showButton = <div className='show'>Logged In {user.accountId}</div>;
-  }
+
   return (
     <div className='wrapper'>
       <div className='backup'>
@@ -32,7 +27,11 @@ const Poster = ({ requestSignIn, isLoading, user }) => {
           <p className='text1'>one-of-the-kind</p>
           <p className='text1'>Corgi today</p>
           <p className='text2'>create, collect, send, or trade</p>
-          {showButton}
+          {user ? (
+            <div className='show'>Logged In {user.accountId}</div>
+          ) : (
+            <Button description='Login with NEAR' action={requestSignIn} />
+          )}
         </div>
         <div className='imagePoster'>
           <img src={corgiFull} alt='' style={{ width: '100%' }} />

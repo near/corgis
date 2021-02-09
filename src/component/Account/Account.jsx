@@ -8,27 +8,25 @@ import Spinner from '../utils/Spinner';
 import AccountCard from './AccountCard/AccountCard';
 
 const Account = () => {
-  const nearContext = useContext(NearContext);
-  const useContract = useContext(ContractContext);
-  const { created, loading, clearCreatedCorgiState, getCorgisList } = useContract;
-  const { corgis } = useContract;
-
-  useEffect(() => {
-    if (nearContext.user) {
-      getCorgisList(nearContext.user.accountId);
-    }
-  }, [getCorgisList, nearContext]);
+  const { user } = useContext(NearContext);
+  const { corgis, created, loading, clearCreatedCorgiState, getCorgisList } = useContext(ContractContext);
 
   if (created) {
     clearCreatedCorgiState();
   }
 
-  if (!nearContext.user) {
+  if (!user) {
     return <Redirect to='/' />;
   }
+
   if (corgis && corgis.length === 0) {
     return <Redirect to='/generation' />;
   }
+
+  useEffect(() => {
+    getCorgisList(user.accountId);
+  }, [getCorgisList]);
+
   return (
     <div>
       <div>

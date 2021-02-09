@@ -1,62 +1,54 @@
 import React, { useContext, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 
+import logo from '../../assets/images/logo.png';
+
 import { NearContext } from '../../context/NearContext';
 import { ContractContext } from '../../context/contract';
 
 import Nav from './Nav/Nav';
-
-import logo from '../../assets/images/logo.png';
 import Spinner from '../utils/Spinner';
 import Button from '../utils/Button';
 
 const Header = () => {
-  const nearContext = useContext(NearContext);
-  const useContract = useContext(ContractContext);
-  const { getCorgisList, corgis } = useContract;
+  const { user, isLoading, signIn, signOut } = useContext(NearContext);
+  const { getCorgisList, corgis } = useContext(ContractContext);
+
+  const signInAction = () => {
+    signIn();
+  };
+
+  const signOutAction = () => {
+    signOut();
+  };
+
   useEffect(() => {
-    if (nearContext.user) {
-      getCorgisList(nearContext.user.accountId);
+    if (!!user) {
+      getCorgisList(user.accountId);
     }
-  }, [getCorgisList, nearContext]);
+  }, [getCorgisList, user]);
 
-  const signIn = () => {
-    nearContext.signIn();
-  };
-  const signOut = () => {
-    nearContext.signOut();
-  };
-
-  if (nearContext.isLoading) {
+  if (isLoading) {
     return <Spinner />;
   }
-  let show;
-  if (nearContext.user) {
-    show = (
-      <div className='header'>
-        <NavLink exact to='/'>
-          <img src={logo} style={{ minWidth: '100px', width: '70%' }} alt='' />
-        </NavLink>
-        <Nav
-          accountName={nearContext.user.accountId}
-          number={corgis ? corgis.length : '...'}
-          requestSignOut={signOut}
-        />
-      </div>
-    );
-  } else {
-    show = (
-      <div className='header'>
-        <NavLink exact to='/'>
-          <img src={logo} style={{ minWidth: '100px', width: '60%' }} alt='' />
-        </NavLink>
-        <Button description='Get Started' action={signIn} />
-      </div>
-    );
-  }
+
   return (
     <div>
-      {show}
+      {!!user ? (
+        <div className='header'>
+          <NavLink exact to='/'>
+            <img src={logo} style={{ minWidth: '100px', width: '70%' }} alt='' />
+          </NavLink>
+          <Nav accountName={user.accountId} number={corgis ? corgis.length : '...'} requestSignOut={signOutAction} />
+        </div>
+      ) : (
+        <div className='header'>
+          <NavLink exact to='/'>
+            <img src={logo} style={{ minWidth: '100px', width: '60%' }} alt='' />
+          </NavLink>
+          <Button description='Get Started' action={signInAction} />
+        </div>
+      )}
       <style>{`
         .header {
             margin: 1% auto;

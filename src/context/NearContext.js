@@ -11,8 +11,6 @@ export const NearContext = React.createContext({
 });
 
 export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, children }) => {
-  const user = useState(currentUser)[0];
-  const nearContent = useState(near)[0];
   const [isLoading, setLoading] = useState(false);
 
   const signIn = useCallback(() => {
@@ -29,12 +27,12 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
   return (
     <NearContext.Provider
       value={{
-        user,
-        signIn,
-        signOut,
+        user: currentUser,
+        nearContent: near,
         isLoading,
         setLoading,
-        nearContent,
+        signIn,
+        signOut,
       }}
     >
       {children}

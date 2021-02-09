@@ -17,41 +17,46 @@ import iconShare from '../../assets/images/icon-share.svg';
 import { TransferContextProvider } from '../../context/transfer';
 
 const SinglePage = () => {
-  const nearContext = useContext(NearContext);
-  const useContract = useContext(ContractContext);
-  const { corgi, loading, getCorgi, transfering } = useContract;
+  const { user } = useContext(NearContext);
+  const { corgi, loading, getCorgi, transfering } = useContext(ContractContext);
+
+  const [showSend, setSend] = useState(false);
+  const [showShare, setShare] = useState(false);
+
   const id = window.location.hash.slice(1);
 
   useEffect(() => {
-    if (id) {
+    if (!!id) {
       getCorgi(id);
     }
   }, [getCorgi, id]);
 
-  const [showSend, setSend] = useState(false);
-  const [showShare, setShare] = useState(false);
   const openSendModal = () => {
     setSend(true);
   };
+
   const openShareModal = () => {
     setShare(true);
   };
+
   const closeModal = () => {
     setSend(false);
     setShare(false);
   };
 
-  if (corgi && corgi.owner !== nearContext.user.accountId) {
+  if (!user) {
+    return <Redirect to='/' />;
+  }
+
+  if (!id) {
     return <Redirect to='/account' />;
   }
 
-  if (!nearContext.user) {
-    return <Redirect to='/' />;
-  }
   if (!corgi || loading) {
     return <Spinner />;
   }
-  if (!id) {
+
+  if (corgi.owner !== user.accountId) {
     return <Redirect to='/account' />;
   }
 

@@ -8,18 +8,21 @@ import { CorgisArrayType } from '../../../types/CorgiTypes';
 const ShowCasePropTypes = { displayCorgis: CorgisArrayType.isRequired };
 
 const ShowCase = ({ displayCorgis }) => {
-  const Corgis = displayCorgis.map((corgi) => (
-    <Link
-      to={{
-        pathname: '/share',
-        hash: corgi.id,
-      }}
-      key={corgi.id}
-    >
-      <DashCard corgi={corgi} />
-    </Link>
-  ));
-  return <div>{Corgis}</div>;
+  return (
+    <div>
+      {displayCorgis.map((corgi) => (
+        <Link
+          to={{
+            pathname: '/share',
+            hash: corgi.id,
+          }}
+          key={corgi.id}
+        >
+          <DashCard corgi={corgi} />
+        </Link>
+      ))}
+    </div>
+  );
 };
 
 ShowCase.propTypes = ShowCasePropTypes;

@@ -18,10 +18,9 @@ const Transfer = () => {
 
   const checkAccountLegit = async (value) => {
     try {
-      const accountState = !!(await new nearlib.Account(nearContent.connection, value).state());
-      console.log(accountState);
+      const isAccountFound = !!(await new nearlib.Account(nearContent.connection, value).state());
 
-      if (!!accountState) {
+      if (isAccountFound) {
         transferContext.foundReceiverSuccess();
         return true;
       }
@@ -33,12 +32,12 @@ const Transfer = () => {
   };
 
   const setReceiver = async (event) => {
-    const receiver = event.target.value;
+    const newReceiver = event.target.value;
 
-    const isAccountLegit = await checkAccountLegit(receiver);
+    const isAccountLegit = await checkAccountLegit(newReceiver);
 
-    if (!isAccountLegit) {
-      transferContext.setReceiver(receiver);
+    if (!!isAccountLegit) {
+      transferContext.setReceiver(newReceiver);
     }
   };
 

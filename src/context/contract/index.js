@@ -28,9 +28,9 @@ export const ContractContext = React.createContext();
 export const ContractContextProvider = ({ Contract, children }) => {
   const [contractState, dispatchContract] = useReducer(contractReducer, initialContractState);
 
-  const clear = useCallback(() => dispatchContract({ type: CLEAR }), []);
+  const clear = () => dispatchContract({ type: CLEAR });
 
-  const clearCreatedCorgiState = useCallback(() => dispatchContract({ type: CLEAR_CREATED_CORGI_STATE }), []);
+  const clearCreatedCorgiState = () => dispatchContract({ type: CLEAR_CREATED_CORGI_STATE });
 
   const createCorgi = useCallback(
     (name, color, backgroundColor, quote) => {

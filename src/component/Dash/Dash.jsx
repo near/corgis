@@ -8,12 +8,13 @@ import ShowCase from './ShowCase/ShowCase';
 
 const Dash = () => {
   const nearContext = useContext(NearContext);
-  const useContract = useContext(ContractContext);
-  const { getDisplayCorgis, displayCorgis } = useContract;
-  useEffect(() => getDisplayCorgis(), [getDisplayCorgis]);
+  const { getDisplayCorgis, displayCorgis } = useContext(ContractContext);
+
   const signIn = () => {
     nearContext.signIn();
   };
+
+  useEffect(() => getDisplayCorgis(), [getDisplayCorgis]);
 
   return (
     <div className='Dash'>
