@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import Button from '../../utils/Button';
@@ -14,14 +14,14 @@ const NavPropTypes = {
 const Nav = ({ number, accountName, requestSignOut }) => (
   <div className='wrap'>
     <div className='account'>
-      <NavLink to='/account'>
+      <Link to='/account'>
         <Button description={`My Corgis ( ${number} )`} />
-      </NavLink>
+      </Link>
       <Card accountName={accountName} requestSignOut={requestSignOut} />
     </div>
-    <NavLink to='/generation'>
+    <Link to='/generation'>
       <AddCorgi />
-    </NavLink>
+    </Link>
     <style>{`
         .wrap {
           margin: auto;
@@ -123,9 +123,9 @@ const Card = ({ accountName, requestSignOut }) => {
       <div className='dropdown-content'>
         <ul style={{ textAlign: 'center', padding: '2px', marginBottom: '0' }}>
           <li style={style}>
-            <NavLink to='/profile'>
+            <Link to='/profile'>
               <button>Edit Profile</button>
-            </NavLink>
+            </Link>
           </li>
           <li style={style}>
             <button onClick={requestSignOut}>Sign Out</button>

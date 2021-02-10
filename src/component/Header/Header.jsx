@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from 'react';
-import { NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import logo from '../../assets/images/logo.png';
 
@@ -36,16 +36,16 @@ const Header = () => {
     <div>
       {!!user ? (
         <div className='header'>
-          <NavLink exact to='/'>
+          <Link to='/'>
             <img src={logo} style={{ minWidth: '100px', width: '70%' }} alt='' />
-          </NavLink>
+          </Link>
           <Nav accountName={user.accountId} number={corgis ? corgis.length : '...'} requestSignOut={signOutAction} />
         </div>
       ) : (
         <div className='header'>
-          <NavLink exact to='/'>
+          <Link to='/'>
             <img src={logo} style={{ minWidth: '100px', width: '60%' }} alt='' />
-          </NavLink>
+          </Link>
           <Button description='Get Started' action={signInAction} />
         </div>
       )}

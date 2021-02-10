@@ -58,9 +58,7 @@ window.nearInitPromise = InitContract()
       <NearContextProvider currentUser={currentUser} nearConfig={nearConfig} wallet={walletConnection} near={near}>
         <ContractContextProvider Contract={contract}>
           <CharacterContextProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
+            <App />
           </CharacterContextProvider>
         </ContractContextProvider>
       </NearContextProvider>
