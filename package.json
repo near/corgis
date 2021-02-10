@@ -2,6 +2,7 @@
     "name": "new-corgi",
     "version": "0.1.0",
     "private": true,
+    "homepage": "/corgis/",
     "scripts": {
         "build": "npm run build:contract && npm run build:web",
         "build:contract": "node asconfig.js",
