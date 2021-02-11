@@ -123,7 +123,7 @@ Here is an overview on how to develop NEAR contracts using Rust:
 You need to install Rustup in order to compile Rust contracts.
 See the official guide on how to set up Rust in your local environment.
 
-<https://www.rust-lang.org/tools/install>
+> <https://www.rust-lang.org/tools/install>
 
 By installing `rustup`, you will add the Rust compiler and the `cargo` package manager to your system.
 
