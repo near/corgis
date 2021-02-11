@@ -181,6 +181,22 @@ near view $CONTRACT_NAME get_corgis_by_owner "{\"owner\":\"$ACCOUNT_NAME\"}"
 
 Note that in this example we use double-quotes to be able to expand the shell variable `$ACCOUNT_NAME`.
 
+The response returns an array of corgis, similar to:
+
+```js
+[
+  {
+    id: 'J9fEDeGE6vBODSjyetsZpLL7hCjm/IyvKmBTA1jUl3o=',
+    name: 'doggy dog',
+    quote: 'To err is human — to forgive, canine',
+    color: 'green',
+    background_color: 'blue',
+    rate: 'COMMON',
+    sausage: '27'
+  },
+]
+```
+
 #### `get_my_corgis`
 
 This contract is similar to the previous one.
@@ -190,6 +206,8 @@ Returns the corgis of the current logged-in user.
 near --accountId $ACCOUNT_NAME call $CONTRACT_NAME get_my_corgis
 ```
 
+For the response body, see `get_corgis_by_owner`.
+
 #### Display global list of corgis
 
 This command returns all corgis that have been created.
@@ -197,3 +215,5 @@ This command returns all corgis that have been created.
 ```sh
 near view $CONTRACT_NAME get_global_corgis
 ```
+
+For the response body, see `get_corgis_by_owner`.
