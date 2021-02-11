@@ -224,3 +224,10 @@ near view $CONTRACT_NAME get_global_corgis
 ```
 
 For the response body, see `get_corgis_by_owner`.
+
+## Development & Tooling
+
+For Rust development with Visual Studio Code,
+you may want to check out the _rust.analyzer_ extension
+
+> <https://rust-analyzer.github.io/>
