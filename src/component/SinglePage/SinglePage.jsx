@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { NearContext } from '../../context/NearContext';
@@ -23,7 +23,8 @@ const SinglePage = () => {
   const [showSend, setSend] = useState(false);
   const [showShare, setShare] = useState(false);
 
-  const id = window.location.hash.slice(1);
+  const { hash } = useLocation();
+  const id = !!hash.length ? hash.slice(1) : hash;
 
   useEffect(() => {
     if (!!id) {
