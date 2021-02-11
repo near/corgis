@@ -125,8 +125,15 @@ See the official guide on how to set up Rust in your local environment.
 
 <https://www.rust-lang.org/tools/install>
 
-This will install the Rust compiler and the `cargo` package manager,
-which we will use in the next sections.
+By installing `rustup`, you will add the Rust compiler and the `cargo` package manager to your system.
+
+The NEAR platform leverage the use of WASM to execute smart contracts.
+Thus, in order to build a suitable binary for the NEAR platform,
+we must install the wasm32 target:
+
+```sh
+rustup target add wasm32-unknown-unknown
+```
 
 ### Building
 
