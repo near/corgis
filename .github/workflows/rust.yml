@@ -24,6 +24,6 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build
-      run: cd contract && cargo build --verbose
+      run: cd contract && cargo build --verbose --target wasm32-unknown-unknown --release
     - name: Run tests
-      run: cd contract && cargo test --verbose
+      run: cd contract && cargo test --verbose -- --nocapture

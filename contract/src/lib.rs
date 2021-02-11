@@ -7,6 +7,9 @@ use near_sdk::serde::Serialize;
 #[global_allocator]
 static ALLOC: near_sdk::wee_alloc::WeeAlloc = near_sdk::wee_alloc::WeeAlloc::INIT;
 
+const TRY_DELETE_UNKNOWN_ACCOUNT_MSG: &str = "The account does not have any corgis to delete from";
+const TRY_DELETE_UNEXISTENT_CORGI: &str = "The specified corgi id was not found";
+
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
@@ -157,6 +160,31 @@ impl Model {
         corgi.id
     }
 
+    /// Delete the `Corgi` by `id`.
+    /// Only the owner of the `Corgi` can delete it.
+    pub fn delete_corgi(&mut self, id: String) {
+        env::log(format!("delete corgi by id").as_bytes());
+
+        let owner = env::signer_account_id();
+
+        match self.corgis.get(&owner) {
+            None => env::panic(TRY_DELETE_UNKNOWN_ACCOUNT_MSG.as_bytes()),
+            Some(list) => {
+                let mut new_list = Vector::new(b"owner".to_vec());
+                for i in 0..list.len() {
+                    let corgi = list.get(i).unwrap();
+                    if corgi.id != id {
+                        new_list.push(&corgi);
+                    }
+                }
+                if new_list.len() == list.len() {
+                    env::panic(TRY_DELETE_UNEXISTENT_CORGI.as_bytes());
+                }
+                self.corgis.insert(&owner, &new_list);
+            }
+        }
+    }
+
     /// Gets the `Corgi`s owned by the `owner` account id.
     /// The `owner` must be a valid account id.
     ///
@@ -178,13 +206,11 @@ impl Model {
         }
     }
 
-    /// Get the `Corgi`s of the current account id.
+    /// Gets the `Corgi`s of the current account id.
     /// 
-    /// Using `near-cli` we can call this contract by:
-    ///
-    /// ```sh
-    /// near view YOU.testnet get_my_corgis
-    /// ```
+    /// Note that even if this contract is not `&mut self`,
+    /// to execute it you need to use `call` instead of `view`.
+    /// This is because this contract uses the `signer_account_id`.
     pub fn get_my_corgis(&self) -> Vec<Corgi> {
         let owner = env::signer_account_id();
         env::log(format!("get current user's <{}> corgis", owner).as_bytes());
@@ -288,6 +314,49 @@ mod tests {
         assert_eq!(id, corgi.id);
 
         assert_eq!(corgis_by_owner, contract.get_my_corgis());
+    }
+
+    #[test]
+    fn create_and_delete_corgi() {
+        let context = get_context(vec![], false);
+        testing_env!(context);
+
+        let mut contract = Model::new();
+
+        assert_eq!(0, contract.get_global_corgis().len());
+
+        let id = create_test_corgi(&mut contract, 0);
+
+        assert_eq!(1, contract.get_global_corgis().len());
+        assert_eq!(1, contract.get_my_corgis().len());
+
+        contract.delete_corgi(id);
+        
+        assert_eq!(0, contract.get_global_corgis().len());
+        assert_eq!(0, contract.get_my_corgis().len());
+    }
+
+    #[test]
+    #[should_panic]
+    fn try_delete_unexistent_corgi_without_account() {
+        let context = get_context(vec![], false);
+        testing_env!(context);
+
+        let mut contract = Model::new();
+
+        create_test_corgi(&mut contract, 0);
+        contract.delete_corgi("?".to_string());
+    }
+
+    #[test]
+    #[should_panic]
+    fn try_delete_unexistent_corgi() {
+        let context = get_context(vec![], false);
+        testing_env!(context);
+
+        let mut contract = Model::new();
+
+        contract.delete_corgi("?".to_string());
     }
 
     #[test]
