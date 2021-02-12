@@ -1,0 +1,32 @@
+.nav {
+  margin: auto;
+  padding: 5px 30px;
+  display: inline-flex;
+  font-size: 1em;
+
+  &__account {
+    display: inline-flex;
+    flex-direction: row;
+  }
+}
+
+@media all and (max-width: 1200px) {
+  .nav {
+    font-size: 0.8em;
+  }
+}
+
+@media all and (max-width: 450px) {
+  .nav {
+    font-size: 0.6em;
+
+    &__account {
+      flex-direction: row;
+    }
+  }
+}
+
+// .orange {
+//   color: #fbb040;
+//   display: inline;
+// }

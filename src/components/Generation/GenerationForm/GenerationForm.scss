@@ -1,0 +1,64 @@
+.generation-form {
+  padding: 0.5rem;
+
+  border-radius: 10px;
+
+  background-color: #f8f8f8;
+
+  text-align: left;
+
+  &__area {
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+  }
+
+  &__title {
+    display: block;
+
+    margin: 10px 0;
+
+    font-weight: 600;
+    font-size: 1.5em;
+  }
+
+  &__icon {
+    margin: 10px;
+
+    border-radius: 50%;
+
+    color: #a51cea;
+    background-color: #f5ebff;
+
+    box-shadow: 0 0 4px 4px rgba(0, 0, 0, 0.5), inset 0 0 5px 2px #ffffff;
+
+    font-size: 1.5rem;
+
+    cursor: pointer;
+  }
+
+  &__input {
+    width: 80%;
+
+    border-radius: 5px;
+
+    background-color: #ffffff;
+
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  &__colorpicker {
+    margin: 0.5rem 0;
+
+    &:last-child {
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+@media all and (max-width: 765px) {
+  .generation-form {
+    width: 100%;
+  }
+}

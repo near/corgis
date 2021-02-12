@@ -3,8 +3,10 @@ import React from 'react';
 import { HashRouter as Router } from 'react-router-dom';
 import Routes from './Routes';
 
-import Header from './component/Header/Header';
-import Footer from './component/Footer/Footer';
+import './App.scss';
+
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
 
 const App = () => (
   <div className='App'>
@@ -13,24 +15,6 @@ const App = () => (
       <Routes />
       <Footer />
     </Router>
-    <style>{`
-        body {
-          text-align: center;
-          font-family: 'Poppins', sans-serif;
-          position: relative;
-          min-height: calc(100vh - 80px);
-        }
-        
-        button {
-          all: unset;
-          outline:none;
-        }
-        
-        input {
-          all:unset;
-          padding: 5px;
-        }
-      `}</style>
   </div>
 );
 

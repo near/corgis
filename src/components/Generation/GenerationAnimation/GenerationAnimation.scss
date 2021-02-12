@@ -1,0 +1,89 @@
+.generation-animation {
+  &__background {
+    height: 50%;
+    max-width: 900px;
+
+    padding: 20px;
+    margin: 20px auto;
+
+    border-radius: 10px;
+  }
+
+  &__box {
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+
+    transform-origin: bottom;
+  }
+
+  &__box--bounce-7 {
+    animation-name: bounce-7;
+    animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+  }
+
+  &__shadow {
+    width: 100%;
+
+    margin: auto;
+
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+  }
+
+  &__shadow--shadow-7 {
+    animation-name: shadow-7;
+  }
+
+  &__image {
+    width: 100%;
+    max-width: 800px;
+  }
+}
+
+@keyframes bounce-7 {
+  0% {
+    transform: scale(1, 1) translateY(0);
+  }
+  10% {
+    transform: scale(1.1, 0.9) translateY(0);
+  }
+  30% {
+    transform: scale(0.9, 1.1) translateY(-100px);
+  }
+  50% {
+    transform: scale(1.05, 0.95) translateY(0);
+  }
+  57% {
+    transform: scale(1, 1) translateY(-7px);
+  }
+  64% {
+    transform: scale(1, 1) translateY(0);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+
+@keyframes shadow-7 {
+  0% {
+    transform: scale(1, 1) translateY(0);
+  }
+  10% {
+    transform: scale(1.1, 0.9) translateY(0);
+  }
+  30% {
+    transform: scale(0.9, 1.1) translateY(0);
+  }
+  50% {
+    transform: scale(1.05, 0.95) translateY(0);
+  }
+  57% {
+    transform: scale(1, 1) translateY(0);
+  }
+  64% {
+    transform: scale(1, 1) translateY(0);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}

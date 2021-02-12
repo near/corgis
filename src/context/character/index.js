@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useReducer } from 'react';
-import ReactChildrenType from '../../types/ReactChildrenType';
+import { ReactChildrenTypeRequired } from '../../types/ReactChildrenType';
 
 import { characterReducer, initialCharacterState } from './reducer';
 import { NAME, COLOR, BACKGROUND_COLOR, QUOTE, CLEAR } from './types';
@@ -9,7 +9,7 @@ import { genRandomQuote } from '../../helpers/generators';
 export const CharacterContext = React.createContext(initialCharacterState);
 
 const CharacterContextProviderPropTypes = {
-  children: ReactChildrenType,
+  children: ReactChildrenTypeRequired,
 };
 
 export const CharacterContextProvider = ({ children }) => {

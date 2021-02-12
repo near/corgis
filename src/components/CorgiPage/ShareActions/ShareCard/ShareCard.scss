@@ -1,0 +1,38 @@
+.share-card {
+  display: flex;
+  align-items: center;
+  width: 100%;
+
+  padding: 0.5rem;
+  margin: 1rem 0;
+
+  border-radius: 5px;
+
+  background-color: azure;
+
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+
+  box-sizing: border-box;
+
+  cursor: pointer;
+
+  &__icon {
+    height: 60%;
+
+    padding: 0;
+    margin: 0;
+  }
+
+  &__content {
+    display: inline-block;
+
+    padding: 0;
+    margin-left: 10px;
+
+    text-align: left;
+  }
+
+  &__title {
+    color: #2b73c7;
+  }
+}

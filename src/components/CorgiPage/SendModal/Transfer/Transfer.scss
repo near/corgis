@@ -1,0 +1,44 @@
+.receiver {
+  display: inline;
+  margin-left: 5px;
+  background: #ffffff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 5px;
+  color: #4a4f54;
+  letter-spacing: 0;
+  text-align: start;
+  width: 60%;
+}
+.transfer {
+  &__input-field {
+    display: flex;
+    align-items: center;
+
+    margin-bottom: 0.5rem;
+
+    text-align: start;
+  }
+
+  &__message {
+    display: inline;
+
+    width: 80%;
+
+    margin-left: 5px;
+
+    border-radius: 5px;
+
+    color: #4a4f54;
+    background: #ffffff;
+
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+
+    letter-spacing: 0;
+
+    text-align: start;
+  }
+
+  &__submit {
+    margin: 1rem 0 0.5rem;
+  }
+}

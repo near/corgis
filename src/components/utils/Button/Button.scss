@@ -1,0 +1,31 @@
+.button {
+  margin: auto;
+  padding: 5px 30px;
+
+  border-radius: 5px;
+
+  background-color: #fbb040;
+  color: #fff;
+
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+
+  font-weight: 600;
+
+  letter-spacing: 0;
+  white-space: nowrap;
+
+  cursor: pointer;
+}
+
+.button:disabled {
+  background-color: #cfcfcf;
+  color: #888888;
+}
+
+@media all and (max-width: 451px) {
+  .button {
+    padding: 8px 3px;
+
+    color: #fff;
+  }
+}

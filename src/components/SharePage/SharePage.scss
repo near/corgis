@@ -1,0 +1,30 @@
+.share {
+  &__content {
+    display: flex;
+    justify-content: space-around;
+
+    width: 70%;
+    max-width: 800px;
+
+    margin: 2% auto;
+  }
+
+  &__corgi {
+    max-width: 950px;
+
+    margin: 0 auto;
+  }
+
+  &__copy-button {
+    padding: 4px 6px;
+
+    border-radius: 5px;
+
+    background-color: #fbb040;
+    color: #f2f2f2;
+
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+
+    cursor: alias;
+  }
+}

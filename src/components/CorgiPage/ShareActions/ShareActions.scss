@@ -1,0 +1,20 @@
+.share-actions {
+  width: 100%;
+
+  &__title {
+    display: block;
+  }
+
+  &__cards {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media all and (max-width: 525px) {
+  .share-actions {
+    &__title {
+      display: none;
+    }
+  }
+}

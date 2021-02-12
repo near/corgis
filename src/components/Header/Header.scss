@@ -1,0 +1,28 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+
+  width: 70%;
+  max-width: 1000px;
+
+  margin: 1% auto;
+  padding: auto;
+}
+
+@media all and (max-width: 751px) {
+  .header {
+    width: 90%;
+
+    margin: 1% auto;
+  }
+}
+
+@media all and (max-width: 376px) {
+  .header {
+    flex-direction: column;
+
+    width: 90%;
+
+    margin: 1% auto;
+  }
+}

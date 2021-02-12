@@ -1,0 +1,25 @@
+body {
+  position: relative;
+
+  min-height: calc(100vh - 80px);
+
+  width: 100%;
+  max-width: 100%;
+
+  padding: 0;
+  margin: 0;
+
+  font-family: 'Poppins', sans-serif;
+
+  text-align: center;
+}
+
+button {
+  all: unset;
+  outline: none;
+}
+
+input {
+  all: unset;
+  padding: 5px;
+}

@@ -24,6 +24,7 @@
     "dependencies": {
         "@babel/runtime": "^7.10.4",
         "big.js": "^5.2.2",
+        "classnames": "^2.2.6",
         "gh-pages": "^3.1.0",
         "near-api-js": "^0.25.1",
         "project-name-generator": "^2.1.7",
@@ -57,10 +58,12 @@
         "jest-environment-node": "^26.0.0",
         "near-sdk-as": "^0.3.1",
         "near-shell": "^0.23.0",
+        "node-sass": "^5.0.0",
         "nodemon": "^2.0.3",
         "parcel-bundler": "^1.12.4",
         "prettier": "^2.2.1",
-        "react-test-renderer": "^17.0.1"
+        "react-test-renderer": "^17.0.1",
+        "sass-loader": "^11.0.1"
     },
     "babel": {
         "presets": [

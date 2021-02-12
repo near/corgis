@@ -1,0 +1,16 @@
+.generation-screen {
+  flex: 1;
+  // width: 100%;
+
+  padding: 5%;
+
+  border-radius: 10px;
+
+  text-align: center;
+
+  &__description {
+    margin-top: 0;
+
+    font-weight: 600;
+  }
+}

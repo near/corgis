@@ -1,12 +1,12 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import Account from './component/Account/Account';
-import Dash from './component/Dash/Dash';
-import Generation from './component/Generation/Generation';
-import Profile from './component/Profile/Profile';
-import SharePage from './component/SharePage/SharePage';
-import SinglePage from './component/SinglePage/SinglePage';
+import AccountPage from './components/AccountPage/AccountPage';
+import Dash from './components/Dash/Dash';
+import Generation from './components/Generation/Generation';
+import Profile from './components/Profile/Profile';
+import SharePage from './components/SharePage/SharePage';
+import CorgiPage from './components/CorgiPage/CorgiPage';
 
 const Routes = () => (
   <Switch>
@@ -17,13 +17,13 @@ const Routes = () => (
       <Generation />
     </Route>
     <Route exact path='/account'>
-      <Account />
+      <AccountPage />
     </Route>
     <Route exact path='/profile'>
       <Profile />
     </Route>
     <Route exact path='/@:name'>
-      <SinglePage />
+      <CorgiPage />
     </Route>
     <Route exact path='/share'>
       <SharePage />

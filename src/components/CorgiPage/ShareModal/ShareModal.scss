@@ -1,0 +1,12 @@
+.share-modal {
+  width: 100%;
+  height: 100%;
+
+  margin-bottom: 10px;
+
+  &__corgi {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
