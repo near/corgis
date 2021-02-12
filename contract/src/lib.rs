@@ -1,8 +1,10 @@
-use near_sdk::collections::Vector;
-use near_sdk::collections::UnorderedMap;
-use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
-use near_sdk::{env, near_bindgen};
-use near_sdk::serde::Serialize;
+#![deny(warnings)]
+
+use near_sdk::{
+    borsh::{self, BorshDeserialize, BorshSerialize},
+    collections::{UnorderedMap, Vector},
+    env, near_bindgen, serde::Serialize
+};
 
 #[global_allocator]
 static ALLOC: near_sdk::wee_alloc::WeeAlloc = near_sdk::wee_alloc::WeeAlloc::INIT;
@@ -13,7 +15,8 @@ const TRY_DELETE_UNEXISTENT_CORGI: &str = "The specified corgi id was not found"
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
-    corgis: UnorderedMap<String, Vector<Corgi>>
+    corgis: UnorderedMap<String, Corgi>,
+    corgis_by_owner: UnorderedMap<String, Vector<String>>
 }
 
 /// Represents a `Corgi`.
@@ -51,6 +54,7 @@ pub struct Corgi {
     background_color: String,
     rate: Rarity,
     sausage: String,
+    owner: String,
 }
 
 #[derive(BorshDeserialize, BorshSerialize)]
@@ -71,6 +75,7 @@ impl Default for Model {
         env::log(b"Default initialization of corgis model");
         Self {
             corgis: UnorderedMap::new(b"corgis".to_vec()),
+            corgis_by_owner: UnorderedMap::new(b"corgis_by_owner".to_vec()),
         }
     }
 }
@@ -89,6 +94,7 @@ impl Model {
         env::log(b"Init non-default CorgisContract");
         Self {
             corgis: UnorderedMap::new(b"corgis".to_vec()),
+            corgis_by_owner: UnorderedMap::new(b"corgis_by_owner".to_vec()),
         }
     }
 
@@ -142,22 +148,47 @@ impl Model {
                 background_color,
                 rate,
                 sausage,
+                owner,
             }
         };
 
-        match self.corgis.get(&owner) {
-            None => {
-                let mut list = Vector::new(b"owner".to_vec());
-                list.push(&corgi);
-                self.corgis.insert(&owner, &list);
-            }
-            Some(mut list) => {
-                list.push(&corgi);
-                self.corgis.insert(&owner, &list);
-            }
-        };
+        let previous_corgi = self.corgis.insert(&corgi.id, &corgi);
+        assert!(previous_corgi.is_none(), "A previous Corgi already exists with id `{}`, aborting", corgi.id);
+
+        let mut ids = self
+            .corgis_by_owner
+            .get(&corgi.owner)
+            .unwrap_or_else(|| Vector::new(b"owner".to_vec()));
+        ids.push(&corgi.id);
+        self.corgis_by_owner.insert(&corgi.owner, &ids);
 
         corgi.id
+    }
+
+    /// Gets the `Corgi` by the given `id`.
+    pub fn get_corgi_by_id(&self, id: String) -> Corgi {
+        self.corgis.get(&id).unwrap()
+    }
+
+    /// Gets the `Corgi`s owned by the `owner` account id.
+    /// The `owner` must be a valid account id.
+    ///
+    /// Note, the parameter is `&self` (without being mutable)
+    /// meaning it doesn't modify state.
+    /// In the frontend (`/src/index.js`) this is added to the `"viewMethods"` array.
+    pub fn get_corgis_by_owner(&self, owner: String) -> Vec<Corgi> {
+        env::log(format!("get corgis by owner <{}>", owner).as_bytes());
+
+        match self.corgis_by_owner.get(&owner) {
+            None => Vec::new(),
+            Some(list) => {
+                list.to_vec().into_iter().map(|id| {
+                    let corgi = self.corgis.get(&id);
+                    assert!(corgi.is_some());
+                    corgi.unwrap()
+                }).collect()
+            }
+        }
     }
 
     /// Delete the `Corgi` by `id`.
@@ -167,55 +198,23 @@ impl Model {
 
         let owner = env::signer_account_id();
 
-        match self.corgis.get(&owner) {
+        match self.corgis_by_owner.get(&owner) {
             None => env::panic(TRY_DELETE_UNKNOWN_ACCOUNT_MSG.as_bytes()),
             Some(list) => {
                 let mut new_list = Vector::new(b"owner".to_vec());
                 for i in 0..list.len() {
-                    let corgi = list.get(i).unwrap();
-                    if corgi.id != id {
-                        new_list.push(&corgi);
+                    let old_id = list.get(i).unwrap();
+                    if old_id != id {
+                        new_list.push(&old_id);
                     }
                 }
                 if new_list.len() == list.len() {
                     env::panic(TRY_DELETE_UNEXISTENT_CORGI.as_bytes());
                 }
-                self.corgis.insert(&owner, &new_list);
+                self.corgis_by_owner.insert(&owner, &new_list);
+                self.corgis.remove(&id);
             }
         }
-    }
-
-    /// Gets the `Corgi`s owned by the `owner` account id.
-    /// The `owner` must be a valid account id.
-    ///
-    /// Note, the parameter is `&self` (without being mutable)
-    /// meaning it doesn't modify state.
-    /// In the frontend (`/src/index.js`) this is added to the `"viewMethods"` array.
-    /// 
-    /// Using `near-cli` we can call this contract by:
-    ///
-    /// ```sh
-    /// near view YOU.testnet get_corgis_by_owner
-    /// ```
-    pub fn get_corgis_by_owner(&self, owner: String) -> Vec<Corgi> {
-        env::log(format!("get corgis by owner <{}>", owner).as_bytes());
-
-        match self.corgis.get(&owner) {
-            None => Vec::new(),
-            Some(list) => list.to_vec(),
-        }
-    }
-
-    /// Gets the `Corgi`s of the current account id.
-    /// 
-    /// Note that even if this contract is not `&mut self`,
-    /// to execute it you need to use `call` instead of `view`.
-    /// This is because this contract uses the `signer_account_id`.
-    pub fn get_my_corgis(&self) -> Vec<Corgi> {
-        let owner = env::signer_account_id();
-        env::log(format!("get current user's <{}> corgis", owner).as_bytes());
-
-        self.get_corgis_by_owner(owner)
     }
 
     /// Get all `Corgi`s from all users.
@@ -230,13 +229,11 @@ impl Model {
     pub fn get_global_corgis(&self) -> Vec<Corgi> {
         env::log(format!("get global list of corgis").as_bytes());
 
-        let mut list = Vec::new();
-        for set in self.corgis.values() {
-            for corgi in set.iter() {
-                list.push(corgi);
-            }
+        let mut result = Vec::new();
+        for corgi in self.corgis.values() {
+            result.push(corgi);
         }
-        list
+        result
     }
 
 }
@@ -260,7 +257,7 @@ mod tests {
     // part of writing unit tests is setting up a mock context
     // in this example, this is only needed for env::log in the contract
     // this is also a useful list to peek at when wondering what's available in env::*
-    fn get_context(input: Vec<u8>, is_view: bool) -> VMContext {
+    fn get_context(input: Vec<u8>, is_view: bool, random_seed: Option<Vec<u8>>) -> VMContext {
         VMContext {
             current_account_id: "alice.testnet".to_string(),
             signer_account_id: "robert.testnet".to_string(),
@@ -274,17 +271,30 @@ mod tests {
             storage_usage: 0,
             attached_deposit: 0,
             prepaid_gas: 10u64.pow(18),
-            random_seed: vec![3, 2, 1],
+            random_seed: random_seed.unwrap_or_else(|| vec![3, 2, 1]),
             is_view,
             output_data_receivers: vec![],
             epoch_height: 19,
         }
     }
 
+    fn create_test_corgi(contract: &mut Model, i: usize) -> (String, String, String, String, String) {
+        let name = format!("doggy dog {}", i);
+        let quote = "To err is human — to forgive, canine";
+        let color = "green";
+        let background_color = "blue";
+        (
+            contract.create_corgi(name.to_string(), quote.to_string(), color.to_string(), background_color.to_string()),
+            name.to_string(),
+            quote.to_string(),
+            color.to_string(),
+            background_color.to_string()
+        )
+    }
+
     #[test]
-    fn initial_global_corgis() {
-        let context = get_context(vec![], false);
-        testing_env!(context);
+    fn empty_global_corgis() {
+        testing_env!(get_context(vec![], false, None));
 
         let contract = Model::new();
         let corgis = contract.get_global_corgis();
@@ -292,15 +302,32 @@ mod tests {
     }
 
     #[test]
+    #[should_panic]
+    fn get_unexistent_corgi_by_id() {
+        testing_env!(get_context(vec![], false, None));
+
+        let contract = Model::new();
+        contract.get_corgi_by_id("?".to_string());
+    }
+
+    #[test]
     fn create_a_corgi() {
-        let context = get_context(vec![], false);
+        let context = get_context(vec![], false, None);
         let signer = context.signer_account_id.to_owned();
         testing_env!(context);
 
         let mut contract = Model::new();
         assert_eq!(0, contract.get_global_corgis().len());
 
-        let id = create_test_corgi(&mut contract, 0);
+        let (id, name, quote, color, background_color) = create_test_corgi(&mut contract, 0);
+
+        let corgi = contract.get_corgi_by_id(id.to_string());
+        assert_eq!(id, corgi.id);
+        assert_eq!(name, corgi.name);
+        assert_eq!(quote, corgi.quote);
+        assert_eq!(color, corgi.color);
+        assert_eq!(background_color, corgi.background_color);
+        assert_eq!(signer, corgi.owner);
 
         let global_corgis = contract.get_global_corgis();
         assert_eq!(1, global_corgis.len());
@@ -312,56 +339,29 @@ mod tests {
         let corgi = corgis_by_owner.get(0).unwrap();
         println!("Corgi: {:?}", corgi);
         assert_eq!(id, corgi.id);
-
-        assert_eq!(corgis_by_owner, contract.get_my_corgis());
     }
 
     #[test]
     fn create_and_delete_corgi() {
-        let context = get_context(vec![], false);
+        let context = get_context(vec![], false, None);
         testing_env!(context);
 
         let mut contract = Model::new();
 
         assert_eq!(0, contract.get_global_corgis().len());
 
-        let id = create_test_corgi(&mut contract, 0);
+        let (id, ..) = create_test_corgi(&mut contract, 0);
 
         assert_eq!(1, contract.get_global_corgis().len());
-        assert_eq!(1, contract.get_my_corgis().len());
 
         contract.delete_corgi(id);
         
         assert_eq!(0, contract.get_global_corgis().len());
-        assert_eq!(0, contract.get_my_corgis().len());
-    }
-
-    #[test]
-    #[should_panic]
-    fn try_delete_unexistent_corgi_without_account() {
-        let context = get_context(vec![], false);
-        testing_env!(context);
-
-        let mut contract = Model::new();
-
-        create_test_corgi(&mut contract, 0);
-        contract.delete_corgi("?".to_string());
-    }
-
-    #[test]
-    #[should_panic]
-    fn try_delete_unexistent_corgi() {
-        let context = get_context(vec![], false);
-        testing_env!(context);
-
-        let mut contract = Model::new();
-
-        contract.delete_corgi("?".to_string());
     }
 
     #[test]
     fn create_a_few_corgis() {
-        let context = get_context(vec![], false);
+        let context = get_context(vec![], false, None);
         let signer = context.signer_account_id.to_owned();
         testing_env!(context);
 
@@ -371,7 +371,8 @@ mod tests {
         let mut ids = Vec::new();
         let n = 5;
         for i in 1..=n {
-            let id = create_test_corgi(&mut contract, i);
+            let (id, ..) = create_test_corgi(&mut contract, i);
+            testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
             println!("Test Corgi id: {}", id);
             ids.push(id);
         }
@@ -384,12 +385,27 @@ mod tests {
         assert_eq!(ids, cids);
     }
 
-    fn create_test_corgi(contract: &mut Model, i: usize) -> String {
-        contract.create_corgi(
-            format!("doggy dog {}", i),
-            "To err is human — to forgive, canine".to_string(),
-            "green".to_string(),
-            "blue".to_string())
+    #[test]
+    #[should_panic]
+    fn try_delete_unexistent_corgi_without_account() {
+        let context = get_context(vec![], false, None);
+        testing_env!(context);
+
+        let mut contract = Model::new();
+
+        create_test_corgi(&mut contract, 0);
+        contract.delete_corgi("?".to_string());
+    }
+
+    #[test]
+    #[should_panic]
+    fn try_delete_unexistent_corgi() {
+        let context = get_context(vec![], false, None);
+        testing_env!(context);
+
+        let mut contract = Model::new();
+
+        contract.delete_corgi("?".to_string());
     }
 
     #[test]
