@@ -7,7 +7,6 @@ import Quote from './Quote/Quote';
 import Spinner from './Spinner/Spinner';
 import {
   CorgiCard,
-  CorgisLogo,
   CorgiSVG,
   CorgiTile,
   CorgiAnimOne,
@@ -31,7 +30,6 @@ export {
   Quote,
   Spinner,
   CorgiCard,
-  CorgisLogo,
   CorgiSVG,
   CorgiTile,
   CorgiAnimOne,

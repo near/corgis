@@ -14,10 +14,6 @@ const AccountPage = () => {
     clearCreatedCorgiState();
   }
 
-  if (!user) {
-    return <Redirect to='/' />;
-  }
-
   if (corgis && corgis.length === 0) {
     return <Redirect to='/generation' />;
   }

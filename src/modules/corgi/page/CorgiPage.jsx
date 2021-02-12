@@ -39,10 +39,6 @@ const CorgiPage = () => {
     setShare(false);
   };
 
-  if (!user) {
-    return <Redirect to='/' />;
-  }
-
   if (!id) {
     return <Redirect to='/account' />;
   }

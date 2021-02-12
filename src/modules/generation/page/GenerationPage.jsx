@@ -18,10 +18,6 @@ const GenerationPage = () => {
   const { creating, created } = useContext(ContractContext);
   const { color, backgroundColor } = useContext(CharacterContext);
 
-  if (!user) {
-    return <Redirect to='/' />;
-  }
-
   if (creating) {
     return <GenerationAnimation color={color} backgroundColor={backgroundColor} />;
   }

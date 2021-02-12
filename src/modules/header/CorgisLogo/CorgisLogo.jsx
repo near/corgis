@@ -6,7 +6,7 @@ import './CorgisLogo.scss';
 import logo from '~assets/images/logo.png';
 
 const CorgisLogo = () => (
-  <Link to='/'>
+  <Link to='/#'>
     <img className='logo' src={logo} style={{ minWidth: '100px', width: '60%' }} alt='' />
   </Link>
 );

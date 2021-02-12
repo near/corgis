@@ -3,19 +3,13 @@ import { Redirect } from 'react-router-dom';
 
 import './ProfilePage.scss';
 
-import { NearContext } from '~context/NearContext';
 import { ContractContext } from '~context/contract';
 
 import { CorgiAnimTwo, Spinner } from '~modules/common';
 import { ProfileRow } from '~modules/profile/components/';
 
 const ProfilePage = () => {
-  const nearContext = useContext(NearContext);
   const { corgis, loading, deleteCorgi, deleting, error } = useContext(ContractContext);
-
-  if (!nearContext.user) {
-    return <Redirect to='/' />;
-  }
 
   if (error) {
     console.error(error);

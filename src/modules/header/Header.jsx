@@ -6,8 +6,9 @@ import { NearContext } from '~context/NearContext';
 import { ContractContext } from '~context/contract';
 
 import Nav from './Nav/Nav';
+import CorgisLogo from './CorgisLogo/CorgisLogo';
 
-import { Spinner, Button, CorgisLogo } from '~modules/common';
+import { Spinner, Button } from '~modules/common';
 
 const Header = () => {
   const { user, isLoading, signIn, signOut } = useContext(NearContext);
