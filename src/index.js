@@ -1,7 +1,6 @@
 /* global document:true */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
 
 import * as nearlib from 'near-api-js';
 import getConfig from './config';

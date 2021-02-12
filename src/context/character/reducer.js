@@ -1,5 +1,5 @@
 import randomColor from 'randomcolor';
-import { genRandomName, genRandomQuote } from '../../helpers/generators';
+import { genRandomName, genRandomQuote } from '~helpers/generators';
 
 import { NAME, QUOTE, COLOR, BACKGROUND_COLOR, CLEAR } from './types';
 

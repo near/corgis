@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "baseUrl": "./src",
+    "paths": {
+      "~assets/*": ["./assets/*"],
+      "~context/*": ["./context/*"],
+      "~helpers/*": ["./helpers/*"],
+      "~modules/*": ["./modules/*"],
+      "~types/*": ["./types/*"]
+    }
+  },
+  "exclude": ["dist", "node_modules", "**/node_modules/*"]
+}

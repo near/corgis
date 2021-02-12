@@ -19,7 +19,7 @@ import {
 } from './types';
 import { contractReducer, initialContractState } from './reducer';
 
-import { ReactChildrenTypeRequired } from '../../types/ReactChildrenType';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
 const BOATLOAD_OF_GAS = Big(1)
   .times(10 ** 14)

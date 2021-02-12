@@ -36,7 +36,24 @@
   "rules": {
     "import/no-named-as-default": 0,
     "import/prefer-default-export": "off",
-    "indent": ["error", 2, { "SwitchCase": 1 }],
+    "import/no-unresolved": 0,
+    "import/extensions": [
+      "error",
+      "never",
+      {
+        "js": "never",
+        "jsx": "never",
+        "png": "always",
+        "svg": "always"
+      }
+    ],
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
     "jsx-quotes": ["error", "prefer-single"],
     "linebreak-style": ["warn", "windows"],
     "max-len": ["error", { "code": 120, "ignorePattern": "d=[\"']([\\s\\S]*?)[\"']" }],

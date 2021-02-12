@@ -1,26 +1,26 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import AccountPage from './components/AccountPage/AccountPage';
-import Dash from './components/Dash/Dash';
-import Generation from './components/Generation/Generation';
-import Profile from './components/Profile/Profile';
-import SharePage from './components/SharePage/SharePage';
-import CorgiPage from './components/CorgiPage/CorgiPage';
+import AccountPage from './modules/account/page/AccountPage';
+import HomePage from './modules/home/page/HomePage';
+import GenerationPage from './modules/generation/page/GenerationPage';
+import ProfilePage from './modules/profile/page/ProfilePage';
+import SharePage from './modules/share/page/SharePage';
+import CorgiPage from './modules/corgi/page/CorgiPage';
 
 const Routes = () => (
   <Switch>
     <Route exact path='/'>
-      <Dash />
+      <HomePage />
     </Route>
     <Route exact path='/generation'>
-      <Generation />
+      <GenerationPage />
     </Route>
     <Route exact path='/account'>
       <AccountPage />
     </Route>
     <Route exact path='/profile'>
-      <Profile />
+      <ProfilePage />
     </Route>
     <Route exact path='/@:name'>
       <CorgiPage />

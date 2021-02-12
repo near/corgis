@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 /* TODO: fill this in! */
 const CONTRACT_NAME = process.env.CONTRACT_NAME || 'new-corgis';
 

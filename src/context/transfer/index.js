@@ -3,7 +3,11 @@ import React, { useReducer } from 'react';
 import { transferReducer, initialTransferState } from './reducer';
 import { FOUND_RECEIVER_SUCCESS, FOUND_RECEIVER_ERROR, SET_RECEIVER, SET_MESSAGE } from './types';
 
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+
 export const TransferContext = React.createContext(initialTransferState);
+
+const TransferContextProviderPropTypes = { children: ReactChildrenTypeRequired };
 
 export const TransferContextProvider = ({ children }) => {
   const [transferState, dispatchTransfer] = useReducer(transferReducer, initialTransferState);
@@ -29,3 +33,5 @@ export const TransferContextProvider = ({ children }) => {
 
   return <TransferContext.Provider value={value}>{children}</TransferContext.Provider>;
 };
+
+TransferContextProvider.propTypes = TransferContextProviderPropTypes;

@@ -5,8 +5,8 @@ import Routes from './Routes';
 
 import './App.scss';
 
-import Header from './components/Header/Header';
-import Footer from './components/Footer/Footer';
+import { Header } from '~modules/header';
+import { Footer } from '~modules/footer';
 
 const App = () => (
   <div className='App'>
