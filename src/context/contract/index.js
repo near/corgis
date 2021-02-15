@@ -29,12 +29,12 @@ export const ContractContext = React.createContext();
 
 const ContractContextProviderPropTypes = {
   Contract: PropTypes.shape({
-    getCorgi: PropTypes.func.isRequired,
-    getCorgisList: PropTypes.func.isRequired,
-    displayGlobalCorgis: PropTypes.func.isRequired,
-    transferCorgi: PropTypes.func.isRequired,
-    createCorgi: PropTypes.func.isRequired,
-    deleteCorgi: PropTypes.func.isRequired,
+    get_corgi_by_id: PropTypes.func.isRequired,
+    get_corgis_by_owner: PropTypes.func.isRequired,
+    get_global_corgis: PropTypes.func.isRequired,
+    transfer_corgi: PropTypes.func.isRequired,
+    create_corgi: PropTypes.func.isRequired,
+    delete_corgi: PropTypes.func.isRequired,
   }).isRequired,
   children: ReactChildrenTypeRequired,
 };
@@ -47,9 +47,9 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const clearCreatedCorgiState = () => dispatchContract({ type: CLEAR_CREATED_CORGI_STATE });
 
   const createCorgi = useCallback(
-    (name, color, backgroundColor, quote) => {
+    (name, color, background_color, quote) => {
       dispatchContract({ type: CREATE_START });
-      Contract.createCorgi({ name, color, backgroundColor, quote }, BOATLOAD_OF_GAS)
+      Contract.create_corgi({ name, color, background_color, quote }, BOATLOAD_OF_GAS)
         .then(() => {
           dispatchContract({ type: CREATE_CORGI_SUCCESS });
         })
@@ -61,7 +61,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const transferCorgi = useCallback(
     (receiver, id, message) => {
       dispatchContract({ type: TRANSFER_START });
-      Contract.transferCorgi({ receiver, id, message }, BOATLOAD_OF_GAS)
+      Contract.transfer_corgi({ receiver, id, message }, BOATLOAD_OF_GAS)
         .then(() => dispatchContract({ type: TRANSFER_CORGI_SUCCESS }))
         .catch((error) => dispatchContract({ type: FAIL, error }));
     },
@@ -71,7 +71,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const deleteCorgi = useCallback(
     (id) => {
       dispatchContract({ type: DELETE_START });
-      Contract.deleteCorgi({ id }, BOATLOAD_OF_GAS)
+      Contract.delete_corgi({ id }, BOATLOAD_OF_GAS)
         .then(() => dispatchContract({ type: DELETE_CORGI_SUCCESS }))
         .catch((error) => dispatchContract({ type: FAIL, error }));
     },
@@ -81,7 +81,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const getCorgisList = useCallback(
     (owner) => {
       dispatchContract({ type: START });
-      Contract.getCorgisList({ owner })
+      Contract.get_corgis_by_owner({ owner })
         .then((corgis) => dispatchContract({ type: GET_CORGISLIST_SUCCESS, corgis }))
         .catch((error) => dispatchContract({ type: FAIL, error }));
     },
@@ -91,7 +91,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const getCorgi = useCallback(
     (id) => {
       dispatchContract({ type: START });
-      Contract.getCorgi({ id })
+      Contract.get_corgi_by_id({ id })
         .then((corgi) => dispatchContract({ type: GET_CORGI_SUCCESS, corgi }))
         .catch((error) => dispatchContract({ type: FAIL, error }));
     },
@@ -100,7 +100,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
 
   const getDisplayCorgis = useCallback(() => {
     dispatchContract({ type: START });
-    Contract.displayGlobalCorgis()
+    Contract.get_global_corgis()
       .then((corgis) => dispatchContract({ type: GET_DISPLAY_CORGIS, corgis }))
       .catch((error) => dispatchContract({ type: FAIL, error }));
   }, [Contract]);

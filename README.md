@@ -22,6 +22,23 @@ npm i -g near-cli
 npm i -g yarn
 ```
 
+4.Rust
+
+You need to install Rustup in order to compile Rust contracts.
+See the official guide on how to set up Rust in your local environment.
+
+> <https://www.rust-lang.org/tools/install>
+
+By installing `rustup`, you will add the Rust compiler and the `cargo` package manager to your system.
+
+The NEAR platform leverage the use of WASM to execute smart contracts.
+Thus, in order to build a suitable binary for the NEAR platform,
+we must install the wasm32 target:
+
+```sh
+rustup target add wasm32-unknown-unknown
+```
+
 ### Procedure (deploy the contract for your own project)
 
 Step 1: Create account for the contract.
@@ -118,23 +135,6 @@ Here is an overview on how to develop NEAR contracts using Rust:
 
 <https://docs.near.org/docs/develop/contracts/rust/intro>
 
-### Prerequisites
-
-You need to install Rustup in order to compile Rust contracts.
-See the official guide on how to set up Rust in your local environment.
-
-> <https://www.rust-lang.org/tools/install>
-
-By installing `rustup`, you will add the Rust compiler and the `cargo` package manager to your system.
-
-The NEAR platform leverage the use of WASM to execute smart contracts.
-Thus, in order to build a suitable binary for the NEAR platform,
-we must install the wasm32 target:
-
-```sh
-rustup target add wasm32-unknown-unknown
-```
-
 ### Building
 
 To build the Corgis contract:
@@ -146,7 +146,7 @@ cargo build --target wasm32-unknown-unknown --release
 
 The contract is compiled down to a WASM binary.
 You can find this binary in
-`contract/target/wasm32-unknown-unknown/release/rust_corgis.wasm`.
+`contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm`.
 
 ### Deploying our Corgis contract
 
@@ -156,7 +156,7 @@ The `near-cli` tool allows us to deploy and interact with contracts on the NEAR 
 We can deploy our contract with:
 
 ```sh
-near deploy --wasmFile contract/target/wasm32-unknown-unknown/release/rust_corgis.wasm
+near deploy --wasmFile contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
 ```
 
 ### Reference

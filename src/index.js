@@ -36,9 +36,9 @@ async function InitContract() {
   // Initializing our contract APIs by contract name and configuration.
   const contract = new nearlib.Contract(walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['getCorgi', 'getCorgisList', 'displayGlobalCorgis'],
+    viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis'],
     // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['transferCorgi', 'createCorgi', 'deleteCorgi'],
+    changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi'],
     // Sender is the account ID to initialize transactions.
     sender: walletConnection.getAccountId(),
   });

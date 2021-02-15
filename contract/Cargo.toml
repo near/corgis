@@ -1,5 +1,5 @@
 [package]
-name = "rust-corgis"
+name = "corgis-nft"
 version = "0.1.0"
 authors = ["Epam <hello@epam.com>"]
 edition = "2018"

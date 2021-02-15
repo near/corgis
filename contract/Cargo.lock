@@ -113,6 +113,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
 
 [[package]]
+name = "corgis-nft"
+version = "0.1.0"
+dependencies = [
+ "base64 0.13.0",
+ "near-sdk",
+]
+
+[[package]]
 name = "digest"
 version = "0.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -353,14 +361,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "991431c3519a3f36861882da93630ce66b52918dcf1b8e2fd66b397fc96f28df"
 dependencies = [
  "proc-macro2",
-]
-
-[[package]]
-name = "rust-corgis"
-version = "0.1.0"
-dependencies = [
- "base64 0.13.0",
- "near-sdk",
 ]
 
 [[package]]

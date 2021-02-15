@@ -23,9 +23,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Install wasm32-unknown-unknown target
-      run: rustup target add wasm32-unknown-unknown 
-    - name: Build
-      run: cd contract && cargo build --verbose --target wasm32-unknown-unknown --release
-    - name: Run tests
-      run: cd contract && cargo test --verbose -- --nocapture
+    # Disables event tracking consent question, which blocks the CI pipeline
+    # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
+    - run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
+    - run: rustup target add wasm32-unknown-unknown 
+    - run: yarn install --frozen-lockfile
+    - run: yarn build:contract
+    - run: yarn test:contract
+    - run: yarn dev-deploy:contract
+    - run: yarn api-test:contract

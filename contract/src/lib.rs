@@ -1,49 +1,51 @@
 #![deny(warnings)]
 
+use std::collections::HashSet;
+
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
-    collections::{UnorderedMap, Vector},
-    env, near_bindgen, serde::Serialize
+    collections::UnorderedMap,
+    env, near_bindgen,
+    serde::Serialize,
 };
 
 #[global_allocator]
 static ALLOC: near_sdk::wee_alloc::WeeAlloc = near_sdk::wee_alloc::WeeAlloc::INIT;
 
 const TRY_DELETE_UNKNOWN_ACCOUNT_MSG: &str = "The account does not have any corgis to delete from";
-const TRY_DELETE_UNEXISTENT_CORGI: &str = "The specified corgi id was not found";
+// const TRY_DELETE_UNEXISTENT_CORGI: &str = "The specified corgi id was not found";
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
     corgis: UnorderedMap<String, Corgi>,
-    corgis_by_owner: UnorderedMap<String, Vector<String>>
+    corgis_by_owner: UnorderedMap<String, HashSet<String>>,
 }
 
 /// Represents a `Corgi`.
 /// The `name` and `quote` are set by the user.
-/// 
+///
 /// The `Corgi` struct is used as part of the public interface of the contract.
 /// See, for example, [`get_corgis_by_owner`](Model::get_corgis_by_owner).
 /// Every struct that is part of the public interface needs to be serializable
 /// to JSON as well.
-/// The following attributes allows JSON serialization with no need to import 
-/// `serde` directly. 
-/// 
+/// The following attributes allows JSON serialization with no need to import
+/// `serde` directly.
+///
 /// ```example
 /// #[derive(Serialize)]
 /// #[serde(crate = "near_sdk::serde")]
 /// ```
-/// 
+///
 /// In addition, we use the following attributes
-/// 
+///
 /// ```example
 /// #[cfg_attr(test, derive(PartialEq, Debug))]
 /// ```
-/// 
+///
 /// to indicate that our struct uses both `PartialEq` and `Debug` traits
 /// but only for testing purposes.
-#[derive(BorshDeserialize, BorshSerialize)]
-#[derive(Serialize)]
+#[derive(BorshDeserialize, BorshSerialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 #[cfg_attr(test, derive(PartialEq, Debug))]
 pub struct Corgi {
@@ -55,10 +57,11 @@ pub struct Corgi {
     rate: Rarity,
     sausage: String,
     owner: String,
+    sender: String,
+    message: String,
 }
 
-#[derive(BorshDeserialize, BorshSerialize)]
-#[derive(Serialize)]
+#[derive(BorshDeserialize, BorshSerialize, Serialize)]
 #[serde(crate = "near_sdk::serde")]
 #[cfg_attr(test, derive(PartialEq, Debug))]
 #[allow(non_camel_case_types)]
@@ -67,7 +70,7 @@ pub enum Rarity {
     UNCOMMON,
     RARE,
     VERY_RARE,
-    ULTRA_RARE
+    ULTRA_RARE,
 }
 
 impl Default for Model {
@@ -75,33 +78,38 @@ impl Default for Model {
         env::log(b"Default initialization of corgis model");
         Self {
             corgis: UnorderedMap::new(b"corgis".to_vec()),
-            corgis_by_owner: UnorderedMap::new(b"corgis_by_owner".to_vec()),
+            corgis_by_owner: UnorderedMap::new(b"corgis-by-owner".to_vec()),
         }
     }
 }
 
 #[near_bindgen]
 impl Model {
-
     /// Initializes the contract.
-    /// 
+    ///
     /// ```sh
-    /// near deploy --wasmFile target/wasm32-unknown-unknown/release/rust_corgis.wasm --initFunction init --initArgs '{}'  
+    /// near deploy --wasmFile target/wasm32-unknown-unknown/release/corgis_nft.wasm --initFunction init --initArgs '{}'  
     /// ```
-    /// 
+    ///
     #[init]
     pub fn new() -> Self {
         env::log(b"Init non-default CorgisContract");
         Self {
             corgis: UnorderedMap::new(b"corgis".to_vec()),
-            corgis_by_owner: UnorderedMap::new(b"corgis_by_owner".to_vec()),
+            corgis_by_owner: UnorderedMap::new(b"corgis-by-owner".to_vec()),
         }
     }
 
     /// Creates a `Corgi` under the `signer_account_id`.
-    /// 
+    ///
     /// Returns the `id` of the generated `Corgi` encoded using base64.
-    pub fn create_corgi(&mut self, name: String, quote: String, color: String, background_color: String) -> String {
+    pub fn create_corgi(
+        &mut self,
+        name: String,
+        quote: String,
+        color: String,
+        background_color: String,
+    ) -> Corgi {
         let owner = env::signer_account_id();
         env::log(format!("create corgi owned by {}", owner).as_bytes());
 
@@ -139,7 +147,8 @@ impl Model {
                     Rarity::UNCOMMON => l + 50,
                     Rarity::COMMON => l,
                 }
-            }.to_string();
+            }
+            .to_string();
             Corgi {
                 id,
                 name,
@@ -149,25 +158,21 @@ impl Model {
                 rate,
                 sausage,
                 owner,
+                sender: "".to_string(),
+                message: "".to_string(),
             }
         };
 
-        let previous_corgi = self.corgis.insert(&corgi.id, &corgi);
-        assert!(previous_corgi.is_none(), "A previous Corgi already exists with id `{}`, aborting", corgi.id);
+        self.append_corgi(&corgi);
 
-        let mut ids = self
-            .corgis_by_owner
-            .get(&corgi.owner)
-            .unwrap_or_else(|| Vector::new(b"owner".to_vec()));
-        ids.push(&corgi.id);
-        self.corgis_by_owner.insert(&corgi.owner, &ids);
-
-        corgi.id
+        corgi
     }
 
     /// Gets the `Corgi` by the given `id`.
     pub fn get_corgi_by_id(&self, id: String) -> Corgi {
-        self.corgis.get(&id).unwrap()
+        let corgi = self.corgis.get(&id).expect("Corgi not found");
+        assert!(corgi.id == id);
+        corgi
     }
 
     /// Gets the `Corgi`s owned by the `owner` account id.
@@ -181,13 +186,15 @@ impl Model {
 
         match self.corgis_by_owner.get(&owner) {
             None => Vec::new(),
-            Some(list) => {
-                list.to_vec().into_iter().map(|id| {
-                    let corgi = self.corgis.get(&id);
-                    assert!(corgi.is_some());
-                    corgi.unwrap()
-                }).collect()
-            }
+            Some(list) => list
+                .into_iter()
+                .map(|id| {
+                    let corgi = self.corgis.get(&id).expect("Could not find Corgi by id");
+                    assert!(corgi.id == id);
+                    assert!(corgi.owner == owner, "The corgi with id `{}` owned by `{}` was found while fetching `{}`'s corgis", id, corgi.owner, owner);
+                    corgi
+                })
+                .collect(),
         }
     }
 
@@ -200,31 +207,30 @@ impl Model {
 
         match self.corgis_by_owner.get(&owner) {
             None => env::panic(TRY_DELETE_UNKNOWN_ACCOUNT_MSG.as_bytes()),
-            Some(list) => {
-                let mut new_list = Vector::new(b"owner".to_vec());
-                for i in 0..list.len() {
-                    let old_id = list.get(i).unwrap();
-                    if old_id != id {
-                        new_list.push(&old_id);
-                    }
-                }
-                if new_list.len() == list.len() {
-                    env::panic(TRY_DELETE_UNEXISTENT_CORGI.as_bytes());
-                }
-                self.corgis_by_owner.insert(&owner, &new_list);
-                self.corgis.remove(&id);
+            Some(mut list) => {
+                let was_removed_from_global_list = self.corgis.remove(&id);
+                assert!(was_removed_from_global_list.is_some());
+
+                let removed_corgi = was_removed_from_global_list.unwrap();
+                assert!(removed_corgi.owner == owner);
+                assert!(removed_corgi.id == id);
+
+                let was_removed_from_owner_list = list.remove(&id);
+                assert!(was_removed_from_owner_list);
+
+                self.corgis_by_owner.insert(&owner, &list);
             }
         }
     }
 
     /// Get all `Corgi`s from all users.
-    /// 
+    ///
     /// Using `near-cli` we can call this contract by:
     ///
     /// ```sh
     /// near view YOU.testnet get_global_corgis
     /// ```
-    /// 
+    ///
     /// Returns a list of all `Corgi`s.
     pub fn get_global_corgis(&self) -> Vec<Corgi> {
         env::log(format!("get global list of corgis").as_bytes());
@@ -236,12 +242,50 @@ impl Model {
         result
     }
 
+    /// Transfer the given corgi to `receiver`.
+    pub fn transfer_corgi(&mut self, receiver: String, id: String, message: String) {
+        let owner = env::signer_account_id();
+        let mut corgi = self
+            .corgis
+            .get(&id)
+            .expect("The Corgi with the given id does not exist");
+
+        assert!(corgi.id == id);
+        assert!(
+            corgi.owner == owner,
+            "The specified Corgi does not belong to sender"
+        );
+        corgi.owner = receiver;
+        corgi.sender = owner;
+        corgi.message = message;
+
+        self.delete_corgi(id);
+        self.append_corgi(&corgi);
+    }
+
+    fn append_corgi(&mut self, corgi: &Corgi) {
+        let previous_corgi = self.corgis.insert(&corgi.id, corgi);
+        assert!(
+            previous_corgi.is_none(),
+            "A previous Corgi already exists with id `{}`, aborting",
+            corgi.id
+        );
+
+        let mut ids = self
+            .corgis_by_owner
+            .get(&corgi.owner)
+            .unwrap_or_else(|| HashSet::new());
+        let is_new_element = ids.insert(corgi.id.to_string());
+        assert!(is_new_element);
+
+        self.corgis_by_owner.insert(&corgi.owner, &ids);
+    }
 }
 
 fn pack(data: &[u8]) -> u64 {
     let mut result = 0u64;
     for i in 0..std::cmp::min(data.len(), 8) {
-        result += (0xff & data[i] as u64) << (i*8);
+        result += (0xff & data[i] as u64) << (i * 8);
     }
 
     result
@@ -250,9 +294,11 @@ fn pack(data: &[u8]) -> u64 {
 // use the attribute below for unit tests
 #[cfg(test)]
 mod tests {
+
     use super::*;
     use near_sdk::MockedBlockchain;
     use near_sdk::{testing_env, VMContext};
+    use std::collections::HashSet;
 
     // part of writing unit tests is setting up a mock context
     // in this example, this is only needed for env::log in the contract
@@ -268,7 +314,9 @@ mod tests {
             block_timestamp: 0,
             account_balance: 0,
             account_locked_balance: 0,
-            storage_usage: 0,
+            // Important to increase storage usage is several items are going to be created.
+            // https://github.com/near/near-sdk-rs/issues/159#issuecomment-631847439
+            storage_usage: 100_000,
             attached_deposit: 0,
             prepaid_gas: 10u64.pow(18),
             random_seed: random_seed.unwrap_or_else(|| vec![3, 2, 1]),
@@ -278,18 +326,38 @@ mod tests {
         }
     }
 
-    fn create_test_corgi(contract: &mut Model, i: usize) -> (String, String, String, String, String) {
+    fn create_test_corgi(
+        contract: &mut Model,
+        i: usize,
+    ) -> (Corgi, String, String, String, String) {
         let name = format!("doggy dog {}", i);
         let quote = "To err is human — to forgive, canine";
         let color = "green";
         let background_color = "blue";
         (
-            contract.create_corgi(name.to_string(), quote.to_string(), color.to_string(), background_color.to_string()),
+            contract.create_corgi(
+                name.to_string(),
+                quote.to_string(),
+                color.to_string(),
+                background_color.to_string(),
+            ),
             name.to_string(),
             quote.to_string(),
             color.to_string(),
-            background_color.to_string()
+            background_color.to_string(),
         )
+    }
+
+    fn assert_eq_as_sets(left: &Vec<String>, right: &Vec<String>) {
+        assert_eq!(
+            left.iter()
+                .map(|id| id.to_string())
+                .collect::<HashSet<String>>(),
+            right
+                .iter()
+                .map(|id| id.to_string())
+                .collect::<HashSet<String>>(),
+        );
     }
 
     #[test]
@@ -319,10 +387,10 @@ mod tests {
         let mut contract = Model::new();
         assert_eq!(0, contract.get_global_corgis().len());
 
-        let (id, name, quote, color, background_color) = create_test_corgi(&mut contract, 0);
+        let (new_corgi, name, quote, color, background_color) = create_test_corgi(&mut contract, 0);
 
-        let corgi = contract.get_corgi_by_id(id.to_string());
-        assert_eq!(id, corgi.id);
+        let corgi = contract.get_corgi_by_id(new_corgi.id.to_string());
+        assert_eq!(new_corgi.id, corgi.id);
         assert_eq!(name, corgi.name);
         assert_eq!(quote, corgi.quote);
         assert_eq!(color, corgi.color);
@@ -331,14 +399,14 @@ mod tests {
 
         let global_corgis = contract.get_global_corgis();
         assert_eq!(1, global_corgis.len());
-        assert_eq!(id, global_corgis.get(0).unwrap().id);
+        assert_eq!(new_corgi.id, global_corgis.get(0).unwrap().id);
 
         let corgis_by_owner = contract.get_corgis_by_owner(signer);
         assert_eq!(1, corgis_by_owner.len());
 
         let corgi = corgis_by_owner.get(0).unwrap();
         println!("Corgi: {:?}", corgi);
-        assert_eq!(id, corgi.id);
+        assert_eq!(new_corgi.id, corgi.id);
     }
 
     #[test]
@@ -350,12 +418,12 @@ mod tests {
 
         assert_eq!(0, contract.get_global_corgis().len());
 
-        let (id, ..) = create_test_corgi(&mut contract, 0);
+        let (new_corgi, ..) = create_test_corgi(&mut contract, 0);
 
         assert_eq!(1, contract.get_global_corgis().len());
 
-        contract.delete_corgi(id);
-        
+        contract.delete_corgi(new_corgi.id);
+
         assert_eq!(0, contract.get_global_corgis().len());
     }
 
@@ -371,10 +439,10 @@ mod tests {
         let mut ids = Vec::new();
         let n = 5;
         for i in 1..=n {
-            let (id, ..) = create_test_corgi(&mut contract, i);
+            let (new_corgi, ..) = create_test_corgi(&mut contract, i);
             testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
-            println!("Test Corgi id: {}", id);
-            ids.push(id);
+            println!("Test Corgi id: {}", new_corgi.id);
+            ids.push(new_corgi.id);
         }
 
         assert_eq!(n, contract.get_global_corgis().len());
@@ -382,7 +450,48 @@ mod tests {
         let corgis_by_owner = contract.get_corgis_by_owner(signer);
         assert_eq!(n, corgis_by_owner.len());
         let cids: Vec<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
-        assert_eq!(ids, cids);
+        assert_eq_as_sets(&ids, &cids);
+    }
+
+    #[test]
+    fn create_and_delete_a_few_corgis() {
+        let context = get_context(vec![], false, None);
+        let signer = context.signer_account_id.to_owned();
+        testing_env!(context);
+
+        let mut contract = Model::new();
+        assert_eq!(0, contract.get_global_corgis().len());
+
+        let mut ids = Vec::new();
+        let n = 5;
+        for i in 1..=n {
+            let (new_corgi, ..) = create_test_corgi(&mut contract, i);
+            testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
+            println!("Test Corgi id: {}", new_corgi.id);
+            ids.push(new_corgi.id);
+        }
+
+        assert_eq!(contract.get_global_corgis().len(), n);
+
+        let check_state = |contract: &Model, ids: &Vec<String>| {
+            assert_eq!(contract.get_global_corgis().len(), ids.len());
+            let corgis_by_owner = contract.get_corgis_by_owner(signer.to_string());
+            assert_eq!(corgis_by_owner.len(), ids.len());
+            let cids: Vec<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
+            assert_eq_as_sets(ids, &cids);
+        };
+
+        let id = ids.remove(2);
+        contract.delete_corgi(id);
+        check_state(&contract, &ids);
+
+        let id = ids.remove(3);
+        contract.delete_corgi(id);
+        check_state(&contract, &ids);
+
+        let id = ids.remove(0);
+        contract.delete_corgi(id);
+        check_state(&contract, &ids);
     }
 
     #[test]
@@ -409,15 +518,111 @@ mod tests {
     }
 
     #[test]
+    fn transfer_a_corgi() {
+        let context = get_context(vec![], false, None);
+        testing_env!(context.clone());
+
+        let mut contract = Model::new();
+        assert_eq!(0, contract.get_global_corgis().len());
+
+        let (new_corgi, ..) = create_test_corgi(&mut contract, 42);
+        println!("Test Corgi id: {}", new_corgi.id);
+        assert_eq!(1, contract.get_global_corgis().len());
+        assert_eq!(
+            contract
+                .get_corgis_by_owner(context.signer_account_id.to_string())
+                .len(),
+            1
+        );
+
+        let receiver = "bob.testnet";
+        contract.transfer_corgi(
+            receiver.to_string(),
+            new_corgi.id.to_string(),
+            "A Corgi will make you happier!".to_string(),
+        );
+
+        assert_eq!(1, contract.get_global_corgis().len());
+
+        let corgi = contract.get_corgi_by_id(new_corgi.id.to_string());
+        assert_eq!(corgi.owner, receiver);
+
+        let receivers_corgis = contract.get_corgis_by_owner(receiver.to_string());
+        assert_eq!(receivers_corgis.len(), 1);
+        assert_eq!(receivers_corgis.get(0).unwrap().id, new_corgi.id);
+
+        let senders_corgis = contract.get_corgis_by_owner(context.signer_account_id);
+        assert_eq!(senders_corgis.len(), 0);
+    }
+
+    #[test]
+    fn transfer_a_few_corgis() {
+        let context = get_context(vec![], false, None);
+        testing_env!(context.clone());
+
+        let mut contract = Model::new();
+        assert_eq!(0, contract.get_global_corgis().len());
+
+        let mut ids = Vec::new();
+        let n = 5;
+        for i in 1..=n {
+            let (new_corgi, ..) = create_test_corgi(&mut contract, i);
+            testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
+            println!("Test Corgi id: {}", new_corgi.id);
+            ids.push(new_corgi.id);
+        }
+
+        assert_eq!(contract.get_global_corgis().len(), n);
+        assert_eq!(
+            contract
+                .get_corgis_by_owner(context.signer_account_id.to_string())
+                .len(),
+            n
+        );
+
+        let receiver = "bob.testnet";
+        contract.transfer_corgi(
+            receiver.to_string(),
+            ids[2].to_string(),
+            "A Corgi will make you happier!".to_string(),
+        );
+
+        assert_eq!(contract.get_global_corgis().len(), n);
+        assert_eq!(
+            contract
+                .get_corgis_by_owner(context.signer_account_id.to_string())
+                .len(),
+            n - 1
+        );
+        assert_eq!(contract.get_corgis_by_owner(receiver.to_string()).len(), 1);
+
+        let corgi = contract.get_corgi_by_id(ids[2].to_string());
+        assert_eq!(corgi.owner, receiver);
+
+        let receivers_corgis = contract.get_corgis_by_owner(receiver.to_string());
+        assert_eq!(receivers_corgis.len(), 1);
+        assert_eq!(receivers_corgis.get(0).unwrap().id, ids[2].to_string());
+
+        let senders_corgis = contract.get_corgis_by_owner(context.signer_account_id);
+        assert_eq!(
+            senders_corgis
+                .iter()
+                .filter(|corgi| corgi.id == ids[2].to_string())
+                .collect::<Vec<&Corgi>>()
+                .len(),
+            0
+        );
+    }
+
+    #[test]
     fn pack_test() {
         assert_eq!(0, pack(&[0, 0, 0]));
         assert_eq!(127, pack(&[127, 0, 0]));
         assert_eq!(256, pack(&[0, 1, 0]));
         assert_eq!(512, pack(&[0, 2, 0]));
         assert_eq!(65536, pack(&[0, 0, 1]));
-        assert_eq!(65536+256+1, pack(&[1, 1, 1]));
+        assert_eq!(65536 + 256 + 1, pack(&[1, 1, 1]));
 
         assert_eq!(3, pack(&[3, 0, 0, 0, 0, 0, 0, 0, 1]));
     }
-
 }
