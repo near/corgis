@@ -3,13 +3,14 @@ import { Switch, Route } from 'react-router-dom';
 
 import { NearContext } from '~context/NearContext';
 
+import GuardedRoute from '~router/GuardedRoute';
+
 import AccountPage from '~modules/account/page/AccountPage';
 import HomePage from '~modules/home/page/HomePage';
 import GenerationPage from '~modules/generation/page/GenerationPage';
 import ProfilePage from '~modules/profile/page/ProfilePage';
 import SharePage from '~modules/share/page/SharePage';
 import CorgiPage from '~modules/corgi/page/CorgiPage';
-import GuardedRoute from '~router/GuardedRoute';
 
 const Routes = () => {
   const { user } = useContext(NearContext);
