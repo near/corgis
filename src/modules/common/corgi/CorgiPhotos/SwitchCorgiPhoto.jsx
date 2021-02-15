@@ -5,6 +5,8 @@ import CorgiUncommon from './CorgiUncommon';
 import CorgiRare from './CorgiRare';
 import CorgiVeryRare from './CorgiVeryRare';
 
+import CORGI_RATES from '~constants/CorgiRates';
+
 import { CorgiType } from '~types/CorgiTypes';
 
 const SwitchCorgiPhotoPropTypes = {
@@ -14,19 +16,19 @@ const SwitchCorgiPhotoPropTypes = {
 
 const SwitchCorgiPhoto = ({ rate, color }) => {
   switch (rate) {
-    case 'COMMON':
+    case CORGI_RATES.COMMON:
       return <CorgiCommon color={color} />;
 
-    case 'UNCOMMON':
+    case CORGI_RATES.UNCOMMON:
       return <CorgiUncommon color={color} />;
 
-    case 'RARE':
+    case CORGI_RATES.RARE:
       return <CorgiRare color={color} />;
 
-    case 'VERY RARE':
+    case CORGI_RATES.VERY_RARE:
       return <CorgiVeryRare color={color} />;
 
-    case 'ULTRA RARE':
+    case CORGI_RATES.ULTRA_RARE:
       return 'ULTRA RARE';
 
     default:
