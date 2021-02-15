@@ -1,64 +1,93 @@
-.spinner {
-  width: 15em;
-  height: 15em;
+.spinner-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
-  position: relative;
+  width: 100%;
+  max-width: 100%;
+
+  padding: 3rem 0;
 
   margin: 50px auto;
 
+  overflow: hidden;
+}
+
+.spinner {
+  width: 6rem;
+  height: 6rem;
+
+  position: relative;
+
+  margin: 0;
+  padding: 0;
+
   border-radius: 50%;
 
-  background: #fbb040;
-  background: -moz-linear-gradient(left, #fbb040 10%, rgba(255, 187, 49, 0) 42%);
-  background: -webkit-linear-gradient(left, #fbb040 10%, rgba(255, 187, 49, 0) 42%);
-  background: -o-linear-gradient(left, #fbb040 10%, rgba(255, 187, 49, 0) 42%);
-  background: -ms-linear-gradient(left, #fbb040 10%, rgba(255, 187, 49, 0) 42%);
-  background: linear-gradient(to right, #fbb040 10%, rgba(255, 187, 49, 0) 42%);
-
-  font-size: 10px;
-
-  text-indent: -9999em;
-
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
+  box-sizing: border-box;
 
   -webkit-animation: load3 1.4s infinite linear;
   animation: load3 1.4s infinite linear;
-}
 
-.spinner:before {
-  width: 50%;
-  height: 50%;
+  z-index: 0;
 
-  position: absolute;
-  top: 0;
-  left: 0;
+  &__gradient {
+    position: absolute;
+    top: -25%;
+    left: -25%;
 
-  border-radius: 100% 0 0 0;
+    width: 150%;
+    height: 150%;
 
-  background: #fbb040;
+    border-radius: inherit;
 
-  content: '';
-}
+    background: #fbb040;
+    background: linear-gradient(to left top, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
+    background: -moz-linear-gradient(right bottom, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
+    background: -webkit-linear-gradient(right bottom, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
+    background: -o-linear-gradient(right bottom, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
+    background: -ms-linear-gradient(right bottom, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
 
-.spinner:after {
-  width: 75%;
-  height: 75%;
+    z-index: -1;
 
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+    // Use ::after to trim unnecessary part of gradient
+    &::after {
+      content: '';
 
-  margin: auto;
+      position: absolute;
 
-  border-radius: 50%;
+      top: 0%;
+      left: 50%;
 
-  background: url('../../../assets/images/corgi-circle.png') no-repeat; /*#f7fffb*/
+      width: 50%;
+      height: 50%;
 
-  content: '';
+      background-color: white;
+    }
+  }
+
+  &__background {
+    width: 100%;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background-color: white;
+  }
+
+  &__corgi {
+    position: absolute;
+    // pixel perfect positioning to remove gaps
+    top: -29%;
+    left: 50%;
+
+    width: 75%;
+    height: 75%;
+
+    margin: 0;
+
+    transform: translateX(-50%);
+  }
 }
 
 @-webkit-keyframes load3 {
