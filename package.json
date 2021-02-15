@@ -9,7 +9,7 @@
         "api-test:contract": ". neardev/dev-account.env && CONTRACT_NAME=$CONTRACT_NAME jest api.test.js --env=node --runInBand --testTimeout=50000",
         "deploy:contract": "near deploy --wasmFile contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm",
         "build:web": "NODE_ENV=testnet parcel build src/index.html --public-url ./",
-        "deploy:web": "gh-pages -d dist -b ghpages --user 'githubcibot <no@email.com>'",
+        "deploy:web": "gh-pages --dist dist",
         "build": "yarn build:contract && yarn build:web",
         "deploy": "yarn build && yarn deploy:contract && yarn deploy:web",
         "dev:start": "yarn build:contract && yarn dev:deploy:contract",

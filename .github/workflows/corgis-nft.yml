@@ -1,4 +1,4 @@
-name: Corgis NFT contract & app CI/CD
+name: Corgis NFT contract&app CI/CD
 
 on:
   # We want to trigger the build & test pipelines in every branch.
@@ -49,8 +49,9 @@ jobs:
       continue-on-error: true
 
     - name: Generate key the account to be used by gh-pages (only in master)
-      run: yarn near generate-key corgis-nft.testnet --seedPhrase="$seed_phrase"
+      run: yarn near generate-key $CONTRACT_NAME --seedPhrase="$seed_phrase"
       env:
+        CONTRACT_NAME: corgis-nft.testnet
         seed_phrase: ${{ secrets.SEED_PHRASE }}
       if: ${{ github.ref == 'refs/heads/master' }}
     
@@ -61,5 +62,7 @@ jobs:
       if: ${{ github.ref == 'refs/heads/master' }}
       
     - name: Deploy the Rust Corgis contract to testnet and the React app to gh-pages (only in master)
-      run: CONTRACT_NAME=corgis-nft.testnet yarn deploy
+      run: yarn deploy --user "Github Workflow Bot <noemail@epam.github.io>"
+      env:
+        CONTRACT_NAME: corgis-nft.testnet
       if: ${{ github.ref == 'refs/heads/master' }}
