@@ -29,7 +29,7 @@ const CorgiRate = ({ rate }) => (
         <span>Rare</span>
       </div>
       <div>
-        <CorgiVeryRare color={rate === 'VERY RARE' ? orange : gray} />
+        <CorgiVeryRare color={rate === 'VERY_RARE' ? orange : gray} />
         <span>Very Rare</span>
       </div>
     </div>
