@@ -12,6 +12,7 @@ function getConfig(env) {
         walletUrl: 'https://wallet.mainnet.near.org'
       };
     case 'development':
+    case 'testnet':
       return {
         networkId: 'testnet',
         nodeUrl: 'https://rpc.testnet.near.org',
