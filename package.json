@@ -11,16 +11,15 @@
         "deploy:contract": "near deploy --wasmFile contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm",
         "build:web": "parcel build src/index.html --public-url ./",
         "deploy:web": "gh-pages -d dist -b ghpages",
-        "build": "npm run build:contract && npm run build:web",
-        "deploy": "npm run build && npm run deploy:contract && npm run deploy:web",
-        "dev:start": "npm run build:contract && npm run dev:deploy:contract",
+        "build": "yarn build:contract && yarn build:web",
+        "deploy": "yarn build && yarn deploy:contract && yarn deploy:web",
+        "dev:start": "yarn build:contract && yarn dev:deploy:contract",
         "prestart": "yarn build:contract && yarn deploy:contract",
         "start": "parcel src/index.html",
-        "dev": "nodemon --watch assembly -e ts --exec \"npm run dev:start && npm run start\"",
-        "test": "asp && npm run build:contract && jest test --runInBand",
+        "test": "yarn test:contract && yarn build:contract && jest test --runInBand",
         "lint": "eslint --ext js,jsx src",
-        "lint:fix": "npm run lint -- --fix",
-        "lint:fix:dry": "npm run lint -- --fix-dry-run"
+        "lint:fix": "yarn lint -- --fix",
+        "lint:fix:dry": "yarn lint -- --fix-dry-run"
     },
     "dependencies": {
         "@babel/runtime": "^7.10.4",
