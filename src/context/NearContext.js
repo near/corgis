@@ -12,6 +12,7 @@ export const NearContext = React.createContext({
 
 export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, children }) => {
   const [isLoading, setLoading] = useState(false);
+  const [user, setUser] = useState(currentUser || null);
 
   const signIn = useCallback(() => {
     wallet.requestSignIn(nearConfig.contractName, 'NEAR Corgi');
@@ -20,14 +21,14 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
   const signOut = useCallback(() => {
     wallet.signOut();
     setTimeout(setLoading(true), 2000);
-    window.location = '/';
     setLoading(false);
+    setUser(null);
   }, [wallet]);
 
   return (
     <NearContext.Provider
       value={{
-        user: currentUser,
+        user,
         nearContent: near,
         isLoading,
         setLoading,

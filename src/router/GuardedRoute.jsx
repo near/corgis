@@ -1,5 +1,5 @@
 import React from 'react';
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, useLocation, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { ReactChildrenType } from '~types/ReactChildrenType';
@@ -11,7 +11,7 @@ const GuardedRoutePropTypes = {
 };
 
 const GuardedRoute = ({ children, auth, ...rest }) => (
-  <Route {...rest}>{auth === true ? children : <Redirect to='/#' />}</Route>
+  <Route {...rest}>{auth === true ? children : <Redirect to='/' />}</Route>
 );
 
 GuardedRoute.propTypes = GuardedRoutePropTypes;

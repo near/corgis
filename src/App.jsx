@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime';
 import React from 'react';
-import { HashRouter as Router } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import Routes from '~router/Routes';
 
 import './App.scss';
