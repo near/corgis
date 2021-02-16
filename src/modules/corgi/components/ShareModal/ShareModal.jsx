@@ -33,6 +33,9 @@ const Share = ({ corgi, show, closeModal }) => {
               hash: corgi.id,
             }}
             key={corgi.id}
+            style={{
+              textDecoration: 'none',
+            }}
           >
             <CorgiCard corgi={corgi} size='small' />
           </Link>

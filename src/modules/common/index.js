@@ -2,9 +2,11 @@ import Button from './Button/Button';
 import Colorpicker from './Colorpicker/Colorpicker';
 import Dropdown from './Dropdown/Dropdown';
 import Egg from './Egg/Egg';
+import InfoTile from './InfoTile/InfoTile';
 import Modal from './Modal/Modal';
 import Quote from './Quote/Quote';
 import Spinner from './Spinner/Spinner';
+
 import {
   CorgiCard,
   CorgiSVG,
@@ -26,6 +28,7 @@ export {
   Colorpicker,
   Dropdown,
   Egg,
+  InfoTile,
   Modal,
   Quote,
   Spinner,

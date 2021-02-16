@@ -1,0 +1,17 @@
+.infotile {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin: 0;
+  padding: 5px 30px;
+
+  border: 2px solid #fbb040;
+  border-radius: 5px;
+
+  background-color: #fff;
+
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+
+  cursor: pointer;
+}

@@ -1,12 +1,21 @@
 .nav {
-  margin: auto;
-  padding: 5px 30px;
-  display: inline-flex;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
   font-size: 1em;
 
-  &__account {
-    display: inline-flex;
-    flex-direction: row;
+  &__item {
+    margin: 0 0.5rem;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
   }
 }
 
@@ -19,14 +28,5 @@
 @media all and (max-width: 450px) {
   .nav {
     font-size: 0.6em;
-
-    &__account {
-      flex-direction: row;
-    }
   }
 }
-
-// .orange {
-//   color: #fbb040;
-//   display: inline;
-// }

@@ -29,15 +29,17 @@ const Header = () => {
   }, [getCorgisList, user]);
 
   return (
-    <div className='header'>
-      <CorgisLogo />
+    <header className='header'>
+      <div className='header__logo'>
+        <CorgisLogo />
+      </div>
 
       {user ? (
         <Nav accountName={user.accountId} number={corgis ? corgis.length : '...'} requestSignOut={signOutAction} />
       ) : (
         <Button description='Get Started' action={signInAction} />
       )}
-    </div>
+    </header>
   );
 };
 

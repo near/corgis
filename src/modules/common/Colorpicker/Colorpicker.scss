@@ -12,21 +12,11 @@
 
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
 
-    cursor: grab;
+    cursor: pointer;
   }
 
   &__input {
     display: none;
-  }
-
-  &__select {
-    position: relative;
-    left: 29px;
-    top: 24px;
-
-    cursor: pointer;
-
-    z-index: 10;
   }
 
   &__description {

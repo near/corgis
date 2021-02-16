@@ -14,9 +14,10 @@ const ModalPropTypes = {
 };
 
 const Modal = ({ show, Close, children }) => (
-  <div>
-    {show && <div className='backdrop' onClick={Close}></div>}
-    <div className={classNames('modal', { 'modal--show': show })}>{children}</div>
+  <div className={classNames('modal', { 'modal--show': show })}>
+    <div className='modal__background' onClick={Close}></div>
+
+    <div className='modal__content'>{children}</div>
   </div>
 );
 

@@ -1,28 +1,29 @@
 .header {
   display: flex;
   justify-content: space-between;
+  align-items: stretch;
 
-  width: 70%;
-  max-width: 1000px;
+  width: 100%;
 
-  margin: 1% auto;
-  padding: auto;
-}
+  margin: 0;
+  padding: 0.5rem 10%;
 
-@media all and (max-width: 751px) {
-  .header {
-    width: 90%;
+  box-sizing: border-box;
 
-    margin: 1% auto;
+  &__logo {
+    width: 30%;
   }
 }
 
-@media all and (max-width: 376px) {
+@media all and (max-width: 1000px) {
+  .header {
+    padding: 0.5rem 5%;
+  }
+}
+
+@media all and (max-width: 750px) {
   .header {
     flex-direction: column;
-
-    width: 90%;
-
-    margin: 1% auto;
+    align-items: center;
   }
 }

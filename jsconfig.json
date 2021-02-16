@@ -8,6 +8,7 @@
       "~constants/*": ["./constants/*"],
       "~context/*": ["./context/*"],
       "~helpers/*": ["./helpers/*"],
+      "~hooks/*": ["./hooks/*"],
       "~modules/*": ["./modules/*"],
       "~router/*": ["./router/*"],
       "~types/*": ["./types/*"]

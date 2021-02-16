@@ -7,7 +7,9 @@ import logo from '~assets/images/logo.png';
 
 const CorgisLogo = () => (
   <Link to='/#'>
-    <img className='logo' src={logo} style={{ minWidth: '100px', width: '60%' }} alt='' />
+    <div className='logo'>
+      <img className='logo__image' src={logo} alt='' />
+    </div>
   </Link>
 );
 

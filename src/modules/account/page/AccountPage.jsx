@@ -24,6 +24,7 @@ const AccountPage = () => {
         <h1 className='account__title'>Your Pack</h1>
         <p className='account__description'>Create,collect,send or trade</p>
       </div>
+
       <div className='account__corgis'>
         {!loading && corgis && corgis.length > 0 ? (
           corgis.map((corgi) => (

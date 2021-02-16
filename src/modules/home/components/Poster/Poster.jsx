@@ -5,7 +5,7 @@ import './Poster.scss';
 
 import corgiFull from '~assets/images/corgi-full.png';
 
-import { Button, Spinner } from '~modules/common';
+import { Button, InfoTile, Spinner } from '~modules/common';
 import { PosterFooter } from '~modules/home/components';
 
 const PosterPropTypes = {
@@ -23,19 +23,22 @@ const Poster = ({ requestSignIn, isLoading, user }) => {
   return (
     <div className='poster'>
       <div className='poster__background'>
-        <div className='poster__text'>
-          <p className='text1'>Create your own </p>
-          <p className='text1'>one-of-the-kind</p>
-          <p className='text1'>Corgi today</p>
-          <p className='text2'>create, collect, send, or trade</p>
-          {user ? (
-            <div className='show'>Logged In {user.accountId}</div>
-          ) : (
-            <Button description='Login with NEAR' action={requestSignIn} />
-          )}
+        <div className='poster__description'>
+          <p className='poster__text'>Create your own one-of-the-kind Corgi today</p>
+
+          <p className='poster__text poster__text--small'>create, collect, send, or trade</p>
+
+          <div className='poster__login'>
+            {user ? (
+              <InfoTile text={`Logged In as @${user.accountId}`} />
+            ) : (
+              <Button description='Login with NEAR' action={requestSignIn} />
+            )}
+          </div>
         </div>
+
         <div className='poster__image'>
-          <img src={corgiFull} alt='' style={{ width: '100%' }} />
+          <img className='poster__corgi' src={corgiFull} alt='' />
         </div>
       </div>
 

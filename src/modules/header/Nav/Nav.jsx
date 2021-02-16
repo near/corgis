@@ -15,22 +15,28 @@ const NavPropTypes = {
 
 const Nav = ({ number, accountName, requestSignOut }) => (
   <nav className='nav'>
-    <div className='nav__account'>
+    <div className='nav__item'>
       <Link to='/account'>
         <Button description={`My Corgis ( ${number} )`} />
       </Link>
+    </div>
+
+    <div className='nav__item'>
       <Dropdown dropdownTitle={`@${accountName}▾`}>
         <Link to='/profile'>
           <button>Edit Profile</button>
         </Link>
+
         <button onClick={requestSignOut}>Sign Out</button>
       </Dropdown>
     </div>
-    <Link to='/generation'>
+
+    <div className='nav__item'>
       <GenerationLink />
-    </Link>
+    </div>
   </nav>
 );
+
 Nav.propTypes = NavPropTypes;
 
 export default Nav;
