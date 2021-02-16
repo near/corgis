@@ -61,6 +61,211 @@ fn assert_eq_as_sets(left: &Vec<String>, right: &Vec<String>) {
 }
 
 #[test]
+fn get_corgis_page_limit_should_be_positive() {
+    testing_env!(get_context(vec![], false, None));
+
+    let contract = Model::new();
+
+    assert!(contract.get_corgis_page_limit() > 0);
+}
+
+#[test]
+fn get_empty_corgis() {
+    testing_env!(get_context(vec![], false, None));
+
+    let contract = Model::new();
+
+    assert_eq!(contract.get_global_corgis().len(), 0);
+    assert_eq!(contract.get_corgis_by_owner("?".to_string()).len(), 0);
+}
+
+#[test]
+#[should_panic]
+fn should_panic_when_corgi_id_does_not_exist() {
+    testing_env!(get_context(vec![], false, None));
+
+    let contract = Model::new();
+
+    assert_eq!(contract.get_global_corgis().len(), 0);
+
+    contract.get_corgi_by_id("?".to_string());
+}
+
+#[test]
+fn create_a_corgi() {
+    let context = get_context(vec![], false, None);
+    let signer = context.signer_account_id.to_owned();
+    testing_env!(context);
+
+    let mut contract = Model::new();
+    assert_eq!(contract.get_global_corgis().len(), 0);
+
+    let (new_corgi, name, quote, color, background_color) = create_test_corgi(&mut contract, 0);
+
+    let corgi = contract.get_corgi_by_id(new_corgi.id.to_string());
+    assert_eq!(new_corgi.id, corgi.id);
+    assert_eq!(name, corgi.name);
+    assert_eq!(quote, corgi.quote);
+    assert_eq!(color, corgi.color);
+    assert_eq!(background_color, corgi.background_color);
+    assert_eq!(signer, corgi.owner);
+
+    let global_corgis = contract.get_global_corgis();
+    assert_eq!(global_corgis.len(), 1);
+    assert_eq!(new_corgi.id, global_corgis.get(0).unwrap().id);
+
+    let corgis_by_owner = contract.get_corgis_by_owner(signer);
+    assert_eq!(corgis_by_owner.len(), 1);
+    assert_eq!(new_corgi.id, corgis_by_owner.get(0).unwrap().id);
+}
+
+#[test]
+fn create_and_delete_corgi() {
+    testing_env!(get_context(vec![], false, None));
+
+    let mut contract = Model::new();
+
+    assert_eq!(contract.get_global_corgis().len(), 0);
+
+    let (new_corgi, ..) = create_test_corgi(&mut contract, 0);
+
+    assert_eq!(contract.get_global_corgis().len(), 1);
+
+    contract.delete_corgi(new_corgi.id);
+
+    assert_eq!(contract.get_global_corgis().len(), 0);
+}
+
+#[test]
+#[should_panic]
+fn should_panic_when_there_are_no_corgis_to_delete() {
+    testing_env!(get_context(vec![], false, None));
+
+    let mut contract = Model::new();
+
+    contract.delete_corgi("?".to_string());
+}
+
+#[test]
+#[should_panic]
+fn should_panic_when_corgi_to_delete_does_not_exist() {
+    testing_env!(get_context(vec![], false, None));
+
+    let mut contract = Model::new();
+
+    create_test_corgi(&mut contract, 0);
+    contract.delete_corgi("?".to_string());
+}
+
+#[test]
+fn create_a_few_corgis() {
+    let context = get_context(vec![], false, None);
+    let signer = context.signer_account_id.to_owned();
+    testing_env!(context);
+
+    let mut contract = Model::new();
+    assert_eq!(0, contract.get_global_corgis().len());
+
+    let mut ids = Vec::new();
+    let n = 20;
+    for i in 1..=n {
+        let (new_corgi, ..) = create_test_corgi(&mut contract, i);
+        testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
+        println!("Test Corgi id: {}", new_corgi.id);
+        ids.push(new_corgi.id);
+    }
+
+    assert_eq!(
+        contract.get_corgis_page_limit() as usize,
+        contract.get_global_corgis().len()
+    );
+
+    let corgis_by_owner = contract.get_corgis_by_owner(signer);
+    assert_eq!(n, corgis_by_owner.len());
+    let cids: Vec<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
+    assert_eq_as_sets(&ids, &cids);
+}
+
+#[test]
+fn create_and_delete_a_few_corgis() {
+    let context = get_context(vec![], false, None);
+    let signer = context.signer_account_id.to_owned();
+    testing_env!(context);
+
+    let mut contract = Model::new();
+    assert_eq!(0, contract.get_global_corgis().len());
+
+    let mut ids = Vec::new();
+    let n = 5;
+    for i in 1..=n {
+        let (new_corgi, ..) = create_test_corgi(&mut contract, i);
+        testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
+        println!("Test Corgi id: {}", new_corgi.id);
+        ids.push(new_corgi.id);
+    }
+
+    assert_eq!(contract.get_global_corgis().len(), n);
+
+    let check_state = |contract: &Model, ids: &Vec<String>| {
+        assert_eq!(contract.get_global_corgis().len(), ids.len());
+        let corgis_by_owner = contract.get_corgis_by_owner(signer.to_string());
+        assert_eq!(corgis_by_owner.len(), ids.len());
+        let cids: Vec<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
+        assert_eq_as_sets(ids, &cids);
+    };
+
+    let id = ids.remove(2);
+    contract.delete_corgi(id);
+    check_state(&contract, &ids);
+
+    let id = ids.remove(3);
+    contract.delete_corgi(id);
+    check_state(&contract, &ids);
+
+    let id = ids.remove(0);
+    contract.delete_corgi(id);
+    check_state(&contract, &ids);
+}
+
+#[test]
+fn transfer_a_corgi() {
+    let context = get_context(vec![], false, None);
+    testing_env!(context.clone());
+
+    let mut contract = Model::new();
+    assert_eq!(0, contract.get_global_corgis().len());
+
+    let (new_corgi, ..) = create_test_corgi(&mut contract, 42);
+    println!("Test Corgi id: {}", new_corgi.id);
+    assert_eq!(1, contract.get_global_corgis().len());
+    assert_eq!(
+        contract
+            .get_corgis_by_owner(context.signer_account_id.to_string())
+            .len(),
+        1
+    );
+
+    let receiver = "bob.testnet";
+    contract.transfer_corgi(
+        receiver.to_string(),
+        new_corgi.id.to_string(),
+        "A Corgi will make you happier!".to_string(),
+    );
+
+    assert_eq!(1, contract.get_global_corgis().len());
+
+    let corgi = contract.get_corgi_by_id(new_corgi.id.to_string());
+    assert_eq!(corgi.owner, receiver);
+
+    let receivers_corgis = contract.get_corgis_by_owner(receiver.to_string());
+    assert_eq!(receivers_corgis.len(), 1);
+    assert_eq!(receivers_corgis.get(0).unwrap().id, new_corgi.id);
+
+    let senders_corgis = contract.get_corgis_by_owner(context.signer_account_id);
+    assert_eq!(senders_corgis.len(), 0);
+}
+
+#[test]
 fn transfer_a_few_corgis() {
     let context = get_context(vec![], false, None);
     testing_env!(context.clone());
@@ -117,198 +322,4 @@ fn transfer_a_few_corgis() {
             .len(),
         0
     );
-}
-
-#[test]
-fn empty_global_corgis() {
-    testing_env!(get_context(vec![], false, None));
-
-    let contract = Model::new();
-    let corgis = contract.get_global_corgis();
-    assert_eq!(0, corgis.len());
-}
-
-#[test]
-#[should_panic]
-fn get_unexistent_corgi_by_id() {
-    testing_env!(get_context(vec![], false, None));
-
-    let contract = Model::new();
-    contract.get_corgi_by_id("?".to_string());
-}
-
-#[test]
-fn create_a_corgi() {
-    let context = get_context(vec![], false, None);
-    let signer = context.signer_account_id.to_owned();
-    testing_env!(context);
-
-    let mut contract = Model::new();
-    assert_eq!(0, contract.get_global_corgis().len());
-
-    let (new_corgi, name, quote, color, background_color) = create_test_corgi(&mut contract, 0);
-
-    let corgi = contract.get_corgi_by_id(new_corgi.id.to_string());
-    assert_eq!(new_corgi.id, corgi.id);
-    assert_eq!(name, corgi.name);
-    assert_eq!(quote, corgi.quote);
-    assert_eq!(color, corgi.color);
-    assert_eq!(background_color, corgi.background_color);
-    assert_eq!(signer, corgi.owner);
-
-    let global_corgis = contract.get_global_corgis();
-    assert_eq!(1, global_corgis.len());
-    assert_eq!(new_corgi.id, global_corgis.get(0).unwrap().id);
-
-    let corgis_by_owner = contract.get_corgis_by_owner(signer);
-    assert_eq!(1, corgis_by_owner.len());
-
-    let corgi = corgis_by_owner.get(0).unwrap();
-    assert_eq!(new_corgi.id, corgi.id);
-}
-
-#[test]
-fn create_and_delete_corgi() {
-    let context = get_context(vec![], false, None);
-    testing_env!(context);
-
-    let mut contract = Model::new();
-
-    assert_eq!(0, contract.get_global_corgis().len());
-
-    let (new_corgi, ..) = create_test_corgi(&mut contract, 0);
-
-    assert_eq!(1, contract.get_global_corgis().len());
-
-    contract.delete_corgi(new_corgi.id);
-
-    assert_eq!(0, contract.get_global_corgis().len());
-}
-
-#[test]
-fn create_a_few_corgis() {
-    let context = get_context(vec![], false, None);
-    let signer = context.signer_account_id.to_owned();
-    testing_env!(context);
-
-    let mut contract = Model::new();
-    assert_eq!(0, contract.get_global_corgis().len());
-
-    let mut ids = Vec::new();
-    let n = 5;
-    for i in 1..=n {
-        let (new_corgi, ..) = create_test_corgi(&mut contract, i);
-        testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
-        println!("Test Corgi id: {}", new_corgi.id);
-        ids.push(new_corgi.id);
-    }
-
-    assert_eq!(n, contract.get_global_corgis().len());
-
-    let corgis_by_owner = contract.get_corgis_by_owner(signer);
-    assert_eq!(n, corgis_by_owner.len());
-    let cids: Vec<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
-    assert_eq_as_sets(&ids, &cids);
-}
-
-#[test]
-fn create_and_delete_a_few_corgis() {
-    let context = get_context(vec![], false, None);
-    let signer = context.signer_account_id.to_owned();
-    testing_env!(context);
-
-    let mut contract = Model::new();
-    assert_eq!(0, contract.get_global_corgis().len());
-
-    let mut ids = Vec::new();
-    let n = 5;
-    for i in 1..=n {
-        let (new_corgi, ..) = create_test_corgi(&mut contract, i);
-        testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
-        println!("Test Corgi id: {}", new_corgi.id);
-        ids.push(new_corgi.id);
-    }
-
-    assert_eq!(contract.get_global_corgis().len(), n);
-
-    let check_state = |contract: &Model, ids: &Vec<String>| {
-        assert_eq!(contract.get_global_corgis().len(), ids.len());
-        let corgis_by_owner = contract.get_corgis_by_owner(signer.to_string());
-        assert_eq!(corgis_by_owner.len(), ids.len());
-        let cids: Vec<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
-        assert_eq_as_sets(ids, &cids);
-    };
-
-    let id = ids.remove(2);
-    contract.delete_corgi(id);
-    check_state(&contract, &ids);
-
-    let id = ids.remove(3);
-    contract.delete_corgi(id);
-    check_state(&contract, &ids);
-
-    let id = ids.remove(0);
-    contract.delete_corgi(id);
-    check_state(&contract, &ids);
-}
-
-#[test]
-#[should_panic]
-fn try_delete_unexistent_corgi_without_account() {
-    let context = get_context(vec![], false, None);
-    testing_env!(context);
-
-    let mut contract = Model::new();
-
-    create_test_corgi(&mut contract, 0);
-    contract.delete_corgi("?".to_string());
-}
-
-#[test]
-#[should_panic]
-fn try_delete_unexistent_corgi() {
-    let context = get_context(vec![], false, None);
-    testing_env!(context);
-
-    let mut contract = Model::new();
-
-    contract.delete_corgi("?".to_string());
-}
-
-#[test]
-fn transfer_a_corgi() {
-    let context = get_context(vec![], false, None);
-    testing_env!(context.clone());
-
-    let mut contract = Model::new();
-    assert_eq!(0, contract.get_global_corgis().len());
-
-    let (new_corgi, ..) = create_test_corgi(&mut contract, 42);
-    println!("Test Corgi id: {}", new_corgi.id);
-    assert_eq!(1, contract.get_global_corgis().len());
-    assert_eq!(
-        contract
-            .get_corgis_by_owner(context.signer_account_id.to_string())
-            .len(),
-        1
-    );
-
-    let receiver = "bob.testnet";
-    contract.transfer_corgi(
-        receiver.to_string(),
-        new_corgi.id.to_string(),
-        "A Corgi will make you happier!".to_string(),
-    );
-
-    assert_eq!(1, contract.get_global_corgis().len());
-
-    let corgi = contract.get_corgi_by_id(new_corgi.id.to_string());
-    assert_eq!(corgi.owner, receiver);
-
-    let receivers_corgis = contract.get_corgis_by_owner(receiver.to_string());
-    assert_eq!(receivers_corgis.len(), 1);
-    assert_eq!(receivers_corgis.get(0).unwrap().id, new_corgi.id);
-
-    let senders_corgis = contract.get_corgis_by_owner(context.signer_account_id);
-    assert_eq!(senders_corgis.len(), 0);
 }

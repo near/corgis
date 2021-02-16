@@ -2,7 +2,7 @@
 
 pub mod pack;
 
-use std::collections::HashSet;
+use std::{collections::HashSet, usize};
 
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
@@ -240,9 +240,17 @@ impl Model {
 
         let mut result = Vec::new();
         for corgi in self.corgis.values() {
+            if result.len() >= self.get_corgis_page_limit() as usize {
+                break;
+            }
             result.push(corgi);
         }
         result
+    }
+
+    /// Returns the max amount of `Corgi`s returned by `get_global_corgis`.
+    pub fn get_corgis_page_limit(&self) -> u64 {
+        8
     }
 
     /// Transfer the given corgi to `receiver`.
