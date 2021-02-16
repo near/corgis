@@ -8,10 +8,10 @@ import { ContractContext } from '~context/contract';
 import Nav from './Nav/Nav';
 import CorgisLogo from './CorgisLogo/CorgisLogo';
 
-import { Spinner, Button } from '~modules/common';
+import { Button } from '~modules/common';
 
 const Header = () => {
-  const { user, isLoading, signIn, signOut } = useContext(NearContext);
+  const { user, signIn, signOut } = useContext(NearContext);
   const { getCorgisList, corgis } = useContext(ContractContext);
 
   const signInAction = () => {
@@ -27,10 +27,6 @@ const Header = () => {
       getCorgisList(user.accountId);
     }
   }, [getCorgisList, user]);
-
-  if (isLoading) {
-    return <Spinner />;
-  }
 
   return (
     <div className='header'>

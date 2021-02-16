@@ -11,7 +11,7 @@ const GuardedRoutePropTypes = {
 };
 
 const GuardedRoute = ({ children, auth, ...rest }) => (
-  <Route {...rest}>{auth === true ? children : <Redirect to='/#' />}</Route>
+  <Route {...rest}>{auth === true ? children : <Redirect exact to='/#' />}</Route>
 );
 
 GuardedRoute.propTypes = GuardedRoutePropTypes;
