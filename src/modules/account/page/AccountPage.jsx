@@ -1,26 +1,22 @@
 import React, { useContext, useEffect } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 
-import { NearContext } from '~context/NearContext';
 import { ContractContext } from '~context/contract';
 
 import { CorgiTile, Spinner } from '~modules/common';
 
 const AccountPage = () => {
-  const { user } = useContext(NearContext);
-  const { corgis, created, loading, clearCreatedCorgiState, getCorgisList } = useContext(ContractContext);
+  const { corgis, created, loading, clearCreatedCorgiState } = useContext(ContractContext);
 
-  if (created) {
-    clearCreatedCorgiState();
-  }
+  useEffect(() => {
+    if (created) {
+      clearCreatedCorgiState();
+    }
+  }, [created, clearCreatedCorgiState]);
 
   if (corgis && corgis.length === 0) {
     return <Redirect to='/generation' />;
   }
-
-  useEffect(() => {
-    getCorgisList(user.accountId);
-  }, [getCorgisList]);
 
   return (
     <div className='account'>
