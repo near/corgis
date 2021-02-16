@@ -1,6 +1,6 @@
 import 'regenerator-runtime/runtime';
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { HashRouter as Router } from 'react-router-dom';
 import Routes from '~router/Routes';
 
 import './App.scss';
@@ -10,7 +10,7 @@ import { Footer } from '~modules/footer';
 
 const App = () => (
   <div className='App'>
-    <Router>
+    <Router hashType='noslash'>
       <Header />
       <Routes />
       <Footer />
