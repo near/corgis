@@ -10,7 +10,7 @@ import { Footer } from '~modules/footer';
 
 const App = () => (
   <div className='App'>
-    <Router hashType='noslash'>
+    <Router>
       <Header />
       <Routes />
       <Footer />
