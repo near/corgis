@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 
 import './CorgiSVG.scss';
 
-import { CorgiType } from '~types/CorgiTypes';
 import COLORS from '~constants/Colors';
 
-const CorgiPropTypes = {
+import { CorgiType } from '~types/CorgiTypes';
+
+const CorgiSVGPropTypes = {
   color: CorgiType.color,
   sausage: CorgiType.sausage,
   width: PropTypes.string,
@@ -14,18 +15,21 @@ const CorgiPropTypes = {
 };
 
 const fullWidth = 520;
-const backPartMargin = 222;
+const backPartMargin = 221;
 
-const Corgi = ({ color, sausage, width = '100%', height = '100%' }) => {
-  const sa = Number(sausage);
-  const len = sa + backPartMargin;
-  const lenW = sa + fullWidth;
+const CorgiSVG = ({ color, sausage, width = '100%', height = '100%' }) => {
+  // add 1 point to remove stitch
+  const sa = Number(sausage) + 1;
+
+  const backPosition = Number(sausage) + backPartMargin;
+  const lengthFull = Number(sausage) + fullWidth;
+
   return (
     <div className='corgi'>
       <svg
         width={width}
         height={height}
-        viewBox={`0 0 ${lenW} 374`}
+        viewBox={`0 0 ${lengthFull} 374`}
         version='1.1'
         xmlns='http://www.w3.org/2000/svg'
         xlink='http://www.w3.org/1999/xlink'
@@ -68,9 +72,10 @@ const Corgi = ({ color, sausage, width = '100%', height = '100%' }) => {
             <stop stopColor={COLORS.WHITE} stopOpacity='0' offset='100%'></stop>
           </linearGradient>
         </defs>
+
         <g id='Page-1' stroke='none' strokeWidth='1' fill='none' fillRule='evenodd'>
           <g id='Group-12' fillRule='nonzero'>
-            <g id='corgi-back' transform={`translate(${len}, 18.5)`}>
+            <g id='corgi-back' transform={`translate(${backPosition}, 18.5)`}>
               <path
                 d='M0,355.929178 C109.065062,355.929178 194.34855,349.526479 194.34855,342.863597 C194.34855,336.200715 109.065062,330.298016 0,330.298016 L0,355.929178 Z'
                 id='Path'
@@ -149,6 +154,7 @@ const Corgi = ({ color, sausage, width = '100%', height = '100%' }) => {
                 opacity='0.15'
               ></path>
             </g>
+
             <g id='corgi-front' transform='translate(0.000000, 0.000000)'>
               <path
                 d='M221.707833,374 C113.117374,374 28.2173606,368.372685 28.2173606,361.432796 C28.2173606,354.492906 113.117374,348.865591 221.707833,348.865591 L221.707833,374 Z'
@@ -329,7 +335,8 @@ const Corgi = ({ color, sausage, width = '100%', height = '100%' }) => {
                 fill={COLORS.BLACK}
               ></path>
             </g>
-            <g id='corgi-mid' transform={`translate(${backPartMargin + 0.5}, 138.25)`} shapeRendering='crispEdges'>
+
+            <g id='corgi-mid' transform={`translate(${backPartMargin}, 138.25)`} shapeRendering='crispEdges'>
               {/* background */}
               <polygon
                 id='Path'
@@ -349,16 +356,16 @@ const Corgi = ({ color, sausage, width = '100%', height = '100%' }) => {
                 fill={COLORS.GRAY}
                 x='-1'
                 y='210.457867'
-                width={sa + 1}
+                width={sa + 2}
                 height='25.1489315'
                 shapeRendering='crispEdges'
               ></rect>
               {/* body */}
               <polygon id='Path' fill={color} points={`${sa} 1.00515726 0 1.00515726 0 140.84 ${sa} 140.84`}></polygon>
               {/* top border */}
-              <rect id='Rectangle' fill={COLORS.BLACK} x='0' y='-0.3' width={sa} height='2.16031452'></rect>
+              <rect id='Rectangle' fill={COLORS.BLACK} x='0' y='-0.25' width={sa} height='2' ></rect>
               {/* bottom border */}
-              <rect id='Rectangle' fill={COLORS.BLACK} x='0' y='183.625' width={sa} height='2.16031452'></rect>
+              <rect id='Rectangle' fill={COLORS.BLACK} x='0' y='183.675' width={sa} height='2'></rect>
             </g>
           </g>
         </g>
@@ -367,6 +374,6 @@ const Corgi = ({ color, sausage, width = '100%', height = '100%' }) => {
   );
 };
 
-Corgi.propTypes = CorgiPropTypes;
+CorgiSVG.propTypes = CorgiSVGPropTypes;
 
-export default Corgi;
+export default CorgiSVG;
