@@ -6,6 +6,7 @@ import { CorgiSVG, Quote } from '~modules/common';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
 import { CardSizeType } from '~types/CardSizeType';
+import { SAUSAGE } from '~constants/corgi';
 
 const CorgiCardPropTypes = {
   corgi: CorgiTypeShape.isRequired,
@@ -13,15 +14,15 @@ const CorgiCardPropTypes = {
 };
 
 const CorgiCard = ({ corgi, size = 'small' }) => {
-  const { backgroundColor, color, quote, sausage } = corgi;
+  const { background_color, color, quote } = corgi;
 
   return (
-    <div className='corgi-card' style={{ backgroundColor }}>
+    <div className='corgi-card' style={{ background_color }}>
       <div className='corgi-card__quote'>
         <Quote text={quote} color={color} size={size} />
       </div>
 
-      <CorgiSVG color={color} sausage={sausage} />
+      <CorgiSVG color={color} sausage={SAUSAGE[corgi.rate] || SAUSAGE.COMMON} />
     </div>
   );
 };

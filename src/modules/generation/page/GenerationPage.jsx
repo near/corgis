@@ -7,19 +7,15 @@ import classNames from 'classnames';
 
 import raritySample from '~assets/images/rarity-sample.svg';
 
-import { CharacterContext } from '~context/character';
 import { ContractContext } from '~context/contract';
-import { NearContext } from '~context/NearContext';
 
 import { GenerationAnimation, GenerationForm, GenerationScreen } from '~modules/generation/components';
 
 const GenerationPage = () => {
-  const { user } = useContext(NearContext);
   const { creating, created } = useContext(ContractContext);
-  const { color, backgroundColor } = useContext(CharacterContext);
 
   if (creating) {
-    return <GenerationAnimation color={color} backgroundColor={backgroundColor} />;
+    return <GenerationAnimation />;
   }
 
   if (created) {
@@ -32,11 +28,11 @@ const GenerationPage = () => {
 
       <div className='generation__field'>
         <div className={classNames('generation__area', 'generation__form')}>
-          <GenerationForm color={color} backgroundColor={backgroundColor} />
+          <GenerationForm />
         </div>
 
         <div className={classNames('generation__area', 'generation__screen')}>
-          <GenerationScreen color={color} backgroundColor={backgroundColor} />
+          <GenerationScreen />
         </div>
       </div>
 

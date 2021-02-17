@@ -1,19 +1,16 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import './GenerationScreen.scss';
 
 import { Egg } from '~modules/common';
 
-import { CorgiType } from '~types/CorgiTypes';
+import { CharacterContext } from '~context/character';
 
-const tinycolor = require('tinycolor2');
+import tinycolor from 'tinycolor2';
 
-const GenerationScreenPropTypes = {
-  backgroundColor: CorgiType.backgroundColor,
-  color: CorgiType.color,
-};
+const GenerationScreen = () => {
+  const { color, backgroundColor } = useContext(CharacterContext);
 
-const GenerationScreen = ({ backgroundColor, color }) => {
   const textColor = tinycolor.mostReadable(backgroundColor, [color, '#fff', '#000']).toHexString();
 
   return (
@@ -27,7 +24,5 @@ const GenerationScreen = ({ backgroundColor, color }) => {
     </div>
   );
 };
-
-GenerationScreen.propTypes = GenerationScreenPropTypes;
 
 export default GenerationScreen;

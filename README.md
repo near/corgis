@@ -210,7 +210,6 @@ type Rarity = 'COMMON'
             | 'UNCOMMON'
             | 'RARE'
             | 'VERY_RARE'
-            | 'ULTRA_RARE'
 ```
 
 #### `get_corgis_by_owner`

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import './GenerationAnimation.scss';
 
@@ -9,30 +9,27 @@ import shadow from '~assets/images/shadow.svg';
 
 import { CorgiAnimFour } from '~modules/common';
 
-import { CorgiType } from '~types/CorgiTypes';
+import { CharacterContext } from '~context/character';
 
-const GenerationAnimationPropTypes = {
-  backgroundColor: CorgiType.backgroundColor,
-  color: CorgiType.color,
-};
+const GenerationAnimation = () => {
+  const { color, backgroundColor } = useContext(CharacterContext);
 
-const GenerationAnimation = ({ color, backgroundColor }) => (
-  <div className='generation-animation'>
-    <h3>Generating...</h3>
-    <div className='generation-animation__background' style={{ background: backgroundColor }}>
-      <div className={classNames('generation-animation__box', 'generation-animation__box--bounce-7')}>
-        <CorgiAnimFour color={color} />
+  return (
+    <div className='generation-animation'>
+      <h3>Generating...</h3>
+      <div className='generation-animation__background' style={{ backgroundColor }}>
+        <div className={classNames('generation-animation__box', 'generation-animation__box--bounce-7')}>
+          <CorgiAnimFour color={color} />
+        </div>
+
+        <div className={classNames('generation-animation__shadow', 'generation-animation__shadow--shadow-7')}>
+          <img src={shadow} alt='' />
+        </div>
       </div>
 
-      <div className={classNames('generation-animation__shadow', 'generation-animation__shadow--shadow-7')}>
-        <img src={shadow} alt='' />
-      </div>
+      <img className='generation-animation__image' src={raritySample} alt='' />
     </div>
-
-    <img className='generation-animation__image' src={raritySample} alt='' />
-  </div>
-);
-
-GenerationAnimation.propTypes = GenerationAnimationPropTypes;
+  );
+};
 
 export default GenerationAnimation;

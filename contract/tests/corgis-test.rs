@@ -1,4 +1,7 @@
-use std::collections::HashSet;
+use std::{
+    collections::HashSet,
+    time::{SystemTime, UNIX_EPOCH},
+};
 
 use corgis_nft::{Corgi, Model};
 use near_sdk::{testing_env, MockedBlockchain, VMContext};
@@ -14,7 +17,10 @@ fn get_context(input: Vec<u8>, is_view: bool, random_seed: Option<Vec<u8>>) -> V
         predecessor_account_id: "jane.testnet".to_string(),
         input,
         block_index: 0,
-        block_timestamp: 0,
+        block_timestamp: SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs(),
         account_balance: 0,
         account_locked_balance: 0,
         // Important to increase storage usage is several items are going to be created.
@@ -29,23 +35,27 @@ fn get_context(input: Vec<u8>, is_view: bool, random_seed: Option<Vec<u8>>) -> V
     }
 }
 
-fn create_test_corgi(contract: &mut Model, i: usize) -> (Corgi, String, String, String, String) {
+fn create_test_corgi(contract: &mut Model, i: usize) -> Corgi {
     let name = format!("doggy dog {}", i);
     let quote = "To err is human — to forgive, canine";
     let color = "green";
     let background_color = "blue";
-    (
-        contract.create_corgi(
-            name.to_string(),
-            quote.to_string(),
-            color.to_string(),
-            background_color.to_string(),
-        ),
+
+    let new_corgi = contract.create_corgi(
         name.to_string(),
         quote.to_string(),
         color.to_string(),
         background_color.to_string(),
-    )
+    );
+
+    assert_eq!(new_corgi.name, name);
+    assert_eq!(new_corgi.quote, quote);
+    assert_eq!(new_corgi.color, color);
+    assert_eq!(new_corgi.background_color, background_color);
+    assert_eq!(new_corgi.sender, "");
+    assert_eq!(new_corgi.message, "");
+
+    new_corgi
 }
 
 fn assert_eq_as_sets(left: &Vec<String>, right: &Vec<String>) {
@@ -95,20 +105,19 @@ fn should_panic_when_corgi_id_does_not_exist() {
 fn create_a_corgi() {
     let context = get_context(vec![], false, None);
     let signer = context.signer_account_id.to_owned();
+    let timestamp = context.block_timestamp;
     testing_env!(context);
 
     let mut contract = Model::new();
     assert_eq!(contract.get_global_corgis().len(), 0);
 
-    let (new_corgi, name, quote, color, background_color) = create_test_corgi(&mut contract, 0);
+    let new_corgi = create_test_corgi(&mut contract, 0);
+    assert_eq!(new_corgi.owner, signer);
+    assert_eq!(new_corgi.created, timestamp);
+    assert_eq!(new_corgi.modified, timestamp);
 
     let corgi = contract.get_corgi_by_id(new_corgi.id.to_string());
-    assert_eq!(new_corgi.id, corgi.id);
-    assert_eq!(name, corgi.name);
-    assert_eq!(quote, corgi.quote);
-    assert_eq!(color, corgi.color);
-    assert_eq!(background_color, corgi.background_color);
-    assert_eq!(signer, corgi.owner);
+    assert_eq!(corgi, new_corgi);
 
     let global_corgis = contract.get_global_corgis();
     assert_eq!(global_corgis.len(), 1);
@@ -127,7 +136,7 @@ fn create_and_delete_corgi() {
 
     assert_eq!(contract.get_global_corgis().len(), 0);
 
-    let (new_corgi, ..) = create_test_corgi(&mut contract, 0);
+    let new_corgi = create_test_corgi(&mut contract, 0);
 
     assert_eq!(contract.get_global_corgis().len(), 1);
 
@@ -169,7 +178,7 @@ fn create_a_few_corgis() {
     let mut ids = Vec::new();
     let n = 20;
     for i in 1..=n {
-        let (new_corgi, ..) = create_test_corgi(&mut contract, i);
+        let new_corgi = create_test_corgi(&mut contract, i);
         testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
         println!("Test Corgi id: {}", new_corgi.id);
         ids.push(new_corgi.id);
@@ -198,7 +207,7 @@ fn create_and_delete_a_few_corgis() {
     let mut ids = Vec::new();
     let n = 5;
     for i in 1..=n {
-        let (new_corgi, ..) = create_test_corgi(&mut contract, i);
+        let new_corgi = create_test_corgi(&mut contract, i);
         testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
         println!("Test Corgi id: {}", new_corgi.id);
         ids.push(new_corgi.id);
@@ -235,7 +244,7 @@ fn transfer_a_corgi() {
     let mut contract = Model::new();
     assert_eq!(0, contract.get_global_corgis().len());
 
-    let (new_corgi, ..) = create_test_corgi(&mut contract, 42);
+    let new_corgi = create_test_corgi(&mut contract, 42);
     println!("Test Corgi id: {}", new_corgi.id);
     assert_eq!(1, contract.get_global_corgis().len());
     assert_eq!(
@@ -276,7 +285,7 @@ fn transfer_a_few_corgis() {
     let mut ids = Vec::new();
     let n = 5;
     for i in 1..=n {
-        let (new_corgi, ..) = create_test_corgi(&mut contract, i);
+        let new_corgi = create_test_corgi(&mut contract, i);
         testing_env!(get_context(vec![], false, Some(vec![3, 2, 1, i as u8])));
         println!("Test Corgi id: {}", new_corgi.id);
         ids.push(new_corgi.id);

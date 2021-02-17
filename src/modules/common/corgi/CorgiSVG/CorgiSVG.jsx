@@ -9,12 +9,12 @@ import { CorgiType } from '~types/CorgiTypes';
 
 const CorgiSVGPropTypes = {
   color: CorgiType.color,
-  sausage: CorgiType.sausage,
+  sausage: PropTypes.number.isRequired,
   width: PropTypes.string,
   height: PropTypes.string,
 };
 
-const fullWidth = 520;
+const fullWidth = 525;
 const backPartMargin = 221;
 
 const CorgiSVG = ({ color, sausage, width = '100%', height = '100%' }) => {
@@ -363,7 +363,7 @@ const CorgiSVG = ({ color, sausage, width = '100%', height = '100%' }) => {
               {/* body */}
               <polygon id='Path' fill={color} points={`${sa} 1.00515726 0 1.00515726 0 140.84 ${sa} 140.84`}></polygon>
               {/* top border */}
-              <rect id='Rectangle' fill={COLORS.BLACK} x='0' y='-0.25' width={sa} height='2' ></rect>
+              <rect id='Rectangle' fill={COLORS.BLACK} x='0' y='-0.25' width={sa} height='2'></rect>
               {/* bottom border */}
               <rect id='Rectangle' fill={COLORS.BLACK} x='0' y='183.675' width={sa} height='2'></rect>
             </g>

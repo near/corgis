@@ -12,7 +12,7 @@ import { Button } from '~modules/common';
 
 const Header = () => {
   const { user, signIn, signOut } = useContext(NearContext);
-  const { getCorgisList, corgis } = useContext(ContractContext);
+  const { corgis } = useContext(ContractContext);
 
   const signInAction = () => {
     signIn();
@@ -21,12 +21,6 @@ const Header = () => {
   const signOutAction = () => {
     signOut();
   };
-
-  useEffect(() => {
-    if (user) {
-      getCorgisList(user.accountId);
-    }
-  }, [getCorgisList, user]);
 
   return (
     <header className='header'>

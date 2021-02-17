@@ -5,7 +5,7 @@ import CorgiUncommon from './CorgiUncommon';
 import CorgiRare from './CorgiRare';
 import CorgiVeryRare from './CorgiVeryRare';
 
-import CORGI_RATES from '~constants/CorgiRates';
+import { RATES } from '~constants/corgi';
 
 import { CorgiType } from '~types/CorgiTypes';
 
@@ -19,19 +19,19 @@ const CorgiRate = ({ rate }) => (
     <h5>Congrats! Your corgi is...</h5>
     <div>
       <div>
-        <CorgiCommon color={rate === CORGI_RATES.COMMON ? orange : gray} />
+        <CorgiCommon color={rate === RATES.COMMON ? orange : gray} />
         <span>Common</span>
       </div>
       <div>
-        <CorgiUncommon color={rate === CORGI_RATES.UNCOMMON ? orange : gray} />
+        <CorgiUncommon color={rate === RATES.UNCOMMON ? orange : gray} />
         <span>Uncommon</span>
       </div>
       <div>
-        <CorgiRare color={rate === CORGI_RATES.RARE ? orange : gray} />
+        <CorgiRare color={rate === RATES.RARE ? orange : gray} />
         <span>Rare</span>
       </div>
       <div>
-        <CorgiVeryRare color={rate === CORGI_RATES.VERY_RARE ? orange : gray} />
+        <CorgiVeryRare color={rate === RATES.VERY_RARE ? orange : gray} />
         <span>Very Rare</span>
       </div>
     </div>

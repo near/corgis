@@ -14,13 +14,6 @@ import { Button, Colorpicker } from '~modules/common';
 
 import { genRandomName } from '~helpers/generators';
 
-import { CorgiType } from '~types/CorgiTypes';
-
-const GenerationFormPropTypes = {
-  color: CorgiType.color,
-  backgroundColor: CorgiType.backgroundColor,
-};
-
 const GenerationForm = () => {
   const { createCorgi } = useContext(ContractContext);
   const { name, quote, color, backgroundColor, setName, setColor, setBackgroundColor } = useContext(CharacterContext);
@@ -86,7 +79,5 @@ const GenerationForm = () => {
     </form>
   );
 };
-
-GenerationForm.propTypes = GenerationFormPropTypes;
 
 export default GenerationForm;

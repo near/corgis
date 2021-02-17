@@ -2,19 +2,55 @@
 
 pub mod pack;
 
-use std::{collections::HashSet, usize};
-
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
     collections::UnorderedMap,
     env, near_bindgen,
     serde::Serialize,
+    wee_alloc::WeeAlloc,
+    AccountId,
 };
+use std::{collections::HashSet, usize};
 
 use pack::pack;
 
 #[global_allocator]
-static ALLOC: near_sdk::wee_alloc::WeeAlloc = near_sdk::wee_alloc::WeeAlloc::INIT;
+static ALLOC: WeeAlloc = WeeAlloc::INIT;
+
+/// The token ID type is also defined in the NEP
+pub type TokenId = u64;
+pub type AccountIdHash = Vec<u8>;
+
+/// This trait provides the baseline of functions as described at:
+/// https://github.com/nearprotocol/NEPs/blob/nep-4/specs/Standards/Tokens/NonFungibleToken.md
+pub trait NEP4 {
+    // Grant the access to the given `accountId` for the given `tokenId`.
+    // Requirements:
+    // * The caller of the function (`predecessor_id`) should have access to the token.
+    fn grant_access(&mut self, escrow_account_id: AccountId);
+
+    // Revoke the access to the given `accountId` for the given `tokenId`.
+    // Requirements:
+    // * The caller of the function (`predecessor_id`) should have access to the token.
+    fn revoke_access(&mut self, escrow_account_id: AccountId);
+
+    // Transfer the given `tokenId` to the given `accountId`. Account `accountId` becomes the new owner.
+    // Requirements:
+    // * The caller of the function (`predecessor_id`) should have access to the token.
+    fn transfer_from(&mut self, owner_id: AccountId, new_owner_id: AccountId, token_id: TokenId);
+
+    // Transfer the given `tokenId` to the given `accountId`. Account `accountId` becomes the new owner.
+    // Requirements:
+    // * The caller of the function (`predecessor_id`) should be the owner of the token. Callers who have
+    // escrow access should use transfer_from.
+    fn transfer(&mut self, new_owner_id: AccountId, token_id: TokenId);
+
+    // Returns `true` or `false` based on caller of the function (`predecessor_id) having access to the token
+    fn check_access(&self, account_id: AccountId) -> bool;
+
+    // Get an individual owner by given `tokenId`.
+    fn get_token_owner(&self, token_id: TokenId) -> String;
+}
 
 const TRY_DELETE_UNKNOWN_ACCOUNT_MSG: &str = "The account does not have any corgis to delete from";
 
@@ -22,7 +58,7 @@ const TRY_DELETE_UNKNOWN_ACCOUNT_MSG: &str = "The account does not have any corg
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
     corgis: UnorderedMap<String, Corgi>,
-    corgis_by_owner: UnorderedMap<String, HashSet<String>>,
+    corgis_by_owner: UnorderedMap<AccountId, HashSet<String>>,
 }
 
 /// Represents a `Corgi`.
@@ -48,9 +84,8 @@ pub struct Model {
 ///
 /// to indicate that our struct uses both `PartialEq` and `Debug` traits
 /// but only for testing purposes.
-#[derive(BorshDeserialize, BorshSerialize, Serialize)]
+#[derive(BorshDeserialize, BorshSerialize, Serialize, PartialEq, Debug)]
 #[serde(crate = "near_sdk::serde")]
-#[cfg_attr(test, derive(PartialEq, Debug))]
 pub struct Corgi {
     pub id: String,
     pub name: String,
@@ -58,22 +93,21 @@ pub struct Corgi {
     pub color: String,
     pub background_color: String,
     rate: Rarity,
-    sausage: String,
-    pub owner: String,
-    sender: String,
-    message: String,
+    pub owner: AccountId,
+    pub created: u64,
+    pub modified: u64,
+    pub sender: AccountId,
+    pub message: String,
 }
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize)]
+#[derive(BorshDeserialize, BorshSerialize, Serialize, PartialEq, Debug)]
 #[serde(crate = "near_sdk::serde")]
-#[cfg_attr(test, derive(PartialEq, Debug))]
 #[allow(non_camel_case_types)]
 pub enum Rarity {
     COMMON,
     UNCOMMON,
     RARE,
     VERY_RARE,
-    ULTRA_RARE,
 }
 
 impl Default for Model {
@@ -116,54 +150,34 @@ impl Model {
         let owner = env::signer_account_id();
         env::log(format!("create corgi owned by {}", owner).as_bytes());
 
-        let corgi = {
-            fn random_number() -> u128 {
-                pack(&env::random_seed()) % 100
-            }
-
-            let id = {
+        let now = env::block_timestamp();
+        let corgi = Corgi {
+            id: {
                 let seed = env::random_seed();
-                env::log(format!("seed size: {}", seed.len()).as_bytes());
                 let data = env::sha256(&seed);
                 base64::encode(&data)
-            };
-            let rate = {
-                let rate = random_number();
+            },
+            name,
+            quote,
+            color,
+            background_color,
+            rate: {
+                let rate = pack(&env::random_seed()) % 100;
                 if rate > 10 {
                     Rarity::COMMON
                 } else if rate > 5 {
                     Rarity::UNCOMMON
                 } else if rate > 1 {
                     Rarity::RARE
-                } else if rate > 0 {
-                    Rarity::VERY_RARE
                 } else {
-                    Rarity::ULTRA_RARE
+                    Rarity::VERY_RARE
                 }
-            };
-            let sausage = {
-                let l = random_number() / 2;
-                match rate {
-                    Rarity::ULTRA_RARE => 0,
-                    Rarity::VERY_RARE => l + 150,
-                    Rarity::RARE => l + 100,
-                    Rarity::UNCOMMON => l + 50,
-                    Rarity::COMMON => l,
-                }
-            }
-            .to_string();
-            Corgi {
-                id,
-                name,
-                quote,
-                color,
-                background_color,
-                rate,
-                sausage,
-                owner,
-                sender: "".to_string(),
-                message: "".to_string(),
-            }
+            },
+            owner,
+            created: now,
+            modified: now,
+            sender: "".to_string(),
+            message: "".to_string(),
         };
 
         self.append_corgi(&corgi);
@@ -184,7 +198,7 @@ impl Model {
     /// Note, the parameter is `&self` (without being mutable)
     /// meaning it doesn't modify state.
     /// In the frontend (`/src/index.js`) this is added to the `"viewMethods"` array.
-    pub fn get_corgis_by_owner(&self, owner: String) -> Vec<Corgi> {
+    pub fn get_corgis_by_owner(&self, owner: AccountId) -> Vec<Corgi> {
         env::log(format!("get corgis by owner <{}>", owner).as_bytes());
 
         match self.corgis_by_owner.get(&owner) {
@@ -254,7 +268,7 @@ impl Model {
     }
 
     /// Transfer the given corgi to `receiver`.
-    pub fn transfer_corgi(&mut self, receiver: String, id: String, message: String) {
+    pub fn transfer_corgi(&mut self, receiver: AccountId, id: String, message: String) {
         let owner = env::signer_account_id();
         let mut corgi = self
             .corgis
