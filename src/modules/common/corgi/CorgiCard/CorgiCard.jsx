@@ -19,7 +19,7 @@ const CorgiCard = ({ corgi, size = 'small' }) => {
   return (
     <div className='corgi-card' style={{ background_color }}>
       <div className='corgi-card__quote'>
-        <Quote text={quote} color={color} size={size} />
+        <Quote quoteId={quote} color={color} size={size} />
       </div>
 
       <CorgiSVG color={color} sausage={SAUSAGE[corgi.rate] || SAUSAGE.COMMON} />

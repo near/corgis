@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useReducer } from 'react';
 
-import { genRandomQuote } from '~helpers/generators';
+import { getRandomQuoteId } from '~helpers/quotes';
 
 import { characterReducer, initialCharacterState } from './reducer';
 import { NAME, COLOR, BACKGROUND_COLOR, QUOTE, CLEAR } from './types';
@@ -23,7 +23,7 @@ export const CharacterContextProvider = ({ children }) => {
   const setBackgroundColor = (backgroundColor) => dispatchCharacter({ type: BACKGROUND_COLOR, backgroundColor });
 
   const generateQuote = useCallback(() => {
-    dispatchCharacter({ type: QUOTE, quote: genRandomQuote() });
+    dispatchCharacter({ type: QUOTE, quote: getRandomQuoteId() });
   }, []);
 
   useEffect(() => {

@@ -1,11 +1,13 @@
 import randomColor from 'randomcolor';
-import { genRandomName, genRandomQuote } from '~helpers/generators';
+
+import { genRandomName } from '~helpers/generators';
+import { getRandomQuoteId } from '~helpers/quotes';
 
 import { NAME, QUOTE, COLOR, BACKGROUND_COLOR, CLEAR } from './types';
 
 export const initialCharacterState = {
   name: genRandomName(),
-  quote: genRandomQuote(),
+  quote: getRandomQuoteId(),
   color: randomColor(),
   backgroundColor: randomColor(),
 };
