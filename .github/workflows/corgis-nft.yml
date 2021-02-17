@@ -88,6 +88,7 @@ jobs:
     - name: Deploy the Rust Corgis contract to testnet and push the React app to gh-pages (only in master)
       run: |
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        yarn gh-pages-clean
         yarn deploy --user "Github Workflow Bot <noemail@epam.github.io>"
       env:
         CONTRACT_NAME: sha-${{ github.sha }}.corgis-nft.testnet
