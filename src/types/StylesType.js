@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 
-const StylesType = {
+const StylesType = PropTypes.shape({
   alignContent: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   alignItems: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   alignSelf: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -317,6 +317,6 @@ const StylesType = {
   zIndex: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   overflowScrolling: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   userSelect: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-};
+});
 
 export default StylesType;
