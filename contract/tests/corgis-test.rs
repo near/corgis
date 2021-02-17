@@ -55,7 +55,6 @@ fn create_test_corgi(contract: &mut Model, i: usize) -> Corgi {
     assert_eq!(new_corgi.color, color);
     assert_eq!(new_corgi.background_color, background_color);
     assert_eq!(new_corgi.sender, "");
-    assert_eq!(new_corgi.message, "");
 
     new_corgi
 }
@@ -285,11 +284,7 @@ fn transfer_a_corgi() {
     );
 
     let receiver = "bob.testnet";
-    contract.transfer_corgi(
-        receiver.to_string(),
-        new_corgi.id.to_string(),
-        "A Corgi will make you happier!".to_string(),
-    );
+    contract.transfer_corgi(receiver.to_string(), new_corgi.id.to_string());
 
     assert_eq!(1, contract.get_global_corgis().len());
 
@@ -326,11 +321,7 @@ fn transfer_a_few_corgis() {
     );
 
     let receiver = "bob.testnet";
-    contract.transfer_corgi(
-        receiver.to_string(),
-        ids[2].to_string(),
-        "A Corgi will make you happier!".to_string(),
-    );
+    contract.transfer_corgi(receiver.to_string(), ids[2].to_string());
 
     assert_eq!(contract.get_global_corgis().len(), ids.len());
     assert_eq!(

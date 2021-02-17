@@ -154,7 +154,7 @@ describe('Corgis contract integration tests', () => {
       expect(corgisByOwner.map(corgi => corgi.id)).toContain(newCorgi.id);
     }
 
-    await alice.contract.transfer_corgi({ receiver: bob.accountId, id: newCorgi.id, message: 'A Corgi will make you happier!' });
+    await alice.contract.transfer_corgi({ receiver: bob.accountId, id: newCorgi.id });
 
     {
       const corgiById = await bob.contract.get_corgi_by_id({ id: newCorgi.id });

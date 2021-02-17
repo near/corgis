@@ -97,7 +97,6 @@ pub struct Corgi {
     pub created: u64,
     pub modified: u64,
     pub sender: AccountId,
-    pub message: String,
 }
 
 #[derive(BorshDeserialize, BorshSerialize, Serialize, PartialEq, Debug)]
@@ -150,10 +149,22 @@ impl Model {
         let owner = env::signer_account_id();
         env::log(format!("create corgi owned by {}", owner).as_bytes());
 
-        assert!(name.len() <= 32, "Corgi's `name` is too large, max 32 chars allowed");
-        assert!(quote.len() <= 256, "Corgi's `quote` is too large, max 256 chars allowed");
-        assert!(color.len() <= 64, "Corgi's `color` is too large, max 64 chars allowed");
-        assert!(background_color.len() <= 64, "Corgi's `background_color` is too large, max 64 chars allowed");
+        assert!(
+            name.len() <= 32,
+            "Corgi's `name` is too large, max 32 chars allowed"
+        );
+        assert!(
+            quote.len() <= 256,
+            "Corgi's `quote` is too large, max 256 chars allowed"
+        );
+        assert!(
+            color.len() <= 64,
+            "Corgi's `color` is too large, max 64 chars allowed"
+        );
+        assert!(
+            background_color.len() <= 64,
+            "Corgi's `background_color` is too large, max 64 chars allowed"
+        );
 
         let now = env::block_timestamp();
         let corgi = Corgi {
@@ -182,7 +193,6 @@ impl Model {
             created: now,
             modified: now,
             sender: "".to_string(),
-            message: "".to_string(),
         };
 
         self.append_corgi(&corgi);
@@ -273,7 +283,7 @@ impl Model {
     }
 
     /// Transfer the given corgi to `receiver`.
-    pub fn transfer_corgi(&mut self, receiver: AccountId, id: String, message: String) {
+    pub fn transfer_corgi(&mut self, receiver: AccountId, id: String) {
         let owner = env::signer_account_id();
         let mut corgi = self
             .corgis
@@ -287,7 +297,6 @@ impl Model {
         );
         corgi.owner = receiver;
         corgi.sender = owner;
-        corgi.message = message;
 
         self.delete_corgi(id);
         self.append_corgi(&corgi);
