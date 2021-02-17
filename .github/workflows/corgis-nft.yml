@@ -47,22 +47,21 @@ jobs:
     - name: Run API tests for the Rust Corgis contract against testnet using the dev account
       run: yarn api-test:contract
       continue-on-error: true
-
-    - name: Generate key the account to be used by gh-pages (only in master)
-      run: yarn near generate-key $CONTRACT_NAME --seedPhrase="$seed_phrase"
+    
+    - name: Create brand new account (sub-account of master account) to be used by gh-pages (only in master)
+      run: |
+        yarn near generate-key $MASTER_ACCOUNT --seedPhrase="$seed_phrase"
+        yarn near create-account sha-$GITHUB_SHA.$MASTER_ACCOUNT --masterAccount $MASTER_ACCOUNT --initialBalance 20
       env:
-        CONTRACT_NAME: corgis-nft.testnet
+        MASTER_ACCOUNT: corgis-nft.testnet
         seed_phrase: ${{ secrets.SEED_PHRASE }}
       if: ${{ github.ref == 'refs/heads/master' }}
-    
-    - name: Set up origin to be able to push to gh-pages (only in master)
-      run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      if: ${{ github.ref == 'refs/heads/master' }}
       
-    - name: Deploy the Rust Corgis contract to testnet and the React app to gh-pages (only in master)
-      run: yarn deploy --user "Github Workflow Bot <noemail@epam.github.io>"
+    - name: Deploy the Rust Corgis contract to testnet and push the React app to gh-pages (only in master)
+      run: |
+        git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+        yarn deploy --user "Github Workflow Bot <noemail@epam.github.io>"
       env:
-        CONTRACT_NAME: corgis-nft.testnet
+        CONTRACT_NAME: sha-$GITHUB_SHA.$MASTER_ACCOUNT
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: ${{ github.ref == 'refs/heads/master' }}
