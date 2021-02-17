@@ -35,6 +35,7 @@
         "react-icons": "^4.1.0",
         "react-router-dom": "5.2.0",
         "react-scripts": "4.0.1",
+        "react-style-proptype": "^3.2.2",
         "regenerator-runtime": "^0.13.5",
         "tinycolor2": "^1.4.1"
     },

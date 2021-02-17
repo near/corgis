@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 
 import './InfoTile.scss';
 
-const InfoTilePropTypes = { text: PropTypes.string.isRequired, style: PropTypes.style };
+import StylesType from '~types/StylesType';
 
-const InfoTile = ({ text, style }) => (
-  <p className='infotile' style={style}>
+const InfoTilePropTypes = { text: PropTypes.string.isRequired, styles: StylesType };
+
+const InfoTile = ({ text, styles }) => (
+  <p className='infotile' style={styles}>
     {text}
   </p>
 );

@@ -33,7 +33,7 @@ const Dropdown = ({ dropdownTitle, children }) => {
   return (
     <div className={classNames('dropdown', { 'dropdown--opened': isOpened })} ref={dropdownRef}>
       <button className='dropdown__title' onClick={() => handleOpen()}>
-        <InfoTile text={dropdownTitle} style={isOpened ? { borderRadius: '5px 5px 0 0' } : {}} />
+        <InfoTile text={dropdownTitle} styles={isOpened ? { borderRadius: '5px 5px 0 0' } : {}} />
       </button>
 
       <div className='dropdown__content'>
