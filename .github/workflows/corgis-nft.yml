@@ -138,6 +138,9 @@ jobs:
 
     - name: Install yarn dependencies
       run: yarn install --frozen-lockfile
+    
+    - name: Build the React app into dist/
+      run: yarn build:web
 
     # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
     - name: Disable near-cli event tracking consent question (which block the CI pipeline)
@@ -152,11 +155,14 @@ jobs:
         seed_phrase: ${{ secrets.SEED_PHRASE }}
       if: ${{ github.ref == 'refs/heads/master' }}
       
-    - name: Deploy the Rust Corgis contract to testnet and push the React app to gh-pages (only in master)
+    - name: Deploy the Rust Corgis contract to testnet
+      run: yarn deploy:contract
+      
+    - name: Deploy the React app to gh-pages
       run: |
         git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
         yarn gh-pages-clean
-        yarn deploy --user "Github Workflow Bot <noemail@epam.github.io>"
+        yarn deploy:web --user "Github Workflow Bot <noemail@epam.github.io>"
       env:
         CONTRACT_NAME: sha-${{ github.sha }}.corgis-nft.testnet
         #CONTRACT_NAME: corgis-nft.testnet
