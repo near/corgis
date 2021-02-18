@@ -111,10 +111,20 @@ pub enum Rarity {
 
 impl Default for Model {
     fn default() -> Self {
-        env::log(b"Default initialization of corgis model");
+        let version = env!("CARGO_PKG_VERSION");
+        let corgis_key = format!("v{}-corgis", version);
+        let corgis_by_owner_key = format!("v{}-corgis-by-owner", version);
+
+        env::log(
+            format!(
+                "Initialization of corgis contract. {}/{}",
+                corgis_key, corgis_by_owner_key
+            )
+            .as_bytes(),
+        );
         Self {
-            corgis: UnorderedMap::new(b"corgis".to_vec()),
-            corgis_by_owner: UnorderedMap::new(b"corgis-by-owner".to_vec()),
+            corgis: UnorderedMap::new(corgis_key.as_bytes().to_vec()),
+            corgis_by_owner: UnorderedMap::new(corgis_by_owner_key.as_bytes().to_vec()),
         }
     }
 }
@@ -129,11 +139,8 @@ impl Model {
     ///
     #[init]
     pub fn new() -> Self {
-        env::log(b"Init non-default CorgisContract");
-        Self {
-            corgis: UnorderedMap::new(b"corgis".to_vec()),
-            corgis_by_owner: UnorderedMap::new(b"corgis-by-owner".to_vec()),
-        }
+        env::log(b"Using new to initialize corgis contract");
+        Self::default()
     }
 
     /// Creates a `Corgi` under the `signer_account_id`.

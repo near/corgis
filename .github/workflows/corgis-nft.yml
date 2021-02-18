@@ -79,7 +79,7 @@ jobs:
     - name: Create brand new account (sub-account of master account) to be used by gh-pages (only in master)
       run: |
         yarn near generate-key $MASTER_ACCOUNT --seedPhrase="$seed_phrase"
-        yarn near create-account sha-$GITHUB_SHA.$MASTER_ACCOUNT --masterAccount $MASTER_ACCOUNT --initialBalance 20
+#        yarn near create-account sha-$GITHUB_SHA.$MASTER_ACCOUNT --masterAccount $MASTER_ACCOUNT --initialBalance 20
       env:
         MASTER_ACCOUNT: corgis-nft.testnet
         seed_phrase: ${{ secrets.SEED_PHRASE }}
@@ -91,6 +91,7 @@ jobs:
         yarn gh-pages-clean
         yarn deploy --user "Github Workflow Bot <noemail@epam.github.io>"
       env:
-        CONTRACT_NAME: sha-${{ github.sha }}.corgis-nft.testnet
+        #CONTRACT_NAME: sha-${{ github.sha }}.corgis-nft.testnet
+        CONTRACT_NAME: corgis-nft.testnet
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       if: ${{ github.ref == 'refs/heads/master' }}
