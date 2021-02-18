@@ -38,17 +38,11 @@ jobs:
     - name: Build the Rust Corgis contract
       run: yarn build:contract
 
-    # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
-    - name: Disable near-cli event tracking consent question (which blocks the CI pipeline)
-      run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
-
     - name: Upload corgis_nft wasm contract
       uses: actions/upload-artifact@v2
       with:
         name: corgis_nft
-        path: |
-          contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
-          ~/.near-config/settings.json
+        path: contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
 
   test-contract:
     runs-on: ubuntu-latest
@@ -99,6 +93,10 @@ jobs:
     
     - name: Install yarn dependencies to install near-cli
       run: yarn install --frozen-lockfile
+
+    # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
+    - name: Disable near-cli event tracking consent question (which blocks the CI pipeline)
+      run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
                 
     - name: Deploy the Rust Corgis contract to testnet using a dev account
       run: yarn dev-deploy:contract
