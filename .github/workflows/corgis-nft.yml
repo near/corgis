@@ -48,7 +48,7 @@ jobs:
         name: corgis_nft
         path: |
           contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
-          $HOME/.near-config/settings.json
+          ~/.near-config/settings.json
 
   test-contract:
     runs-on: ubuntu-latest
