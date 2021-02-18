@@ -18,10 +18,43 @@ env:
 
 jobs:
 
+  build-contract:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Cache cargo
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          contract/target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      
+    - name: Install Rust target wasm32 to compile for the NEAR platform
+      run: rustup target add wasm32-unknown-unknown
+      
+    - name: Build the Rust Corgis contract
+      run: yarn build:contract
+
+    # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
+    - name: Disable near-cli event tracking consent question (which blocks the CI pipeline)
+      run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
+
+    - name: Upload corgis_nft wasm contract
+      uses: actions/upload-artifact@v2
+      with:
+        name: corgis_nft
+        path: |
+          contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
+          $HOME/.near-config/settings.json
+
   test-contract:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    
     - name: Cache cargo
       uses: actions/cache@v2
       with:
@@ -33,6 +66,45 @@ jobs:
         
     - name: Run Rust Corgis contract unit tests
       run: yarn test:contract
+
+  api-test-contract:
+    needs: build-contract
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: echo "::set-output name=dir::$(yarn cache dir)"
+
+    - name: Cache yarn
+      uses: actions/cache@v2
+      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
+    - name: Cache node_modules
+      uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+    
+    - name: Download corgis_nft wasm contract
+      uses: actions/download-artifact@v2
+      with:
+        name: corgis_nft
+    
+    - name: Install yarn dependencies to install near-cli
+      run: yarn install --frozen-lockfile
+                
+    - name: Deploy the Rust Corgis contract to testnet using a dev account
+      run: yarn dev-deploy:contract
+      
+    - name: Run API tests for the Rust Corgis contract against testnet using the dev account
+      run: yarn api-test:contract
 
   build:
 
@@ -81,10 +153,7 @@ jobs:
       
     - name: Build the Rust Corgis contract
       run: yarn build:contract
-      
-    - name: Run unit tests for the Rust Corgis contract locally
-      run: yarn test:contract
-    
+          
     - name: Deploy the Rust Corgis contract to testnet using a dev account
       run: yarn dev-deploy:contract
       continue-on-error: true
