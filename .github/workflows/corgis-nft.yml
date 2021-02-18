@@ -43,6 +43,7 @@ jobs:
       with:
         name: corgis_nft
         path: contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
+        retention-days: 1
 
   test-contract:
     runs-on: ubuntu-latest
@@ -90,7 +91,8 @@ jobs:
       uses: actions/download-artifact@v2
       with:
         name: corgis_nft
-    
+        path: contract/target/wasm32-unknown-unknown/release
+
     - name: Install yarn dependencies to install near-cli
       run: yarn install --frozen-lockfile
 
