@@ -1,9 +1,11 @@
 import React, { useContext } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import { NearContext } from '~context/NearContext';
+import { NearContext } from '~contexts';
 
 import GuardedRoute from '~router/GuardedRoute';
+
+import { CharacterContextProvider } from '~contexts/';
 
 import AccountPage from '~modules/account/page/AccountPage';
 import HomePage from '~modules/home/page/HomePage';
@@ -23,7 +25,9 @@ const Routes = () => {
         <HomePage />
       </Route>
       <GuardedRoute auth={isAuthenticated} exact path='/generation'>
-        <GenerationPage />
+        <CharacterContextProvider>
+          <GenerationPage />
+        </CharacterContextProvider>
       </GuardedRoute>
       <GuardedRoute auth={isAuthenticated} exact path='/account'>
         <AccountPage />

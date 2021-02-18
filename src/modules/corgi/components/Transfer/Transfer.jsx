@@ -6,9 +6,7 @@ import { IoIosCheckmarkCircleOutline, IoIosCloseCircleOutline } from 'react-icon
 
 import * as nearlib from 'near-api-js';
 
-import { NearContext } from '~context/NearContext';
-import { ContractContext } from '~context/contract';
-import { TransferContext } from '~context/transfer';
+import { ContractContext, NearContext, TransferContext } from '~contexts';
 
 import { Button } from '~modules/common';
 

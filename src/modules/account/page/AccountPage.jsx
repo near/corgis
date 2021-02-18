@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import { Redirect, Link } from 'react-router-dom';
 
-import { ContractContext } from '~context/contract';
+import { ContractContext } from '~contexts';
 
 import { CorgiTile, Spinner } from '~modules/common';
 

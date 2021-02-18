@@ -7,7 +7,7 @@ import classNames from 'classnames';
 
 import raritySample from '~assets/images/rarity-sample.svg';
 
-import { ContractContext } from '~context/contract';
+import { ContractContext } from '~contexts';
 
 import { GenerationAnimation, GenerationForm, GenerationScreen } from '~modules/generation/components';
 

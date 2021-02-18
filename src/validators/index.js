@@ -1,3 +1,4 @@
+import checkProfanity from './checkProfanity';
 import validateCorgiName from './validateCorgiName';
 
-export { validateCorgiName };
+export { checkProfanity, validateCorgiName };

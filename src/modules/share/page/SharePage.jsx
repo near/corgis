@@ -6,8 +6,7 @@ import './SharePage.scss';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { GiBowTieRibbon, GiImperialCrown } from 'react-icons/gi';
 
-import { ContractContext } from '~context/contract';
-import { NearContext } from '~context/NearContext';
+import { ContractContext, NearContext } from '~contexts';
 
 import { CorgiCard, Spinner, SwitchCorgiPhoto } from '~modules/common';
 

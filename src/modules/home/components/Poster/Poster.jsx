@@ -10,42 +10,35 @@ import { PosterFooter } from '~modules/home/components';
 
 const PosterPropTypes = {
   requestSignIn: PropTypes.func.isRequired,
-  isLoading: PropTypes.bool.isRequired,
   // TODO: user type
   user: PropTypes.shape({ accountId: PropTypes.string.isRequired }),
 };
 
-const Poster = ({ requestSignIn, isLoading, user }) => {
-  if (isLoading) {
-    return <Spinner />;
-  }
+const Poster = ({ requestSignIn, user }) => (
+  <div className='poster'>
+    <div className='poster__background'>
+      <div className='poster__description'>
+        <p className='poster__text'>Create your own one-of-the-kind Corgi today</p>
 
-  return (
-    <div className='poster'>
-      <div className='poster__background'>
-        <div className='poster__description'>
-          <p className='poster__text'>Create your own one-of-the-kind Corgi today</p>
+        <p className='poster__text poster__text--small'>create, collect, send, or trade</p>
 
-          <p className='poster__text poster__text--small'>create, collect, send, or trade</p>
-
-          <div className='poster__login'>
-            {user ? (
-              <InfoTile text={`Logged In as @${user.accountId}`} />
-            ) : (
-              <Button description='Login with NEAR' action={requestSignIn} />
-            )}
-          </div>
-        </div>
-
-        <div className='poster__image'>
-          <img className='poster__corgi' src={corgiFull} alt='' />
+        <div className='poster__login'>
+          {user ? (
+            <InfoTile text={`Logged In as @${user.accountId}`} />
+          ) : (
+            <Button description='Login with NEAR' action={requestSignIn} />
+          )}
         </div>
       </div>
 
-      <PosterFooter />
+      <div className='poster__image'>
+        <img className='poster__corgi' src={corgiFull} alt='' />
+      </div>
     </div>
-  );
-};
+
+    <PosterFooter />
+  </div>
+);
 
 Poster.propTypes = PosterPropTypes;
 

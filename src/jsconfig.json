@@ -6,7 +6,7 @@
     "paths": {
       "~assets/*": ["./assets/*"],
       "~constants/*": ["./constants/*"],
-      "~context/*": ["./context/*"],
+      "~contexts/*": ["./contexts/*"],
       "~helpers/*": ["./helpers/*"],
       "~hooks/*": ["./hooks/*"],
       "~modules/*": ["./modules/*"],

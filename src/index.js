@@ -5,9 +5,7 @@ import ReactDOM from 'react-dom';
 import * as nearlib from 'near-api-js';
 import getConfig from './config';
 
-import { NearContextProvider } from './context/NearContext';
-import { ContractContextProvider } from './context/contract';
-import { CharacterContextProvider } from './context/character';
+import { ContractContextProvider, NearContextProvider } from '~contexts';
 
 import App from './App';
 
@@ -56,9 +54,7 @@ window.nearInitPromise = InitContract()
     const app = (
       <NearContextProvider currentUser={currentUser} nearConfig={nearConfig} wallet={walletConnection} near={near}>
         <ContractContextProvider Contract={contract}>
-          <CharacterContextProvider>
-            <App />
-          </CharacterContextProvider>
+          <App />
         </ContractContextProvider>
       </NearContextProvider>
     );

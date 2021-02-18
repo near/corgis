@@ -7,8 +7,7 @@ import { GiGreekSphinx, GiBeachBall } from 'react-icons/gi';
 import classNames from 'classnames';
 import randomColor from 'randomcolor';
 
-import { CharacterContext } from '~context/character';
-import { ContractContext } from '~context/contract';
+import { CharacterContext, ContractContext } from '~contexts';
 
 import { Button, Colorpicker, Input } from '~modules/common';
 

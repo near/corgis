@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 
 import './ProfilePage.scss';
 
-import { ContractContext } from '~context/contract';
+import { ContractContext } from '~contexts';
 
 import { CorgiAnimTwo, Spinner } from '~modules/common';
 import { ProfileRow } from '~modules/profile/components/';

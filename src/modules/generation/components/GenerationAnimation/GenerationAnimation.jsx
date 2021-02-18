@@ -9,7 +9,7 @@ import shadow from '~assets/images/shadow.svg';
 
 import { CorgiAnimFour } from '~modules/common';
 
-import { CharacterContext } from '~context/character';
+import { CharacterContext } from '~contexts';
 
 const GenerationAnimation = () => {
   const { color, backgroundColor } = useContext(CharacterContext);

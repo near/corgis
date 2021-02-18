@@ -8,8 +8,7 @@ import './App.scss';
 import { Header } from '~modules/header';
 import { Footer } from '~modules/footer';
 
-import { NearContext } from '~context/NearContext';
-import { ContractContext } from '~context/contract';
+import { ContractContext, NearContext } from '~contexts';
 
 const App = () => {
   const { user } = useContext(NearContext);

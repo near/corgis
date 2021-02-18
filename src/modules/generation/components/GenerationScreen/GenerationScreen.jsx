@@ -4,7 +4,7 @@ import './GenerationScreen.scss';
 
 import { Egg } from '~modules/common';
 
-import { CharacterContext } from '~context/character';
+import { CharacterContext } from '~contexts';
 
 import tinycolor from 'tinycolor2';
 

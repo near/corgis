@@ -3,9 +3,7 @@ import { Redirect, useRouteMatch } from 'react-router-dom';
 
 import './CorgiPage.scss';
 
-import { NearContext } from '~context/NearContext';
-import { ContractContext } from '~context/contract';
-import { TransferContextProvider } from '~context/transfer';
+import { ContractContext, NearContext, TransferContextProvider } from '~contexts';
 
 import { CorgiCard, CorgiRate, Spinner } from '~modules/common';
 import { SendModal, ShareActions, ShareModal } from '~modules/corgi/components';

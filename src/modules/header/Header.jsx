@@ -1,9 +1,8 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
 import './Header.scss';
 
-import { NearContext } from '~context/NearContext';
-import { ContractContext } from '~context/contract';
+import { ContractContext, NearContext } from '~contexts';
 
 import Nav from './Nav/Nav';
 import CorgisLogo from './CorgisLogo/CorgisLogo';
