@@ -1,0 +1,59 @@
+.input {
+  position: relative;
+
+  width: 100%;
+
+  z-index: 10;
+
+  &__field {
+    width: 100%;
+
+    border: 1px solid black;
+    border-radius: 2px;
+
+    box-sizing: border-box;
+
+    background-color: #ffffff;
+
+    transition: 0.1s ease-out;
+  }
+
+  &__error {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    max-height: 0;
+
+    padding: 0.5rem;
+    margin: 0;
+
+    background-color: #fbb040;
+    color: #ffffff;
+
+    opacity: 0;
+
+    box-sizing: border-box;
+
+    overflow: hidden;
+
+    transition: 0.4s ease-out;
+
+    z-index: -1;
+  }
+
+  &--show-error {
+    .input__field {
+      background-color: #ef9a9a;
+    }
+
+    .input__error {
+      top: 100%;
+
+      max-height: 1000%;
+
+      opacity: 1;
+    }
+  }
+}

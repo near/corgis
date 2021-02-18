@@ -11,7 +11,8 @@
       "~hooks/*": ["./hooks/*"],
       "~modules/*": ["./modules/*"],
       "~router/*": ["./router/*"],
-      "~types/*": ["./types/*"]
+      "~types/*": ["./types/*"],
+      "~validators/*": ["./validators/*"]
     }
   },
   "exclude": ["dist", "node_modules", "**/node_modules/*"]

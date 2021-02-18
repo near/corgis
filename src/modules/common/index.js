@@ -3,6 +3,7 @@ import Colorpicker from './Colorpicker/Colorpicker';
 import Dropdown from './Dropdown/Dropdown';
 import Egg from './Egg/Egg';
 import InfoTile from './InfoTile/InfoTile';
+import Input from './Input/Input';
 import Modal from './Modal/Modal';
 import Quote from './Quote/Quote';
 import Spinner from './Spinner/Spinner';
@@ -29,6 +30,7 @@ export {
   Dropdown,
   Egg,
   InfoTile,
+  Input,
   Modal,
   Quote,
   Spinner,
