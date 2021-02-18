@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Redirect, useRouteMatch } from 'react-router-dom';
 
 import './CorgiPage.scss';
 
@@ -17,8 +17,8 @@ const CorgiPage = () => {
   const [showSend, setSend] = useState(false);
   const [showShare, setShare] = useState(false);
 
-  const { hash } = useLocation();
-  const id = hash.length ? hash.slice(1) : hash;
+  const { params } = useRouteMatch();
+  const { id } = params;
 
   useEffect(() => {
     if (id) {

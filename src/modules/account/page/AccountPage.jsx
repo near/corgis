@@ -28,13 +28,7 @@ const AccountPage = () => {
       <div className='account__corgis'>
         {!loading && corgis && corgis.length > 0 ? (
           corgis.map((corgi) => (
-            <Link
-              to={{
-                pathname: `/@${corgi.name}`,
-                hash: corgi.id,
-              }}
-              key={corgi.id}
-            >
+            <Link to={`/corgi/${corgi.id}`} key={corgi.id}>
               <CorgiTile corgi={corgi} />
             </Link>
           ))

@@ -31,7 +31,7 @@ const Routes = () => {
       <GuardedRoute auth={isAuthenticated} exact path='/profile'>
         <ProfilePage />
       </GuardedRoute>
-      <GuardedRoute auth={isAuthenticated} exact path='/@:name'>
+      <GuardedRoute auth={isAuthenticated} path='/corgi/:id+'>
         <CorgiPage />
       </GuardedRoute>
       <GuardedRoute auth={isAuthenticated} exact path='/share'>

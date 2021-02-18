@@ -2,7 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es6",
-    "baseUrl": "./src",
+    "baseUrl": ".",
     "paths": {
       "~assets/*": ["./assets/*"],
       "~constants/*": ["./constants/*"],
