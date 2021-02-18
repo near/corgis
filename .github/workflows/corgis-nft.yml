@@ -155,7 +155,7 @@ jobs:
         seed_phrase: ${{ secrets.SEED_PHRASE }}
 
     - name: Create brand new account (sub-account of master account) to be used by gh-pages
-      run: yarn near create-account $CONTRACT_NAME --masterAccount $MASTER_ACCOUNT --initialBalance 5
+      run: yarn near create-account $CONTRACT_NAME --masterAccount $MASTER_ACCOUNT --initialBalance 10
       
     - name: Deploy the Rust Corgis contract to testnet
       run: yarn deploy:contract
