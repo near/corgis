@@ -17,6 +17,23 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+
+  test-contract:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache cargo
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          contract/target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        
+    - name: Run Rust Corgis contract unit tests
+      run: yarn test:contract
+
   build:
 
     runs-on: ubuntu-latest
