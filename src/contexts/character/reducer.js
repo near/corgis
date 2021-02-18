@@ -3,7 +3,7 @@ import randomColor from 'randomcolor';
 import { genRandomName } from '~helpers/generators';
 import { getRandomQuoteId } from '~helpers/quotes';
 
-import { NAME, QUOTE, COLOR, BACKGROUND_COLOR, CLEAR } from './types';
+import { SET_NAME, SET_COLOR, SET_BACKGROUND_COLOR, SET_QUOTE, CLEAR_STATE } from './types';
 
 export const initialCharacterState = {
   name: genRandomName(),
@@ -14,31 +14,31 @@ export const initialCharacterState = {
 
 export const characterReducer = (currentState = initialCharacterState, action) => {
   switch (action.type) {
-    case NAME:
+    case SET_NAME:
       return {
         ...currentState,
-        name: action.name,
+        name: action.payload.name,
       };
 
-    case QUOTE:
+    case SET_QUOTE:
       return {
         ...currentState,
-        quote: action.quote,
+        quote: action.payload.quote,
       };
 
-    case COLOR:
+    case SET_COLOR:
       return {
         ...currentState,
-        color: action.color,
+        color: action.payload.color,
       };
 
-    case BACKGROUND_COLOR:
+    case SET_BACKGROUND_COLOR:
       return {
         ...currentState,
-        backgroundColor: action.backgroundColor,
+        backgroundColor: action.payload.backgroundColor,
       };
 
-    case CLEAR:
+    case CLEAR_STATE:
       return initialCharacterState;
 
     default:

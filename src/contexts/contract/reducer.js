@@ -1,17 +1,17 @@
 import {
-  START,
-  FAIL,
-  GET_DISPLAY_CORGIS,
-  GET_CORGISLIST_SUCCESS,
+  ACTION_START,
+  ACTION_ERROR,
   GET_CORGI_SUCCESS,
-  CREATE_START,
+  GET_CORGIS_SUCCESS,
+  GET_DISPLAY_CORGIS_SUCCESS,
+  CREATE_CORGI_START,
   CREATE_CORGI_SUCCESS,
-  TRANSFER_START,
-  TRANSFER_CORGI_SUCCESS,
-  DELETE_START,
+  DELETE_CORGI_START,
   DELETE_CORGI_SUCCESS,
-  CLEAR,
-  CLEAR_CREATED_CORGI_STATE,
+  TRANSFER_CORGI_START,
+  TRANSFER_CORGI_SUCCESS,
+  CLEAR_CREATED_CORGI,
+  CLEAR_STATE,
 } from './types';
 
 export const initialContractState = {
@@ -28,80 +28,99 @@ export const initialContractState = {
 
 export const contractReducer = (currentState = initialContractState, action) => {
   switch (action.type) {
-    case START:
+    case ACTION_START:
       return {
         ...currentState,
         loading: true,
       };
-    case FAIL:
+
+    case ACTION_ERROR:
       return {
         ...currentState,
         loading: false,
         creating: false,
         transfering: false,
         deleting: false,
-        error: action.error,
+        error: action.payload.error,
       };
-    case GET_DISPLAY_CORGIS:
-      return {
-        ...currentState,
-        loading: false,
-        displayCorgis: action.corgis,
-      };
-    case GET_CORGISLIST_SUCCESS:
-      return {
-        ...currentState,
-        loading: false,
-        corgis: action.corgis,
-      };
+
     case GET_CORGI_SUCCESS:
       return {
         ...currentState,
         loading: false,
-        corgi: action.corgi,
+        corgi: action.payload.corgi,
+        error: null,
       };
-    case CREATE_START:
+
+    case GET_CORGIS_SUCCESS:
+      return {
+        ...currentState,
+        loading: false,
+        corgis: action.payload.corgis,
+        error: null,
+      };
+
+    case GET_DISPLAY_CORGIS_SUCCESS:
+      return {
+        ...currentState,
+        loading: false,
+        displayCorgis: action.payload.corgis,
+        error: null,
+      };
+
+    case CREATE_CORGI_START:
       return {
         ...currentState,
         creating: true,
       };
+
     case CREATE_CORGI_SUCCESS:
       return {
         ...currentState,
         creating: false,
         created: true,
+        error: null,
       };
-    case TRANSFER_START:
+
+    case TRANSFER_CORGI_START:
       return {
         ...currentState,
         transfering: true,
       };
+
     case TRANSFER_CORGI_SUCCESS:
       return {
         ...currentState,
         transfering: false,
+        error: null,
       };
-    case DELETE_START:
+
+    case DELETE_CORGI_START:
       return {
         ...currentState,
         deleting: true,
       };
+
     case DELETE_CORGI_SUCCESS:
       return {
         ...currentState,
         deleting: false,
+        error: null,
       };
-    case CLEAR:
+
+    case CLEAR_STATE:
       return {
         ...currentState,
         error: null,
       };
-    case CLEAR_CREATED_CORGI_STATE:
+
+    case CLEAR_CREATED_CORGI:
       return {
         ...currentState,
         creating: false,
         created: false,
       };
+
     default:
       return initialContractState;
   }

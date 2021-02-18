@@ -7,18 +7,20 @@ import { ContractContext, NearContext } from '~contexts';
 import { Poster, ShowCase } from '~modules/home/components';
 
 const HomePage = () => {
-  const nearContext = useContext(NearContext);
+  const { user, signIn } = useContext(NearContext);
   const { getDisplayCorgis, displayCorgis } = useContext(ContractContext);
 
-  const signIn = () => {
-    nearContext.signIn();
+  const requestSignIn = () => {
+    signIn();
   };
 
-  useEffect(() => getDisplayCorgis(), [getDisplayCorgis]);
+  useEffect(() => {
+    getDisplayCorgis();
+  }, [getDisplayCorgis]);
 
   return (
     <div className='home'>
-      <Poster requestSignIn={signIn} user={nearContext.user} />
+      <Poster requestSignIn={requestSignIn} user={user} />
       <ShowCase corgis={displayCorgis} />
     </div>
   );

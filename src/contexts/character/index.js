@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useReducer } from 'react';
 import { getRandomQuoteId } from '~helpers/quotes';
 
 import { characterReducer, initialCharacterState } from './reducer';
-import { NAME, COLOR, BACKGROUND_COLOR, QUOTE, CLEAR } from './types';
+import { SET_NAME, SET_COLOR, SET_BACKGROUND_COLOR, SET_QUOTE, CLEAR_STATE } from './types';
 
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
@@ -14,16 +14,24 @@ const CharacterContextProviderPropTypes = { children: ReactChildrenTypeRequired 
 export const CharacterContextProvider = ({ children }) => {
   const [characterState, dispatchCharacter] = useReducer(characterReducer, initialCharacterState);
 
-  const clear = () => dispatchCharacter({ type: CLEAR });
+  const clearState = () => {
+    dispatchCharacter({ type: CLEAR_STATE });
+  };
 
-  const setName = (name) => dispatchCharacter({ type: NAME, name });
+  const setName = (name) => {
+    dispatchCharacter({ type: SET_NAME, payload: { name } });
+  };
 
-  const setColor = (color) => dispatchCharacter({ type: COLOR, color });
+  const setColor = (color) => {
+    dispatchCharacter({ type: SET_COLOR, payload: { color } });
+  };
 
-  const setBackgroundColor = (backgroundColor) => dispatchCharacter({ type: BACKGROUND_COLOR, backgroundColor });
+  const setBackgroundColor = (backgroundColor) => {
+    dispatchCharacter({ type: SET_BACKGROUND_COLOR, payload: { backgroundColor } });
+  };
 
   const generateQuote = useCallback(() => {
-    dispatchCharacter({ type: QUOTE, quote: getRandomQuoteId() });
+    dispatchCharacter({ type: SET_QUOTE, payload: { quote: getRandomQuoteId() } });
   }, []);
 
   useEffect(() => {
@@ -35,7 +43,7 @@ export const CharacterContextProvider = ({ children }) => {
     color: characterState.color,
     backgroundColor: characterState.backgroundColor,
     quote: characterState.quote,
-    clear,
+    clearState,
     setName,
     setColor,
     setBackgroundColor,

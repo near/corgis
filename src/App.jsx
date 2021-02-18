@@ -12,13 +12,13 @@ import { ContractContext, NearContext } from '~contexts';
 
 const App = () => {
   const { user } = useContext(NearContext);
-  const { created, getCorgisList } = useContext(ContractContext);
+  const { created, deleting, getCorgis } = useContext(ContractContext);
 
   useEffect(() => {
-    if (user) {
-      getCorgisList(user.accountId);
+    if (user && !deleting) {
+      getCorgis(user.accountId);
     }
-  }, [user, getCorgisList, created]);
+  }, [user, getCorgis, created, deleting]);
 
   return (
     <div className='App'>

@@ -1,4 +1,5 @@
+import BOATLOAD_OF_GAS from './BoatloadOfGas';
 import RATES from './Rates';
 import SAUSAGE from './Sausage';
 
-export { SAUSAGE, RATES };
+export { BOATLOAD_OF_GAS, RATES, SAUSAGE };

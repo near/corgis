@@ -6,11 +6,11 @@ import { ContractContext } from '~contexts';
 import { CorgiTile, Spinner } from '~modules/common';
 
 const AccountPage = () => {
-  const { corgis, created, loading, clearCreatedCorgiState } = useContext(ContractContext);
+  const { corgis, created, loading, clearCreatedCorgi } = useContext(ContractContext);
 
   useEffect(() => {
     if (created) {
-      clearCreatedCorgiState();
+      clearCreatedCorgi();
     }
   }, [created, clearCreatedCorgiState]);
 
