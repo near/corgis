@@ -1,0 +1,76 @@
+@mixin basic($height, $width) {
+  height: $height;
+  width: $width;
+}
+
+@mixin basicSquare($size) {
+  height: $size;
+  width: $size;
+}
+
+@mixin fill-parent {
+  height: 100%;
+  width: 100%;
+}
+
+@mixin fill-viewport {
+  height: 100vh;
+  width: 100vw;
+}
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin dis-flex($justify-content: flex-start, $align-items: flex-start) {
+  display: flex;
+  flex-direction: row;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+@mixin dis-flex-column($justify-content: flex-start, $align-items: flex-start) {
+  display: flex;
+  flex-direction: column;
+  justify-content: $justify-content;
+  align-items: $align-items;
+}
+
+@mixin absolute-top-left($top: 0, $left: 0) {
+  position: absolute;
+  top: $top;
+  left: $left;
+}
+
+@mixin absolute-top-right($top: 0, $right: 0) {
+  position: absolute;
+  top: $top;
+  right: $right;
+}
+
+@mixin absolute-bottom-left($bottom: 0, $left: 0) {
+  position: absolute;
+  bottom: $bottom;
+  left: $left;
+}
+
+@mixin absolute-bottom-right($bottom: 0, $right: 0) {
+  position: absolute;
+  bottom: $bottom;
+  right: $right;
+}
+
+@mixin absolute-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+@mixin clear-mar-pad {
+  margin: 0;
+  padding: 0;
+}

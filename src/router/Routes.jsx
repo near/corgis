@@ -10,7 +10,6 @@ import { CharacterContextProvider } from '~contexts/';
 import AccountPage from '~modules/account/page/AccountPage';
 import HomePage from '~modules/home/page/HomePage';
 import GenerationPage from '~modules/generation/page/GenerationPage';
-import ProfilePage from '~modules/profile/page/ProfilePage';
 import SharePage from '~modules/share/page/SharePage';
 import CorgiPage from '~modules/corgi/page/CorgiPage';
 
@@ -31,9 +30,6 @@ const Routes = () => {
       </GuardedRoute>
       <GuardedRoute auth={isAuthenticated} exact path='/account'>
         <AccountPage />
-      </GuardedRoute>
-      <GuardedRoute auth={isAuthenticated} exact path='/profile'>
-        <ProfilePage />
       </GuardedRoute>
       <GuardedRoute auth={isAuthenticated} path='/corgi/:id+'>
         <CorgiPage />

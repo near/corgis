@@ -1,0 +1,47 @@
+// basic colors
+
+$color-main: #fbb040;
+$color-black: #000000;
+$color-white: #ffffff;
+$color-gray: #eeeeee;
+
+$text-color-main: $color-black;
+
+// component colors
+
+$color-dropdown-item: $color-white;
+$color-dropdown-item-hover: $color-gray;
+
+// component sizes
+
+// margins and paddings
+
+$padding-button: 0.25rem 1.5rem;
+
+$padding-infotile: $padding-button;
+
+$padding-dropdown-item: $padding-button;
+
+// gaps
+
+// borders
+
+$border-basic: 1px solid;
+$border-basic-main: $border-basic $color-main;
+$border-basic-black: $border-basic $color-black;
+
+$border-radius-basic: 2px;
+$border-radius-big: $border-radius-basic * 2;
+
+$border-radius-dropdown-title: $border-radius-basic $border-radius-basic 0 0;
+$border-radius-dropdown-list: 0 0 $border-radius-basic $border-radius-basic;
+
+// shadows
+
+// fonts
+
+// transition
+
+$transition-basic: 0.2s;
+
+$transition-basic-ease-out: $transition-basic ease-out;

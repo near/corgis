@@ -1,13 +1,13 @@
+@import 'variables';
+
 .button {
   margin: auto;
-  padding: 5px 30px;
+  padding: $padding-button;
 
-  border-radius: 5px;
+  border-radius: $border-radius-basic;
 
   background-color: #fbb040;
   color: #fff;
-
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
 
   font-weight: 600;
 

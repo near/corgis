@@ -1,14 +1,16 @@
 import 'regenerator-runtime/runtime';
+
 import React, { useContext, useEffect } from 'react';
 import { HashRouter as Router } from 'react-router-dom';
-import Routes from '~router/Routes';
 
 import './App.scss';
+
+import { ContractContext, NearContext } from '~contexts';
 
 import { Header } from '~modules/header';
 import { Footer } from '~modules/footer';
 
-import { ContractContext, NearContext } from '~contexts';
+import Routes from '~router/Routes';
 
 const App = () => {
   const { user } = useContext(NearContext);

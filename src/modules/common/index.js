@@ -2,6 +2,7 @@ import Button from './Button/Button';
 import Colorpicker from './Colorpicker/Colorpicker';
 import Dropdown from './Dropdown/Dropdown';
 import Egg from './Egg/Egg';
+import ExternalLink from './ExternalLink/ExternalLink';
 import InfoTile from './InfoTile/InfoTile';
 import Input from './Input/Input';
 import Modal from './Modal/Modal';
@@ -29,6 +30,7 @@ export {
   Colorpicker,
   Dropdown,
   Egg,
+  ExternalLink,
   InfoTile,
   Input,
   Modal,

@@ -1,17 +1,16 @@
+@import 'mixins';
+@import 'variables';
+
 .infotile {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex-center;
 
   margin: 0;
-  padding: 5px 30px;
+  padding: $padding-infotile;
 
-  border: 2px solid #fbb040;
-  border-radius: 5px;
+  border: $border-basic-main;
+  border-radius: $border-radius-basic;
 
-  background-color: #fff;
-
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+  background-color: $color-white;
 
   cursor: pointer;
 }
