@@ -37,7 +37,6 @@ jobs:
         path: |
           contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
           contract/target/wasm32-unknown-unknown/release/metadata.json
-        retention-days: 1
 
   test-contract:
     runs-on: ubuntu-latest
@@ -125,12 +124,15 @@ jobs:
         path: contract/target/wasm32-unknown-unknown/release
 
     - run: yarn install --frozen-lockfile
-    - run: node ci/deploy.mjs
-      env:
-        SEED_PHRASE: ${{ secrets.SEED_PHRASE }}
+    # - run: node ci/deploy.mjs
+    #   env:
+    #     SEED_PHRASE: ${{ secrets.SEED_PHRASE }}
+    - run: SEED_PHRASE="${{ secrets.SEED_PHRASE }}" node ci/deploy.mjs
+        
     - run: CONTRACT_NAME=`cat version`.$MASTER_ACCOUNT yarn build:web
-    - run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # - run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - run: git remote set-url origin https://git:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git
     - run: yarn gh-pages-clean
     - run: yarn deploy:web --user "Github Workflow Bot <noemail@epam.github.io>"
