@@ -56,36 +56,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    
-    # - name: Get yarn cache directory path
-    #   id: yarn-cache-dir-path
-    #   run: echo "::set-output name=dir::$(yarn cache dir)"
-
-    # - name: Cache yarn
-    #   uses: actions/cache@v2
-    #   id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-    #   with:
-    #     path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-    #     key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-    #     restore-keys: |
-    #       ${{ runner.os }}-yarn-
-
-    - name: Cache node_modules
-      uses: actions/cache@v2
+    - uses: actions/cache@v2
       with:
         path: '**/node_modules'
         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
-    
-    - name: Download corgis_nft wasm contract
-      uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2
       with:
         name: corgis_nft
         path: contract/target/wasm32-unknown-unknown/release
 
-    # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
     - name: Disable near-cli event tracking consent question (which blocks the CI pipeline)
       run: "mkdir ~/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > ~/.near-config/settings.json"
-                
     - run: yarn install --frozen-lockfile
     - run: yarn dev-deploy:contract
     - run: yarn api-test:contract
@@ -98,26 +79,10 @@ jobs:
       MASTER_ACCOUNT: corgis-nft.testnet
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Get yarn cache directory path
-      id: yarn-cache-dir-path
-      run: echo "::set-output name=dir::$(yarn cache dir)"
-
-    - name: Cache yarn
-      uses: actions/cache@v2
-      id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-      with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
-
-    - name: Cache node_modules
-      uses: actions/cache@v2
+    - uses: actions/cache@v2
       with:
         path: '**/node_modules'
         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
-            
     - uses: actions/download-artifact@v2
       with:
         name: corgis_nft
