@@ -286,7 +286,7 @@ impl Model {
 
     /// Returns the max amount of `Corgi`s returned by `get_global_corgis`.
     pub fn get_corgis_page_limit(&self) -> u64 {
-        8
+        10
     }
 
     /// Transfer the given corgi to `receiver`.

@@ -36,11 +36,16 @@ jobs:
     - name: Build the Rust Corgis contract
       run: yarn build:contract
 
+    - name: Export cargo metadata to json format to extract package version when deploying
+      run: cd contract && cargo metadata --no-deps --format-version 1 > target/wasm32-unknown-unknown/release/metadata.json
+
     - name: Upload corgis_nft wasm contract
       uses: actions/upload-artifact@v2
       with:
         name: corgis_nft
-        path: contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
+        path: |
+          contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
+          contract/target/wasm32-unknown-unknown/release/metadata.json
         retention-days: 1
 
   test-contract:
@@ -110,7 +115,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MASTER_ACCOUNT: corgis-nft.testnet
-      CONTRACT_NAME: sha-${{ github.sha }}.corgis-nft.testnet
+      # CONTRACT_NAME: sha-${{ github.sha }}.corgis-nft.testnet
+      CONTRACT_NAME: v0-1-0.corgis-nft.testnet
     steps:
     - uses: actions/checkout@v2
     
@@ -146,20 +152,25 @@ jobs:
       run: yarn build:web
 
     # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
-    - name: Disable near-cli event tracking consent question (which block the CI pipeline)
-      run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
+    # - name: Disable near-cli event tracking consent question (which block the CI pipeline)
+    #   run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
 
-    - name: Generate key for the master account to be able to create sub account
-      run: yarn near generate-key $MASTER_ACCOUNT --seedPhrase="$seed_phrase"
-      env:
-        seed_phrase: ${{ secrets.SEED_PHRASE }}
+    # - name: Generate key for the master account to be able to create sub account
+    #   run: yarn near generate-key $MASTER_ACCOUNT --seedPhrase="$seed_phrase"
+    #   env:
+    #     seed_phrase: ${{ secrets.SEED_PHRASE }}
 
-    - name: Create brand new account (sub-account of master account) to be used by gh-pages
-      run: yarn near create-account $CONTRACT_NAME --masterAccount $MASTER_ACCOUNT --initialBalance 10
+    # - name: Create brand new account (sub-account of master account) to be used by gh-pages
+    #   run: yarn near create-account $CONTRACT_NAME --masterAccount $MASTER_ACCOUNT --initialBalance 10
+      
+    # - name: Deploy the Rust Corgis contract to testnet
+    #   run: yarn deploy:contract
       
     - name: Deploy the Rust Corgis contract to testnet
-      run: yarn deploy:contract
-      
+      run: node ci/deploy.mjs
+      env:
+        SEED_PHRASE: ${{ secrets.SEED_PHRASE }}
+
     - name: Set up git remote to be able to push to gh-pages 
       run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
       env:
