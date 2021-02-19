@@ -36,7 +36,7 @@ if (parts.length !== 2) {
     console.log(`${chalk.red('Master account needs to have exactly 2 account parts')}`);
     exit(1);
 }
-const subAccountPrefix = 'v' + version.replaceAll('.', '-');
+const subAccountPrefix = 'v' + version.replace(/\./g, '-');
 console.log(`> Deploy to ${chalk.bold(config.nodeUrl)} with contract name ${chalk.bold.yellow(subAccountPrefix)}.${chalk.bold.magenta(masterAccount)}`);
 config.contractName = subAccountPrefix + '.' + masterAccount;
 
