@@ -116,7 +116,7 @@ jobs:
     env:
       MASTER_ACCOUNT: corgis-nft.testnet
       # CONTRACT_NAME: sha-${{ github.sha }}.corgis-nft.testnet
-      CONTRACT_NAME: v0-1-0.corgis-nft.testnet
+      # CONTRACT_NAME: v0-1-0.corgis-nft.testnet
     steps:
     - uses: actions/checkout@v2
     
@@ -145,11 +145,8 @@ jobs:
         name: corgis_nft
         path: contract/target/wasm32-unknown-unknown/release
 
-    - name: Install yarn dependencies
-      run: yarn install --frozen-lockfile
+    - run: yarn install --frozen-lockfile
     
-    - name: Build the React app into dist/
-      run: yarn build:web
 
     # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
     # - name: Disable near-cli event tracking consent question (which block the CI pipeline)
@@ -171,13 +168,12 @@ jobs:
       env:
         SEED_PHRASE: ${{ secrets.SEED_PHRASE }}
 
-    - name: Set up git remote to be able to push to gh-pages 
-      run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
+    - run: CONTRACT_NAME=`cat version`.$MASTER_ACCOUNT yarn build:web
+
+    - run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Clean up gh-pages cache
-      run: yarn gh-pages-clean
+    - run: yarn gh-pages-clean
       
-    - name: Deploy the React app to gh-pages
-      run: yarn deploy:web --user "Github Workflow Bot <noemail@epam.github.io>"
+    - run: yarn deploy:web --user "Github Workflow Bot <noemail@epam.github.io>"

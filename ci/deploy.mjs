@@ -1,5 +1,5 @@
 import { parseSeedPhrase } from 'near-seed-phrase';
-import { Near, keyStores, KeyPair, utils, transactions } from 'near-api-js';
+import { Near, keyStores, KeyPair, utils } from 'near-api-js';
 import getConfig from '../src/config.js';
 import fs from 'fs';
 import chalk from 'chalk';
@@ -39,8 +39,9 @@ if (parts.length !== 2) {
 const subAccountPrefix = 'v' + version.replace(/\./g, '-');
 console.log(`> Deploy to ${chalk.bold(config.nodeUrl)} with contract name ${chalk.bold.yellow(subAccountPrefix)}.${chalk.bold.magenta(masterAccount)}`);
 config.contractName = subAccountPrefix + '.' + masterAccount;
+fs.writeFileSync('version', subAccountPrefix);
 
-const initialBalanceAmount = '20';
+const initialBalanceAmount = '50';
 const initialBalance = utils.format.parseNearAmount(initialBalanceAmount);
 console.log(`> Initial balance to use if account is created Ⓝ  ${chalk.yellow.bold(initialBalanceAmount)}`);
 
