@@ -25,7 +25,6 @@ jobs:
       with:
         path: |
           ~/.cargo/registry
-          ~/.cargo/git
           contract/target
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       
@@ -49,7 +48,6 @@ jobs:
       with:
         path: |
           ~/.cargo/registry
-          ~/.cargo/git
           contract/target
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
         
@@ -100,8 +98,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       MASTER_ACCOUNT: corgis-nft.testnet
-      # CONTRACT_NAME: sha-${{ github.sha }}.corgis-nft.testnet
-      # CONTRACT_NAME: v0-1-0.corgis-nft.testnet
     steps:
     - uses: actions/checkout@v2
     
