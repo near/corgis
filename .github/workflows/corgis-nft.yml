@@ -1,4 +1,4 @@
-name: Corgis NFT contract&app CI/CD
+name: Corgis NFT CI/CD
 
 on:
   # We want to trigger the build & test pipelines in every branch.
@@ -13,6 +13,7 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
+  FORCE_COLOR: 1
 
 jobs:
 
@@ -20,9 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Cache cargo
-      uses: actions/cache@v2
+    - uses: actions/cache@v2
       with:
         path: |
           ~/.cargo/registry
@@ -30,17 +29,11 @@ jobs:
           contract/target
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
       
-    - name: Install Rust target wasm32 to compile for the NEAR platform
-      run: rustup target add wasm32-unknown-unknown
-      
-    - name: Build the Rust Corgis contract
-      run: yarn build:contract
+    - run: rustup target add wasm32-unknown-unknown
+    - run: yarn build:contract
+    - run: cd contract && cargo metadata --no-deps --format-version 1 > target/wasm32-unknown-unknown/release/metadata.json
 
-    - name: Export cargo metadata to json format to extract package version when deploying
-      run: cd contract && cargo metadata --no-deps --format-version 1 > target/wasm32-unknown-unknown/release/metadata.json
-
-    - name: Upload corgis_nft wasm contract
-      uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v2
       with:
         name: corgis_nft
         path: |
@@ -52,9 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    
-    - name: Cache cargo
-      uses: actions/cache@v2
+    - uses: actions/cache@v2
       with:
         path: |
           ~/.cargo/registry
@@ -62,8 +53,7 @@ jobs:
           contract/target
         key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
         
-    - name: Run Rust Corgis contract unit tests
-      run: yarn test:contract
+    - run: yarn test:contract
 
   api-test-contract:
     needs: build-contract
@@ -96,18 +86,13 @@ jobs:
         name: corgis_nft
         path: contract/target/wasm32-unknown-unknown/release
 
-    - name: Install yarn dependencies to install near-cli
-      run: yarn install --frozen-lockfile
-
     # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
     - name: Disable near-cli event tracking consent question (which blocks the CI pipeline)
-      run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
+      run: "mkdir ~/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > ~/.near-config/settings.json"
                 
-    - name: Deploy the Rust Corgis contract to testnet using a dev account
-      run: yarn dev-deploy:contract
-      
-    - name: Run API tests for the Rust Corgis contract against testnet using the dev account
-      run: yarn api-test:contract
+    - run: yarn install --frozen-lockfile
+    - run: yarn dev-deploy:contract
+    - run: yarn api-test:contract
 
   deploy:
     needs: api-test-contract
@@ -139,41 +124,18 @@ jobs:
         path: '**/node_modules'
         key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
             
-    - name: Download corgis_nft wasm contract
-      uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2
       with:
         name: corgis_nft
         path: contract/target/wasm32-unknown-unknown/release
 
     - run: yarn install --frozen-lockfile
-    
-
-    # For more information, take a look at https://github.com/near/near-cli/blob/master/utils/eventtracking.js
-    # - name: Disable near-cli event tracking consent question (which block the CI pipeline)
-    #   run: "mkdir $HOME/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > $HOME/.near-config/settings.json"
-
-    # - name: Generate key for the master account to be able to create sub account
-    #   run: yarn near generate-key $MASTER_ACCOUNT --seedPhrase="$seed_phrase"
-    #   env:
-    #     seed_phrase: ${{ secrets.SEED_PHRASE }}
-
-    # - name: Create brand new account (sub-account of master account) to be used by gh-pages
-    #   run: yarn near create-account $CONTRACT_NAME --masterAccount $MASTER_ACCOUNT --initialBalance 10
-      
-    # - name: Deploy the Rust Corgis contract to testnet
-    #   run: yarn deploy:contract
-      
-    - name: Deploy the Rust Corgis contract to testnet
-      run: node ci/deploy.mjs
+    - run: node ci/deploy.mjs
       env:
         SEED_PHRASE: ${{ secrets.SEED_PHRASE }}
-
     - run: CONTRACT_NAME=`cat version`.$MASTER_ACCOUNT yarn build:web
-
     - run: git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
     - run: yarn gh-pages-clean
-      
     - run: yarn deploy:web --user "Github Workflow Bot <noemail@epam.github.io>"
