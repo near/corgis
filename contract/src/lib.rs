@@ -60,17 +60,8 @@ pub trait NEP4 {
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
     corgis: Dict<CorgiId, Corgi>,
-    // corgis: UnorderedMap<CorgiId, CorgiNode>,
     corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiId, ()>>,
-    // first: CorgiId,
 }
-
-// #[derive(BorshDeserialize, BorshSerialize)]
-// pub struct CorgiNode {
-//     next: CorgiId,
-//     prev: CorgiId,
-//     corgi: Corgi,
-// }
 
 /// Represents a `Corgi`.
 /// The `name` and `quote` are set by the user.
@@ -126,7 +117,6 @@ impl Default for Model {
         Self {
             corgis: Dict::new("C".as_bytes().to_vec()),
             corgis_by_owner: UnorderedMap::new("O".as_bytes().to_vec()),
-            // first: "".to_string(),
         }
     }
 }
@@ -246,11 +236,6 @@ impl Model {
 
         let owner = env::signer_account_id();
 
-        // let removed_node = self.corgis.remove(&id).expect("Corgi id not found");
-        // assert!(removed_node.corgi.owner == owner);
-        // assert!(removed_node.corgi.id == id);
-
-        // self.delete_corgi_from_list(removed_node);
         self.corgis.delete(&id);
 
         let mut list = self
@@ -319,8 +304,6 @@ impl Model {
     }
 
     fn push_corgi(&mut self, corgi: Corgi) -> Corgi {
-        // let node = self.push_corgi_to_list(corgi);
-        // self.corgis.insert(&node.corgi.id, &node);
         let id = corgi.id.clone();
         let corgi = self.corgis.push(&id, corgi).value;
 
@@ -334,32 +317,4 @@ impl Model {
 
         corgi
     }
-
-    // fn push_corgi_to_list(&mut self, corgi: Corgi) -> CorgiNode {
-    //     if self.first != "" {
-    //         let mut node = self.corgis.get(&self.first).unwrap();
-    //         node.prev = corgi.id.clone();
-    //         self.corgis.insert(&self.first, &node);
-    //     }
-
-    //     let node = CorgiNode {
-    //         next: self.first.clone(),
-    //         prev: "".to_string(),
-    //         corgi,
-    //     };
-
-    //     self.first = node.corgi.id.clone();
-
-    //     node
-    // }
-
-    // fn delete_corgi_from_list(&mut self, removed_node: CorgiNode) {
-    //     if removed_node.prev == "" {
-    //         self.first = removed_node.next;
-    //     } else {
-    //         let mut node = self.corgis.get(&removed_node.prev).unwrap();
-    //         node.next = removed_node.next;
-    //         self.corgis.insert(&removed_node.prev, &node);
-    //     }
-    // }
 }
