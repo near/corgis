@@ -12,7 +12,7 @@ use near_sdk::{testing_env, MockedBlockchain, VMContext};
 struct ModelMock {
     contract: Model,
     context: VMContext,
-    ids: Vec<String>,
+    ids: Vec<(String, String)>,
 }
 
 impl Deref for ModelMock {
@@ -50,7 +50,10 @@ impl ModelMock {
             color.to_string(),
             background_color.to_string(),
         );
-        self.ids.push(new_corgi.id.clone());
+        self.ids
+            .push((new_corgi.id.clone(), self.signer_account_id()));
+
+        println!("Created corgi id: {}", new_corgi.id);
 
         assert_eq!(new_corgi.name, name);
         assert_eq!(new_corgi.quote, quote);
@@ -67,23 +70,24 @@ impl ModelMock {
         let global_corgis = self.get_global_corgis();
         assert_eq!(
             global_corgis.len(),
-            min(
-                self.ids.len(),
-                self.get_corgis_page_limit() as usize
-            )
+            min(self.ids.len(), self.get_corgis_page_limit() as usize)
         );
         assert_eq!(&new_corgi, global_corgis.get(0).unwrap());
         self.check_global_corgis(global_corgis);
 
         let corgis_by_owner = self.get_corgis_by_owner(self.signer_account_id());
         assert_eq!(corgis_by_owner.len(), corgis_by_owner_count + 1);
-        // assert_eq!(&new_corgi, corgis_by_owner.get(0).unwrap());
+        assert_eq!(&new_corgi, corgis_by_owner.get(0).unwrap());
+        self.check_corgis_by_owner();
 
         Self::test_context(vec![], false, Some(vec![3, 2, 1, i as u8]));
 
-        println!("Created corgi id: {}", new_corgi.id);
-
         new_corgi
+    }
+
+    fn delete_corgi_by_index(&mut self, i: usize) {
+        let (id, _) = self.ids[i].clone();
+        self.delete_corgi(id);
     }
 
     fn delete_corgi(&mut self, id: String) {
@@ -91,7 +95,7 @@ impl ModelMock {
 
         self.contract.delete_corgi(id.clone());
 
-        let i = self.ids.iter().position(|x| x == &id).unwrap();
+        let i = self.ids.iter().position(|x| x.0 == id).unwrap();
         self.ids.remove(i);
 
         let global_corgis = self.get_global_corgis();
@@ -100,6 +104,7 @@ impl ModelMock {
             min(self.ids.len(), self.get_corgis_page_limit() as usize)
         );
         self.check_global_corgis(global_corgis);
+        self.check_corgis_by_owner();
 
         assert_eq!(
             self.get_corgis_by_owner(self.signer_account_id()).len(),
@@ -113,8 +118,8 @@ impl ModelMock {
         assert_eq!(
             &global_corgis
                 .into_iter()
-                .map(|corgi| corgi.id)
-                .collect::<Vec<String>>(),
+                .map(|corgi| (corgi.id, corgi.owner))
+                .collect::<Vec<(String, String)>>(),
             &{
                 let mut ids = self.ids.clone();
                 ids.reverse();
@@ -122,6 +127,31 @@ impl ModelMock {
                 ids
             }
         );
+    }
+
+    fn check_corgis_by_owner(&self) {
+        let owners = self
+            .ids
+            .iter()
+            .map(|(_, owner)| owner)
+            .collect::<HashSet<&String>>();
+        for owner in owners {
+            let corgis_by_owner = self.get_corgis_by_owner(owner.clone());
+            let ids_by_owner = corgis_by_owner
+                .iter()
+                .map(|corgi| &corgi.id)
+                .collect::<Vec<&String>>();
+
+            let mut ids = self
+                .ids
+                .iter()
+                .filter(|(_, o)| o == owner)
+                .map(|(id, _)| id)
+                .collect::<Vec<&String>>();
+            ids.reverse();
+
+            assert_eq!(ids_by_owner, ids);
+        }
     }
 
     fn test_context(input: Vec<u8>, is_view: bool, random_seed: Option<Vec<u8>>) -> VMContext {
@@ -151,18 +181,6 @@ impl ModelMock {
         testing_env!(context.clone());
         context
     }
-}
-
-fn assert_eq_as_sets(left: &Vec<String>, right: &Vec<String>) {
-    assert_eq!(
-        left.iter()
-            .map(|id| id.to_string())
-            .collect::<HashSet<String>>(),
-        right
-            .iter()
-            .map(|id| id.to_string())
-            .collect::<HashSet<String>>(),
-    );
 }
 
 #[test]
@@ -267,17 +285,9 @@ fn create_and_delete_a_few_corgis() {
         contract.create_corgi(i);
     }
 
-    let delete_and_check_state = |contract: &mut ModelMock, i: usize| {
-        let id = contract.ids[i].clone();
-        contract.delete_corgi(id);
-        let corgis_by_owner = contract.get_corgis_by_owner(contract.signer_account_id());
-        let cids: Vec<String> = corgis_by_owner.into_iter().map(|corgi| corgi.id).collect();
-        assert_eq_as_sets(&contract.ids, &cids);
-    };
-
-    delete_and_check_state(&mut contract, 2);
-    delete_and_check_state(&mut contract, 3);
-    delete_and_check_state(&mut contract, 0);
+    contract.delete_corgi_by_index(2);
+    contract.delete_corgi_by_index(3);
+    contract.delete_corgi_by_index(0);
 }
 
 #[test]

@@ -1,5 +1,6 @@
 #![deny(warnings)]
 
+pub mod dict;
 pub mod pack;
 
 use near_sdk::{
@@ -10,8 +11,9 @@ use near_sdk::{
     wee_alloc::WeeAlloc,
     AccountId,
 };
-use std::{collections::HashSet, usize};
+use std::usize;
 
+use dict::Dict;
 use pack::pack;
 
 #[global_allocator]
@@ -57,8 +59,8 @@ pub trait NEP4 {
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
-    corgis: UnorderedMap<String, CorgiNode>,
-    corgis_by_owner: UnorderedMap<AccountId, HashSet<String>>,
+    corgis: UnorderedMap<CorgiId, CorgiNode>,
+    corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiId, ()>>,
     first: CorgiId,
 }
 
@@ -226,7 +228,7 @@ impl Model {
             None => Vec::new(),
             Some(list) => list
                 .into_iter()
-                .map(|id| {
+                .map(|(id,_)| {
                     let node = self.corgis.get(&id).expect("Could not find Corgi by id");
                     assert!(node.corgi.id == id);
                     assert!(node.corgi.owner == owner, "The corgi with id `{}` owned by `{}` was found while fetching `{}`'s corgis", id, node.corgi.owner, owner);
@@ -243,18 +245,17 @@ impl Model {
 
         let owner = env::signer_account_id();
 
-        let mut list = self
-            .corgis_by_owner
-            .get(&owner)
-            .expect("The account does not have any corgis to delete from");
         let removed_node = self.corgis.remove(&id).expect("Corgi id not found");
         assert!(removed_node.corgi.owner == owner);
         assert!(removed_node.corgi.id == id);
 
         self.delete_corgi_from_list(removed_node);
 
-        let was_removed_from_owner_list = list.remove(&id);
-        assert!(was_removed_from_owner_list);
+        let mut list = self
+            .corgis_by_owner
+            .get(&owner)
+            .expect("The account does not have any corgis to delete from");
+        list.delete(id);
 
         self.corgis_by_owner.insert(&owner, &list);
     }
@@ -321,9 +322,8 @@ impl Model {
         let mut ids = self
             .corgis_by_owner
             .get(&node.corgi.owner)
-            .unwrap_or_else(|| HashSet::new());
-        let is_new_element = ids.insert(node.corgi.id.to_string());
-        assert!(is_new_element);
+            .unwrap_or_else(|| Dict::new(node.corgi.owner.as_bytes().to_vec()));
+        ids.push(&node.corgi.id, ());
 
         self.corgis_by_owner.insert(&node.corgi.owner, &ids);
 
