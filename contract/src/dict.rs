@@ -5,15 +5,15 @@ use near_sdk::{
 
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Dict<K, V> {
-    dict: UnorderedMap<K, Node<K, V>>,
-    first: K,
+    pub dict: UnorderedMap<K, Node<K, V>>,
+    pub first: K,
 }
 
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Node<K, V> {
-    next: K,
+    pub next: K,
     prev: K,
-    value: V,
+    pub value: V,
 }
 
 impl<
@@ -26,6 +26,10 @@ impl<
             dict: UnorderedMap::new(id),
             first: K::default(),
         }
+    }
+
+    pub fn get(&self, key: &K) -> Option<V> {
+        self.dict.get(key).map(|n| n.value)
     }
 
     pub fn push(&mut self, key: &K, value: V) -> Node<K, V> {
@@ -47,7 +51,7 @@ impl<
         node
     }
 
-    pub fn delete(&mut self, key: K) {
+    pub fn delete(&mut self, key: &K) {
         let removed_node = self.dict.remove(&key).expect("Id not found");
         if removed_node.prev == K::default() {
             self.first = removed_node.next;

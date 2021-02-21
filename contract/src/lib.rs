@@ -59,17 +59,18 @@ pub trait NEP4 {
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
-    corgis: UnorderedMap<CorgiId, CorgiNode>,
+    corgis: Dict<CorgiId, Corgi>,
+    // corgis: UnorderedMap<CorgiId, CorgiNode>,
     corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiId, ()>>,
-    first: CorgiId,
+    // first: CorgiId,
 }
 
-#[derive(BorshDeserialize, BorshSerialize)]
-pub struct CorgiNode {
-    next: CorgiId,
-    prev: CorgiId,
-    corgi: Corgi,
-}
+// #[derive(BorshDeserialize, BorshSerialize)]
+// pub struct CorgiNode {
+//     next: CorgiId,
+//     prev: CorgiId,
+//     corgi: Corgi,
+// }
 
 /// Represents a `Corgi`.
 /// The `name` and `quote` are set by the user.
@@ -123,9 +124,9 @@ impl Default for Model {
     fn default() -> Self {
         env::log(format!("Init of corgis contract {}", env!("CARGO_PKG_VERSION")).as_bytes());
         Self {
-            corgis: UnorderedMap::new("C".as_bytes().to_vec()),
+            corgis: Dict::new("C".as_bytes().to_vec()),
             corgis_by_owner: UnorderedMap::new("O".as_bytes().to_vec()),
-            first: "".to_string(),
+            // first: "".to_string(),
         }
     }
 }
@@ -210,9 +211,9 @@ impl Model {
 
     /// Gets the `Corgi` by the given `id`.
     pub fn get_corgi_by_id(&self, id: CorgiId) -> Corgi {
-        let node = self.corgis.get(&id).expect("Corgi not found");
-        assert!(node.corgi.id == id);
-        node.corgi
+        let corgi = self.corgis.get(&id).expect("Corgi not found");
+        assert!(corgi.id == id);
+        corgi
     }
 
     /// Gets the `Corgi`s owned by the `owner` account id.
@@ -229,10 +230,10 @@ impl Model {
             Some(list) => list
                 .into_iter()
                 .map(|(id,_)| {
-                    let node = self.corgis.get(&id).expect("Could not find Corgi by id");
-                    assert!(node.corgi.id == id);
-                    assert!(node.corgi.owner == owner, "The corgi with id `{}` owned by `{}` was found while fetching `{}`'s corgis", id, node.corgi.owner, owner);
-                    node.corgi
+                    let corgi = self.corgis.get(&id).expect("Could not find Corgi by id");
+                    assert!(corgi.id == id);
+                    assert!(corgi.owner == owner, "The corgi with id `{}` owned by `{}` was found while fetching `{}`'s corgis", id, corgi.owner, owner);
+                    corgi
                 })
                 .collect(),
         }
@@ -245,17 +246,18 @@ impl Model {
 
         let owner = env::signer_account_id();
 
-        let removed_node = self.corgis.remove(&id).expect("Corgi id not found");
-        assert!(removed_node.corgi.owner == owner);
-        assert!(removed_node.corgi.id == id);
+        // let removed_node = self.corgis.remove(&id).expect("Corgi id not found");
+        // assert!(removed_node.corgi.owner == owner);
+        // assert!(removed_node.corgi.id == id);
 
-        self.delete_corgi_from_list(removed_node);
+        // self.delete_corgi_from_list(removed_node);
+        self.corgis.delete(&id);
 
         let mut list = self
             .corgis_by_owner
             .get(&owner)
             .expect("The account does not have any corgis to delete from");
-        list.delete(id);
+        list.delete(&id);
 
         self.corgis_by_owner.insert(&owner, &list);
     }
@@ -273,7 +275,7 @@ impl Model {
         env::log(format!("get global list of corgis").as_bytes());
 
         let mut result = Vec::new();
-        let mut id = self.first.clone();
+        let mut id = self.corgis.first.clone();
         while id != "" {
             if result.len() >= self.get_corgis_page_limit() as usize {
                 break;
@@ -281,9 +283,10 @@ impl Model {
 
             let node = self
                 .corgis
+                .dict
                 .get(&id)
                 .expect("Not able to get corgi for display");
-            result.push(node.corgi);
+            result.push(node.value);
             id = node.next
         }
 
@@ -298,63 +301,65 @@ impl Model {
     /// Transfer the given corgi to `receiver`.
     pub fn transfer_corgi(&mut self, receiver: AccountId, id: String) {
         let owner = env::signer_account_id();
-        let mut node = self
+        let mut corgi = self
             .corgis
             .get(&id)
             .expect("The Corgi with the given id does not exist");
 
-        assert!(node.corgi.id == id);
+        assert!(corgi.id == id);
         assert!(
-            node.corgi.owner == owner,
+            corgi.owner == owner,
             "The specified Corgi does not belong to sender"
         );
-        node.corgi.owner = receiver;
-        node.corgi.sender = owner;
+        corgi.owner = receiver;
+        corgi.sender = owner;
 
         self.delete_corgi(id);
-        self.push_corgi(node.corgi);
+        self.push_corgi(corgi);
     }
 
     fn push_corgi(&mut self, corgi: Corgi) -> Corgi {
-        let node = self.push_corgi_to_list(corgi);
-        self.corgis.insert(&node.corgi.id, &node);
+        // let node = self.push_corgi_to_list(corgi);
+        // self.corgis.insert(&node.corgi.id, &node);
+        let id = corgi.id.clone();
+        let corgi = self.corgis.push(&id, corgi).value;
 
         let mut ids = self
             .corgis_by_owner
-            .get(&node.corgi.owner)
-            .unwrap_or_else(|| Dict::new(node.corgi.owner.as_bytes().to_vec()));
-        ids.push(&node.corgi.id, ());
+            .get(&corgi.owner)
+            .unwrap_or_else(|| Dict::new(corgi.owner.as_bytes().to_vec()));
+        ids.push(&corgi.id, ());
 
-        self.corgis_by_owner.insert(&node.corgi.owner, &ids);
+        self.corgis_by_owner.insert(&corgi.owner, &ids);
 
-        node.corgi
+        corgi
     }
 
-    fn push_corgi_to_list(&mut self, corgi: Corgi) -> CorgiNode {
-        if self.first != "" {
-            let mut node = self.corgis.get(&self.first).unwrap();
-            node.prev = corgi.id.clone();
-            self.corgis.insert(&self.first, &node);
-        }
+    // fn push_corgi_to_list(&mut self, corgi: Corgi) -> CorgiNode {
+    //     if self.first != "" {
+    //         let mut node = self.corgis.get(&self.first).unwrap();
+    //         node.prev = corgi.id.clone();
+    //         self.corgis.insert(&self.first, &node);
+    //     }
 
-        let node = CorgiNode {
-            next: self.first.clone(),
-            prev: "".to_string(),
-            corgi,
-        };
+    //     let node = CorgiNode {
+    //         next: self.first.clone(),
+    //         prev: "".to_string(),
+    //         corgi,
+    //     };
 
-        self.first = node.corgi.id.clone();
+    //     self.first = node.corgi.id.clone();
 
-        node
-    }
+    //     node
+    // }
 
-    fn delete_corgi_from_list(&mut self, removed_node: CorgiNode) {
-        if removed_node.prev == "" {
-            self.first = removed_node.next;
-        } else {
-            let mut node = self.corgis.get(&removed_node.prev).unwrap();
-            node.next = removed_node.next;
-            self.corgis.insert(&removed_node.prev, &node);
-        }
-    }
+    // fn delete_corgi_from_list(&mut self, removed_node: CorgiNode) {
+    //     if removed_node.prev == "" {
+    //         self.first = removed_node.next;
+    //     } else {
+    //         let mut node = self.corgis.get(&removed_node.prev).unwrap();
+    //         node.next = removed_node.next;
+    //         self.corgis.insert(&removed_node.prev, &node);
+    //     }
+    // }
 }
