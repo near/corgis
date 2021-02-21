@@ -119,20 +119,10 @@ pub enum Rarity {
 
 impl Default for Model {
     fn default() -> Self {
-        let version = env!("CARGO_PKG_VERSION");
-        let corgis_key = format!("v{}-corgis", version);
-        let corgis_by_owner_key = format!("v{}-corgis-by-owner", version);
-
-        env::log(
-            format!(
-                "Initialization of corgis contract. {}/{}",
-                corgis_key, corgis_by_owner_key
-            )
-            .as_bytes(),
-        );
+        env::log(format!("Init of corgis contract {}", env!("CARGO_PKG_VERSION")).as_bytes());
         Self {
-            corgis: UnorderedMap::new(corgis_key.as_bytes().to_vec()),
-            corgis_by_owner: UnorderedMap::new(corgis_by_owner_key.as_bytes().to_vec()),
+            corgis: UnorderedMap::new("C".as_bytes().to_vec()),
+            corgis_by_owner: UnorderedMap::new("O".as_bytes().to_vec()),
             first: "".to_string(),
         }
     }
