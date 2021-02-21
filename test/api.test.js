@@ -1,5 +1,11 @@
 const { Near, KeyPair, Contract, keyStores: { InMemoryKeyStore } } = require('near-api-js');
+const { CustomConsole } = require('@jest/console');
 const getConfig = require('../src/config');
+
+global.console = new CustomConsole(process.stdout, process.stderr, (type, message) => message
+  .split(/\n/)
+  .map(line => `[${type}] ${line}`)
+  .join('\n'));
 
 const config = getConfig('development');
 
@@ -34,7 +40,8 @@ async function initContractWithNewTestAccount() {
 
   return {
     contract,
-    accountId: account.accountId
+    accountId: account.accountId,
+    account,
   };
 }
 
@@ -47,6 +54,12 @@ describe('Corgis contract integration tests', () => {
     bob = await initContractWithNewTestAccount();
 
     pageLimit = await alice.contract.get_corgis_page_limit();
+  });
+
+  afterAll(async () => {
+    const accid = 'corgis-nft.testnet';
+    await alice.account.deleteAccount(accid);
+    await bob.account.deleteAccount(accid);
   });
 
   test('check that test account are actually different', async () => {
