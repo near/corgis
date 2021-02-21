@@ -4,7 +4,6 @@ import './GenerationAnimation.scss';
 
 import classNames from 'classnames';
 
-import raritySample from '~assets/images/rarity-sample.svg';
 import shadow from '~assets/images/shadow.svg';
 
 import { CorgiAnimFour } from '~modules/common';
@@ -26,8 +25,6 @@ const GenerationAnimation = () => {
           <img src={shadow} alt='' />
         </div>
       </div>
-
-      <img className='generation-animation__image' src={raritySample} alt='' />
     </div>
   );
 };

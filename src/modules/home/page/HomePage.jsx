@@ -4,7 +4,8 @@ import './HomePage.scss';
 
 import { ContractContext, NearContext } from '~contexts';
 
-import { Poster, ShowCase } from '~modules/home/components';
+import { Poster } from '~modules/home/components';
+import { CorgisShowCase } from '~modules/common';
 
 const HomePage = () => {
   const { user, signIn } = useContext(NearContext);
@@ -21,7 +22,10 @@ const HomePage = () => {
   return (
     <div className='home'>
       <Poster requestSignIn={requestSignIn} user={user} />
-      <ShowCase corgis={displayCorgis} />
+
+      <div className='home__showcase'>
+        <CorgisShowCase corgis={displayCorgis} showRarity showOwner />
+      </div>
     </div>
   );
 };

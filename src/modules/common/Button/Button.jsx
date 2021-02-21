@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 
 import './Button.scss';
 
+import classNames from 'classnames';
+
 const ButtonPropTypes = {
   action: PropTypes.func,
   description: PropTypes.string.isRequired,
@@ -11,8 +13,8 @@ const ButtonPropTypes = {
 };
 
 const Button = ({ action, description, disabled = false, badge }) => (
-  <button className='button' onClick={action} disabled={disabled}>
-    {description} {badge && <span className='badge bg-secondary'>{badge}</span>}
+  <button className={classNames('button', { 'button--disabled': disabled })} onClick={action} disabled={disabled}>
+    {description} {(badge || badge === 0) && !disabled && <span className='button__badge badge'>{badge}</span>}
   </button>
 );
 

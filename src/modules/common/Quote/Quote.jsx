@@ -16,12 +16,14 @@ const QuotePropTypes = {
   size: CardSizeType,
 };
 
-const quoteIconSize = '0.8em';
+const quoteIconSize = '0.35rem';
 
 const Quote = ({ color = '#fafafa', quoteId = '0', size = 'small' }) => (
   <div className={classNames('quote', `quote--${size}`)}>
     <p className='quote__text' style={{ color }}>
-      <FaQuoteLeft size={quoteIconSize} /> {getQuoteById(quoteId)} <FaQuoteRight size={quoteIconSize} />
+      <FaQuoteLeft size={quoteIconSize} style={{ verticalAlign: 'top', marginTop: '0.25rem' }} />{' '}
+      {getQuoteById(quoteId)}{' '}
+      <FaQuoteRight size={quoteIconSize} style={{ verticalAlign: 'top', marginTop: '0.25rem' }} />
     </p>
   </div>
 );

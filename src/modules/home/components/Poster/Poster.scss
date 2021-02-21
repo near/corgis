@@ -1,38 +1,25 @@
+@import 'mixins';
+@import 'variables';
+
 .poster {
-  display: flex;
-  flex-direction: column;
+  @include bootstrap-row();
 
-  width: 90%;
-  max-width: 1100px;
+  width: 100%;
 
-  margin: auto;
+  margin: 0;
+  padding: 0 1rem;
 
-  &__background {
-    display: grid;
-    grid-template-areas: 'text image';
-    grid-template-columns: 1fr 2fr;
-    grid-column-gap: 2%;
+  border-radius: $border-radius-big;
 
-    margin: 2% auto;
-
-    padding: 1.5rem;
-
-    border-radius: 10px;
-
-    background: rgba(251, 176, 64, 0.5);
-
-    justify-items: center;
-    align-items: center;
-  }
+  background-color: rgba($color-main, 0.5);
 
   &__description {
-    grid-area: text;
+    @include bootstrap-col(lg, 4);
+    @include dis-flex-column(space-evenly, center);
 
-    width: 100%;
+    padding: 1rem;
 
     box-sizing: border-box;
-
-    text-align: left;
   }
 
   &__text {
@@ -41,53 +28,24 @@
 
     color: #24272a;
 
-    font-weight: 600;
     font-size: 2em;
+    font-weight: 500;
 
-    letter-spacing: 0;
-
-    word-break: keep-all;
-    word-wrap: normal;
+    letter-spacing: 1px;
 
     &--small {
       font-size: 1em;
-      font-weight: 100;
+      font-weight: 300;
     }
   }
 
-  &__login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
   &__image {
-    grid-area: image;
-
-    width: 100%;
-
-    margin-top: -10%;
+    @include bootstrap-col(lg, 8);
   }
 
   &__corgi {
     width: 100%;
-  }
-}
 
-@media all and (max-width: 1000px) {
-  .poster {
-    &__background {
-      display: grid;
-      grid-template-areas:
-        'image'
-        'text';
-
-      grid-template-columns: none;
-      grid-template-rows: 2fr 1fr;
-    }
-
-    &__text {
-      text-align: center;
-    }
+    transform: translateY(-3%);
   }
 }

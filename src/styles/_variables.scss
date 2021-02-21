@@ -3,14 +3,33 @@
 $color-main: #fbb040;
 $color-black: #000000;
 $color-white: #ffffff;
-$color-gray: #eeeeee;
+$color-green: #4caf50;
+$color-blue: #1976d2;
+$color-purple: #7b1fa2;
+$color-brown: #a97c50;
+
+$color-gray: #bdbdbd;
+$color-gray-light: #eeeeee;
+$color-gray-dark: #757575;
 
 $text-color-main: $color-black;
 
+$text-color-rarity-common: $color-gray-dark;
+$text-color-rarity-uncommon: $color-green;
+$text-color-rarity-rare: $color-blue;
+$text-color-rarity-very-rare: $color-purple;
+
 // component colors
 
-$color-dropdown-item: $color-white;
-$color-dropdown-item-hover: $color-gray;
+$button-text-color: $color-white;
+$button-text-color-disabled: $color-gray-dark;
+
+$button-background-color: $color-main;
+$button-background-color-hover: darken($color-main, 5%);
+$button-background-color-disabled: $color-gray;
+
+$dropdown-item-background-color: $color-white;
+$dropdown-item-background-color-hover: $color-gray-light;
 
 // component sizes
 
@@ -29,6 +48,7 @@ $padding-dropdown-item: $padding-button;
 $border-basic: 1px solid;
 $border-basic-main: $border-basic $color-main;
 $border-basic-black: $border-basic $color-black;
+$border-basic-gray: $border-basic $color-gray;
 
 $border-radius-basic: 2px;
 $border-radius-big: $border-radius-basic * 2;

@@ -1,13 +1,15 @@
+@import 'mixins';
 @import 'variables';
 
 .button {
-  margin: auto;
+  @include flex-center;
+
   padding: $padding-button;
 
   border-radius: $border-radius-basic;
 
-  background-color: #fbb040;
-  color: #fff;
+  background-color: $button-background-color;
+  color: $button-text-color;
 
   font-weight: 600;
 
@@ -15,17 +17,21 @@
   white-space: nowrap;
 
   cursor: pointer;
-}
 
-.button:disabled {
-  background-color: #cfcfcf;
-  color: #888888;
-}
+  transition: $transition-basic-ease-out;
 
-@media all and (max-width: 451px) {
-  .button {
-    padding: 8px 3px;
+  &__badge {
+    background-color: $color-brown;
 
-    color: #fff;
+    transform: translateX(15%);
+  }
+
+  &:hover {
+    background-color: $button-background-color-hover;
+  }
+
+  &--disabled {
+    background-color: $button-background-color-disabled;
+    color: $button-text-color-disabled;
   }
 }

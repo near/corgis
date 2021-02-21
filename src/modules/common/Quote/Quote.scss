@@ -1,17 +1,19 @@
+@import 'variables';
+
 .quote {
   padding: 0.25rem;
 
-  border-radius: 20px;
+  border-radius: $border-radius-basic;
 
   background-color: white;
-
-  font-size: 0.6em;
-  word-wrap: break-word;
 
   opacity: 0.7;
 
   &__text {
     margin: 0;
+
+    font-size: 0.75rem;
+    word-wrap: break-word;
 
     filter: brightness(50%);
   }
@@ -19,6 +21,8 @@
   &--big {
     padding: 0.5rem;
 
-    font-size: 1em;
+    .quote__text {
+      font-size: 1rem;
+    }
   }
 }

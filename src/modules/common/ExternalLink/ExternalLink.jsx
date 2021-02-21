@@ -6,6 +6,7 @@ import './ExternalLink.scss';
 import classNames from 'classnames';
 
 const ExternalLinkPropTypes = {
+  customClasses: PropTypes.oneOfType([PropTypes.string, PropTypes.arrayOf(PropTypes.string)]),
   description: PropTypes.string,
   disabled: PropTypes.bool,
   href: PropTypes.string,
@@ -15,6 +16,7 @@ const ExternalLinkPropTypes = {
 };
 
 const ExternalLink = ({
+  customClasses = '',
   description = 'link to...',
   disabled = false,
   href = '',
@@ -23,7 +25,7 @@ const ExternalLink = ({
   target = '_blank',
 }) => (
   <a
-    className={classNames('link', { 'link--disabled': disabled, 'link--underline': showUnderline })}
+    className={classNames('link', { 'link--disabled': disabled, 'link--underline': showUnderline }, customClasses)}
     target={target}
     href={href}
     rel={rel}

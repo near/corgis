@@ -1,3 +1,5 @@
+@import 'bootstrap';
+
 @mixin basic($height, $width) {
   height: $height;
   width: $width;
@@ -73,4 +75,15 @@
 @mixin clear-mar-pad {
   margin: 0;
   padding: 0;
+}
+
+@mixin bootstrap-row {
+  @include make-row();
+}
+
+@mixin bootstrap-col($breakpoint: md, $col-num: 6) {
+  @include make-col-ready();
+  @include media-breakpoint-up($breakpoint) {
+    @include make-col($col-num);
+  }
 }

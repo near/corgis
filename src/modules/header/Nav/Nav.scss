@@ -1,8 +1,10 @@
+@import 'mixins';
+@import 'variables';
+
 .nav {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  @include dis-flex(space-between, center);
+
+  padding: 0.5rem 0;
 
   font-size: 1em;
 
@@ -17,16 +19,40 @@
       margin-right: 0;
     }
   }
-}
 
-@media all and (max-width: 1200px) {
-  .nav {
-    font-size: 0.8em;
+  &__link {
+    @include fill-parent;
+
+    padding: $padding-dropdown-item;
   }
 }
 
-@media all and (max-width: 450px) {
+@media all and (max-width: 500px) {
   .nav {
-    font-size: 0.6em;
+    flex-wrap: wrap;
+
+    width: 100%;
+
+    &__item {
+      margin: 0.5rem 0;
+
+      order: 1;
+
+      &:first-child {
+        order: 2;
+      }
+
+      &:last-child {
+        order: 3;
+      }
+
+      &--expandable {
+        width: 100%;
+      }
+    }
+
+    &__login {
+      margin: 0 auto;
+    }
   }
 }

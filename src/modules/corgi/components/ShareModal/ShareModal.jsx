@@ -9,13 +9,13 @@ import { ShareCopyLink } from '~modules/corgi/components';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
 
-const SharePropTypes = {
+const ShareModalPropTypes = {
   corgi: CorgiTypeShape.isRequired,
   show: PropTypes.bool.isRequired,
   closeModal: PropTypes.func.isRequired,
 };
 
-const Share = ({ corgi, show, closeModal }) => {
+const ShareModal = ({ corgi, show, closeModal }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const address = `${window.location.origin}/share${window.location.hash}`;
@@ -27,21 +27,7 @@ const Share = ({ corgi, show, closeModal }) => {
         <p>Click the card to see the share page</p>
 
         <div className='share-modal__corgi'>
-          <Link
-            to={{
-              pathname: '/share',
-              hash: corgi.id,
-            }}
-            key={corgi.id}
-            style={{
-              textDecoration: 'none',
-            }}
-          >
-            <CorgiCard corgi={corgi} size='small' />
-          </Link>
-
-          <p>{corgi.name}</p>
-          <span style={{ color: 'orange', fontSize: '0.7rem' }}>{corgi.rate}</span>
+          <CorgiCard corgi={corgi} size='small' showRarity />
         </div>
 
         <hr />
@@ -63,6 +49,6 @@ const Share = ({ corgi, show, closeModal }) => {
   );
 };
 
-Share.propTypes = SharePropTypes;
+ShareModal.propTypes = ShareModalPropTypes;
 
-export default Share;
+export default ShareModal;

@@ -1,13 +1,13 @@
 import { CorgiAnimOne, CorgiAnimTwo, CorgiAnimThree, CorgiAnimFour } from './CorgiAnimations';
 import { CorgiCommon, CorgiUncommon, CorgiRare, CorgiVeryRare, CorgiRate, SwitchCorgiPhoto } from './CorgiPhotos';
 import CorgiCard from './CorgiCard/CorgiCard';
+import CorgisShowCase from './CorgisShowCase/CorgisShowCase';
 import CorgiSVG from './CorgiSVG/CorgiSVG';
-import CorgiTile from './CorgiTile/CorgiTile';
 
 export {
   CorgiCard,
+  CorgisShowCase,
   CorgiSVG,
-  CorgiTile,
   CorgiAnimOne,
   CorgiAnimTwo,
   CorgiAnimThree,

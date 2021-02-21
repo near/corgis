@@ -11,8 +11,8 @@ import Spinner from './Spinner/Spinner';
 
 import {
   CorgiCard,
+  CorgisShowCase,
   CorgiSVG,
-  CorgiTile,
   CorgiAnimOne,
   CorgiAnimTwo,
   CorgiAnimThree,
@@ -37,8 +37,8 @@ export {
   Quote,
   Spinner,
   CorgiCard,
+  CorgisShowCase,
   CorgiSVG,
-  CorgiTile,
   CorgiAnimOne,
   CorgiAnimTwo,
   CorgiAnimThree,

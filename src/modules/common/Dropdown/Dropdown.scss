@@ -4,6 +4,8 @@
 .dropdown {
   position: relative;
 
+  z-index: 1;
+
   &__title,
   &__list {
     border: $border-basic-main;
@@ -18,14 +20,14 @@
 
     border-radius: $border-radius-basic;
 
-    background-color: $color-dropdown-item;
+    background-color: $dropdown-item-background-color;
 
     box-sizing: border-box;
 
     cursor: pointer;
 
     &:hover {
-      background-color: $color-dropdown-item-hover;
+      background-color: $dropdown-item-background-color-hover;
     }
   }
 
@@ -42,8 +44,6 @@
 
     background-color: $color-white;
 
-    box-sizing: border-box;
-
     transition: $transition-basic-ease-out;
 
     overflow-x: v;
@@ -59,11 +59,7 @@
 
     width: 100%;
 
-    padding: $padding-dropdown-item;
-
-    background-color: $color-dropdown-item;
-
-    box-sizing: border-box;
+    background-color: $dropdown-item-background-color;
 
     transition: $transition-basic;
 
@@ -71,7 +67,7 @@
     cursor: pointer;
 
     &:hover {
-      background-color: $color-dropdown-item-hover;
+      background-color: $dropdown-item-background-color-hover;
     }
   }
 

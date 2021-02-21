@@ -5,8 +5,6 @@ import './GenerationPage.scss';
 
 import classNames from 'classnames';
 
-import raritySample from '~assets/images/rarity-sample.svg';
-
 import { ContractContext } from '~contexts';
 
 import { GenerationAnimation, GenerationForm, GenerationScreen } from '~modules/generation/components';
@@ -37,12 +35,10 @@ const GenerationPage = () => {
       </div>
 
       <div className='generation__footer'>
-        <p className={classNames('generation__area', 'generation__description')}>
+        <p className='generation__description'>
           This will create a one-of-a-kind Corgi that will develop a unique size and thought process. The size it grows
           to will untimately determine it’s value
         </p>
-
-        <img className={classNames('generation__area', 'generation__rarity')} src={raritySample} alt='' />
       </div>
     </div>
   );
