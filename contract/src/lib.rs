@@ -26,7 +26,7 @@ pub type AccountIdHash = Vec<u8>;
 pub type CorgiId = String;
 
 /// This trait provides the baseline of functions as described at:
-/// https://github.com/nearprotocol/NEPs/blob/nep-4/specs/Standards/Tokens/NonFungibleToken.md
+/// <https://github.com/nearprotocol/NEPs/blob/nep-4/specs/Standards/Tokens/NonFungibleToken.md>
 pub trait NEP4 {
     // Grant the access to the given `accountId` for the given `tokenId`.
     // Requirements:
@@ -286,14 +286,17 @@ impl Model {
     /// Transfer the given corgi to `receiver`.
     pub fn transfer_corgi(&mut self, receiver: AccountId, id: String) {
         let owner = env::signer_account_id();
+
+        assert_ne!(receiver, owner, "Self transfers are not accepted");
+
         let mut corgi = self
             .corgis
             .get(&id)
             .expect("The Corgi with the given id does not exist");
 
-        assert!(corgi.id == id);
-        assert!(
-            corgi.owner == owner,
+        assert_eq!(corgi.id, id);
+        assert_eq!(
+            corgi.owner, owner,
             "The specified Corgi does not belong to sender"
         );
         corgi.owner = receiver;

@@ -90,6 +90,33 @@ impl ModelMock {
         self.delete_corgi(id);
     }
 
+    fn transfer_corgi(&mut self, receiver: String, id: String) {
+        let pre_global_corgis_count = self.get_global_corgis().len();
+        let mut pre_corgis_by_receiver = self.get_corgis_by_owner(receiver.clone());
+        let pre_corgis_by_sender = self.get_corgis_by_owner(self.signer_account_id());
+
+        self.contract.transfer_corgi(receiver.clone(), id.clone());
+
+        let corgi = self.get_corgi_by_id(id.to_string());
+        assert_eq!(corgi.owner, receiver);
+
+        let global_corgis = self.get_global_corgis();
+        assert_eq!(global_corgis.len(), pre_global_corgis_count);
+        assert_eq!(global_corgis.get(0).unwrap(), &corgi);
+
+        assert_eq!(self.get_corgis_by_owner(receiver.clone()), {
+            pre_corgis_by_receiver.insert(0, corgi);
+            pre_corgis_by_receiver
+        });
+
+        assert_eq!(self.get_corgis_by_owner(self.signer_account_id()), {
+            pre_corgis_by_sender
+                .into_iter()
+                .filter(|corgi| corgi.id != id)
+                .collect::<Vec<Corgi>>()
+        });
+    }
+
     fn delete_corgi(&mut self, id: String) {
         let corgis_by_owner_count = self.get_corgis_by_owner(self.signer_account_id()).len();
 
@@ -293,78 +320,43 @@ fn create_and_delete_a_few_corgis() {
 #[test]
 fn transfer_a_corgi() {
     let mut contract = ModelMock::new();
-
-    let new_corgi = contract.create_corgi(42);
-    assert_eq!(
-        contract
-            .get_corgis_by_owner(contract.signer_account_id())
-            .len(),
-        1
-    );
-
     let receiver = "bob.testnet";
-    contract
-        .contract
-        .transfer_corgi(receiver.to_string(), new_corgi.id.to_string());
 
-    assert_eq!(1, contract.get_global_corgis().len());
-
-    let corgi = contract.get_corgi_by_id(new_corgi.id.to_string());
-    assert_eq!(corgi.owner, receiver);
-
-    let receivers_corgis = contract.get_corgis_by_owner(receiver.to_string());
-    assert_eq!(receivers_corgis.len(), 1);
-    assert_eq!(receivers_corgis.get(0).unwrap().id, new_corgi.id);
-
-    let senders_corgis = contract.get_corgis_by_owner(contract.signer_account_id());
-    assert_eq!(senders_corgis.len(), 0);
+    let id = contract.create_corgi(42).id;
+    contract.transfer_corgi(receiver.to_string(), id.clone());
 }
 
 #[test]
 fn transfer_a_few_corgis() {
     let mut contract = ModelMock::new();
 
-    let mut ids = Vec::new();
-    for i in 1..=5 {
-        let new_corgi = contract.create_corgi(i);
-        ids.push(new_corgi.id);
+    for i in 1..=20 {
+        contract.create_corgi(i);
     }
 
-    assert_eq!(
-        contract
-            .get_corgis_by_owner(contract.signer_account_id())
-            .len(),
-        ids.len()
-    );
-
     let receiver = "bob.testnet";
-    contract
-        .contract
-        .transfer_corgi(receiver.to_string(), ids[2].to_string());
+    contract.transfer_corgi(receiver.to_string(), contract.ids[2].clone().0);
+    contract.transfer_corgi(receiver.to_string(), contract.ids[9].clone().0);
+    contract.transfer_corgi(receiver.to_string(), contract.ids[0].clone().0);
+    contract.transfer_corgi(receiver.to_string(), contract.ids[3].clone().0);
+    contract.transfer_corgi(receiver.to_string(), contract.ids[7].clone().0);
+}
 
-    assert_eq!(contract.get_global_corgis().len(), ids.len());
-    assert_eq!(
-        contract
-            .get_corgis_by_owner(contract.signer_account_id())
-            .len(),
-        ids.len() - 1
-    );
-    assert_eq!(contract.get_corgis_by_owner(receiver.to_string()).len(), 1);
+#[test]
+#[should_panic]
+fn should_panic_when_self_transfer() {
+    let mut contract = ModelMock::new();
+    let id = contract.create_corgi(42).id;
+    let receiver = contract.signer_account_id();
+    contract.transfer_corgi(receiver.clone(), id);
+}
 
-    let corgi = contract.get_corgi_by_id(ids[2].to_string());
-    assert_eq!(corgi.owner, receiver);
-
-    let receivers_corgis = contract.get_corgis_by_owner(receiver.to_string());
-    assert_eq!(receivers_corgis.len(), 1);
-    assert_eq!(receivers_corgis.get(0).unwrap().id, ids[2].to_string());
-
-    let senders_corgis = contract.get_corgis_by_owner(contract.signer_account_id());
-    assert_eq!(
-        senders_corgis
-            .iter()
-            .filter(|corgi| corgi.id == ids[2].to_string())
-            .collect::<Vec<&Corgi>>()
-            .len(),
-        0
-    );
+#[test]
+#[should_panic]
+fn should_panic_when_sender_is_not_owner() {
+    let mut contract = ModelMock::new();
+    let id = contract.create_corgi(42).id;
+    let receiver = "bob.testnet";
+    contract.transfer_corgi(receiver.to_string(), id.clone());
+    contract.transfer_corgi(receiver.to_string(), id.clone());
 }
