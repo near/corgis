@@ -130,7 +130,9 @@ impl Default for Model {
 
 #[near_bindgen]
 impl Model {
-    /// Initializes the contract.
+    /// Initializes the corgis contract.
+    ///
+    /// Use:
     ///
     /// ```sh
     /// near deploy --wasmFile target/wasm32-unknown-unknown/release/corgis_nft.wasm --initFunction init --initArgs '{}'  
