@@ -4,9 +4,9 @@
     "private": true,
     "scripts": {
         "build:contract": "cd contract && cargo build --target wasm32-unknown-unknown --release",
-        "test:contract": "cd contract && cargo test -- --nocapture",
+        "test:contract": "cd contract && cargo test",
         "dev-deploy:contract": "rm -rf neardev/ && near dev-deploy --wasmFile contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm",
-        "api-test:contract": "CONTRACT_NAME=`cat neardev/dev-account` jest api.test.js --env=node --runInBand --testTimeout=50000",
+        "api-test:contract": "CONTRACT_NAME=`cat neardev/dev-account` jest api.test.js --env=node --runInBand --testTimeout=100000",
         "deploy:contract": "near deploy --wasmFile contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm",
         "build:web": "NODE_ENV=testnet parcel build src/index.html --public-url ./",
         "deploy:web": "gh-pages --dist dist",

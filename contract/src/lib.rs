@@ -20,10 +20,11 @@ use pack::pack;
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
 /// The token ID type is also defined in the NEP
-pub type TokenId = u64;
-pub type AccountIdHash = Vec<u8>;
+/// Cannot be `u64`.
+/// See <https://github.com/near-examples/NFT/issues/117>
+pub type TokenId = String;
 
-pub type CorgiId = String;
+pub type CorgiId = TokenId;
 
 /// This trait provides the baseline of functions as described at:
 /// <https://github.com/nearprotocol/NEPs/blob/nep-4/specs/Standards/Tokens/NonFungibleToken.md>
@@ -111,13 +112,53 @@ pub enum Rarity {
     VERY_RARE,
 }
 
+macro_rules! log {
+    ($($arg:tt)*) => {{
+        env::log(format!($($arg)*).as_bytes());
+    }}
+}
+
 impl Default for Model {
     fn default() -> Self {
-        env::log(format!("Init of corgis contract {}", env!("CARGO_PKG_VERSION")).as_bytes());
+        log!("Default::default() contract v{}", env!("CARGO_PKG_VERSION"));
         Self {
             corgis: Dict::new("C".as_bytes().to_vec()),
             corgis_by_owner: UnorderedMap::new("O".as_bytes().to_vec()),
         }
+    }
+}
+
+#[near_bindgen]
+impl NEP4 for Model {
+    fn grant_access(&mut self, _escrow_account_id: AccountId) {
+        todo!()
+    }
+
+    fn revoke_access(&mut self, _escrow_account_id: AccountId) {
+        todo!()
+    }
+
+    fn transfer_from(
+        &mut self,
+        _owner_id: AccountId,
+        _new_owner_id: AccountId,
+        _token_id: TokenId,
+    ) {
+        todo!()
+    }
+
+    fn transfer(&mut self, new_owner_id: AccountId, token_id: TokenId) {
+        log!("NEP4::transfer({}, {})", new_owner_id, token_id);
+        self.transfer_corgi(new_owner_id, token_id);
+    }
+
+    fn check_access(&self, _account_id: AccountId) -> bool {
+        todo!()
+    }
+
+    fn get_token_owner(&self, token_id: TokenId) -> String {
+        log!("NEP4::get_token_owner({})", token_id);
+        self.get_corgi_by_id(token_id).owner
     }
 }
 
@@ -133,7 +174,7 @@ impl Model {
     ///
     #[init]
     pub fn new() -> Self {
-        env::log(b"Using new to initialize corgis contract");
+        log!("::new()");
         Self::default()
     }
 
@@ -147,6 +188,14 @@ impl Model {
         color: String,
         background_color: String,
     ) -> Corgi {
+        log!(
+            "::create_corgi({}, {}, {}, {})",
+            name,
+            quote,
+            color,
+            background_color
+        );
+
         let owner = env::signer_account_id();
         env::log(format!("create corgi owned by {}", owner).as_bytes());
 
@@ -201,6 +250,8 @@ impl Model {
 
     /// Gets the `Corgi` by the given `id`.
     pub fn get_corgi_by_id(&self, id: CorgiId) -> Corgi {
+        log!("::get_corgi_by_id({})", id);
+
         let corgi = self.corgis.get(&id).expect("Corgi not found");
         assert!(corgi.id == id);
         corgi
@@ -213,7 +264,7 @@ impl Model {
     /// meaning it doesn't modify state.
     /// In the frontend (`/src/index.js`) this is added to the `"viewMethods"` array.
     pub fn get_corgis_by_owner(&self, owner: AccountId) -> Vec<Corgi> {
-        env::log(format!("get corgis by owner <{}>", owner).as_bytes());
+        log!("::get_corgis_by_owner({})", owner);
 
         match self.corgis_by_owner.get(&owner) {
             None => Vec::new(),
@@ -232,7 +283,7 @@ impl Model {
     /// Delete the `Corgi` by `id`.
     /// Only the owner of the `Corgi` can delete it.
     pub fn delete_corgi(&mut self, id: String) {
-        env::log(format!("delete corgi by id").as_bytes());
+        log!("::delete_corgi({})", id);
 
         let owner = env::signer_account_id();
 
@@ -257,7 +308,7 @@ impl Model {
     ///
     /// Returns a list of all `Corgi`s.
     pub fn get_global_corgis(&self) -> Vec<Corgi> {
-        env::log(format!("get global list of corgis").as_bytes());
+        log!("::get_global_corgis()");
 
         let mut result = Vec::new();
         let mut id = self.corgis.first.clone();
@@ -280,11 +331,15 @@ impl Model {
 
     /// Returns the max amount of `Corgi`s returned by `get_global_corgis`.
     pub fn get_corgis_page_limit(&self) -> u64 {
+        log!("::get_corgis_page_limit()");
+
         10
     }
 
     /// Transfer the given corgi to `receiver`.
     pub fn transfer_corgi(&mut self, receiver: AccountId, id: String) {
+        log!("::transfer_corgi({}, {})", receiver, id);
+
         let receiver_is_valid_id = env::is_valid_account_id(receiver.as_bytes());
         assert!(receiver_is_valid_id, "Receiver account is not a valid id");
 
@@ -304,6 +359,7 @@ impl Model {
         );
         corgi.owner = receiver;
         corgi.sender = owner;
+        corgi.modified = env::block_timestamp();
 
         self.delete_corgi(id);
         self.push_corgi(corgi);

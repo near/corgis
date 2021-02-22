@@ -7,7 +7,8 @@ use std::{
 };
 
 use corgis_nft::{Corgi, Model};
-use near_sdk::{testing_env, MockedBlockchain, VMContext};
+use near_sdk::{testing_env, MockedBlockchain, VMConfig, VMContext};
+use near_vm_logic::VMLimitConfig;
 
 struct ModelMock {
     contract: Model,
@@ -209,7 +210,17 @@ impl ModelMock {
             output_data_receivers: vec![],
             epoch_height: 19,
         };
-        testing_env!(context.clone());
+        testing_env!(
+            context.clone(),
+            VMConfig {
+                limit_config: VMLimitConfig {
+                    max_number_logs: 200,
+                    ..Default::default()
+                },
+                ..Default::default()
+            },
+            Default::default()
+        );
         context
     }
 }

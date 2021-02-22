@@ -9,6 +9,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 near-sdk = "2.0.1"
+near-vm-logic = "2.2.0"
 base64 = "0.13.0"
 
 [profile.release]

@@ -9,11 +9,16 @@ global.console = new CustomConsole(process.stdout, process.stderr, (type, messag
 
 const config = getConfig('development');
 
+const NEP4Methods = {
+  viewMethods: ['get_token_owner'],
+  changeMethods: ['transfer'],
+};
+
 const contractMethods = {
   // View methods are read only. They don't modify the state, but usually return some value.
-  viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis', 'get_corgis_page_limit'],
+  viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis', 'get_corgis_page_limit', ...NEP4Methods.viewMethods],
   // Change methods can modify the state. But you don't receive the returned value when called.
-  changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi'],
+  changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi', ...NEP4Methods.changeMethods],
 };
 
 async function initContractWithNewTestAccount() {
@@ -182,6 +187,13 @@ describe('Corgis contract integration tests', () => {
       const corgisByOwner = await alice.contract.get_corgis_by_owner({ owner: alice.accountId });
       expect(corgisByOwner.map(corgi => corgi.id)).not.toContain(newCorgi.id);
     }
+  });
+
+  test('NEP4 transfer corgi', async () => {
+    const newCorgi = await alice.contract.create_corgi({ name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+    await alice.contract.transfer({ new_owner_id: bob.accountId, token_id: newCorgi.id });
+    const newOwner = await alice.contract.get_token_owner({ token_id: newCorgi.id });
+    expect(newOwner).toBe(bob.accountId);
   });
 
 });
