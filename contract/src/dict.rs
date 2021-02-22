@@ -32,7 +32,7 @@ impl<
         self.dict.get(key).map(|n| n.value)
     }
 
-    pub fn push(&mut self, key: &K, value: V) -> Node<K, V> {
+    pub fn push_front(&mut self, key: &K, value: V) -> V {
         if self.first != K::default() {
             let mut node = self.dict.get(&self.first).unwrap();
             node.prev = key.clone();
@@ -48,10 +48,10 @@ impl<
         self.first = key.clone();
         self.dict.insert(&key, &node);
 
-        node
+        node.value
     }
 
-    pub fn delete(&mut self, key: &K) {
+    pub fn remove(&mut self, key: &K) {
         let removed_node = self.dict.remove(&key).expect("Id not found");
         if removed_node.prev == K::default() {
             self.first = removed_node.next;

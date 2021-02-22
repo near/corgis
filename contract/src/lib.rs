@@ -236,13 +236,13 @@ impl Model {
 
         let owner = env::signer_account_id();
 
-        self.corgis.delete(&id);
+        self.corgis.remove(&id);
 
         let mut list = self
             .corgis_by_owner
             .get(&owner)
             .expect("The account does not have any corgis to delete from");
-        list.delete(&id);
+        list.remove(&id);
 
         self.corgis_by_owner.insert(&owner, &list);
     }
@@ -308,13 +308,13 @@ impl Model {
 
     fn push_corgi(&mut self, corgi: Corgi) -> Corgi {
         let id = corgi.id.clone();
-        let corgi = self.corgis.push(&id, corgi).value;
+        let corgi = self.corgis.push_front(&id, corgi);
 
         let mut ids = self
             .corgis_by_owner
             .get(&corgi.owner)
             .unwrap_or_else(|| Dict::new(corgi.owner.as_bytes().to_vec()));
-        ids.push(&corgi.id, ());
+        ids.push_front(&corgi.id, ());
 
         self.corgis_by_owner.insert(&corgi.owner, &ids);
 
