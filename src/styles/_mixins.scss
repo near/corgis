@@ -87,3 +87,8 @@
     @include make-col($col-num);
   }
 }
+
+@mixin bootstrap-col-auto {
+  @include make-col-ready();
+  @include make-col-auto();
+}

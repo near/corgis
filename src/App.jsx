@@ -24,11 +24,14 @@ const App = () => {
 
   return (
     <div className='App'>
-      <Router hashType='noslash'>
-        <Header />
-        <Routes />
-        <Footer />
-      </Router>
+      <div className='page'>
+        <Router hashType='noslash'>
+          <Header />
+          <Routes />
+        </Router>
+      </div>
+
+      <Footer />
     </div>
   );
 };

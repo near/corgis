@@ -1,18 +1,7 @@
 @import 'reset';
-
-body {
-  position: relative;
-
-  min-height: calc(100vh - 80px);
-
-  width: 100%;
-  max-width: 100%;
-
-  padding: 0;
-  margin: 0;
-
-  text-align: center;
-}
+@import 'fonts';
+@import 'mixins';
+@import 'variables';
 
 button {
   all: unset;
@@ -35,7 +24,13 @@ a {
 }
 
 .App {
-  padding: 0 5%;
+  @include dis-flex-column(space-between, stretch);
 
   font-family: 'Poppins', sans-serif;
+
+  min-height: 100vh;
+}
+
+.page {
+  padding: $padding-page;
 }

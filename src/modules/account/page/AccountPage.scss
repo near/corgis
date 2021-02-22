@@ -1,5 +1,9 @@
+@import 'mixins';
+
 .account {
   &__header {
+    @include dis-flex-column(flex-start, center);
+
     margin-bottom: 1rem;
   }
 }

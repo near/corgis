@@ -15,7 +15,8 @@ const GenerationAnimation = () => {
 
   return (
     <div className='generation-animation'>
-      <h3>Generating...</h3>
+      <h3 className='generation-animation__title'>Generating...</h3>
+
       <div className='generation-animation__background' style={{ backgroundColor }}>
         <div className={classNames('generation-animation__box', 'generation-animation__box--bounce-7')}>
           <CorgiAnimFour color={color} />

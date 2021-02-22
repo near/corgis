@@ -12,7 +12,11 @@
 
   color: black;
 
-  &--underline:hover {
+  &--underline {
+    text-decoration: underline;
+  }
+
+  &--underline-on-hover:hover {
     text-decoration: underline;
   }
 

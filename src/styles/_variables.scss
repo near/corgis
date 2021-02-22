@@ -9,10 +9,13 @@ $color-purple: #7b1fa2;
 $color-brown: #a97c50;
 
 $color-gray: #bdbdbd;
-$color-gray-light: #eeeeee;
+$color-gray-light: #f8f8f8;
 $color-gray-dark: #757575;
 
 $text-color-main: $color-black;
+$text-color-dark: #24272a;;
+$text-color-gray: #999999;
+$text-color-blue: #0072ce;
 
 $text-color-rarity-common: $color-gray-dark;
 $text-color-rarity-uncommon: $color-green;
@@ -34,6 +37,8 @@ $dropdown-item-background-color-hover: $color-gray-light;
 // component sizes
 
 // margins and paddings
+
+$padding-page: 0 5%;
 
 $padding-button: 0.25rem 1.5rem;
 
@@ -65,3 +70,7 @@ $border-radius-dropdown-list: 0 0 $border-radius-basic $border-radius-basic;
 $transition-basic: 0.2s;
 
 $transition-basic-ease-out: $transition-basic ease-out;
+
+// filters
+
+$near-logo-filter: invert(44%) sepia(36%) saturate(0%) hue-rotate(166deg) brightness(124%) contrast(118%);
