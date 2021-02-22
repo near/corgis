@@ -72,7 +72,11 @@ impl ModelMock {
             global_corgis.len(),
             min(self.ids.len(), self.get_corgis_page_limit() as usize)
         );
-        assert_eq!(&new_corgi, global_corgis.get(0).unwrap());
+        assert_eq!(
+            global_corgis.get(0).unwrap(),
+            &new_corgi,
+            "First retrieved Corgi in global list was not last created Corgi"
+        );
         self.check_global_corgis(global_corgis);
 
         let corgis_by_owner = self.get_corgis_by_owner(self.signer_account_id());
