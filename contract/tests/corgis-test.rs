@@ -364,3 +364,12 @@ fn should_panic_when_sender_is_not_owner() {
     contract.transfer_corgi(receiver.to_string(), id.clone());
     contract.transfer_corgi(receiver.to_string(), id.clone());
 }
+
+#[test]
+#[should_panic]
+fn should_panic_when_transfer_receiver_is_invalid() {
+    let mut contract = ModelMock::new();
+    let id = contract.create_corgi(42).id;
+    let invalid_receiver = "bob.testnet.";
+    contract.transfer_corgi(invalid_receiver.to_string(), id);
+}

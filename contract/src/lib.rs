@@ -285,6 +285,9 @@ impl Model {
 
     /// Transfer the given corgi to `receiver`.
     pub fn transfer_corgi(&mut self, receiver: AccountId, id: String) {
+        let receiver_is_valid_id = env::is_valid_account_id(receiver.as_bytes());
+        assert!(receiver_is_valid_id, "Receiver account is not a valid id");
+
         let owner = env::signer_account_id();
 
         assert_ne!(receiver, owner, "Self transfers are not accepted");
