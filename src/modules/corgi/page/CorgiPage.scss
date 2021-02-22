@@ -1,4 +1,8 @@
+@import 'mixins';
+
 .corgi-page {
+  @include dis-flex-column(flex-start, center);
+
   width: 100%;
   max-width: 100%;
 

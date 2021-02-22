@@ -13,6 +13,8 @@
 
   background-color: rgba($color-main, 0.5);
 
+  text-align: center;
+
   &__description {
     @include bootstrap-col(lg, 4);
     @include dis-flex-column(space-evenly, center);

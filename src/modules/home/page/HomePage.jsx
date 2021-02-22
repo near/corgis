@@ -9,22 +9,22 @@ import { CorgisShowCase } from '~modules/common';
 
 const HomePage = () => {
   const { user, signIn } = useContext(NearContext);
-  const { getDisplayCorgis, displayCorgis } = useContext(ContractContext);
+  const { getGlobalCorgis, globalCorgis } = useContext(ContractContext);
 
   const requestSignIn = () => {
     signIn();
   };
 
   useEffect(() => {
-    getDisplayCorgis();
-  }, [getDisplayCorgis]);
+    getGlobalCorgis();
+  }, [getGlobalCorgis]);
 
   return (
     <div className='home'>
       <Poster requestSignIn={requestSignIn} user={user} />
 
       <div className='home__showcase'>
-        <CorgisShowCase corgis={displayCorgis} showRarity showOwner />
+        <CorgisShowCase corgis={globalCorgis} showRarity showOwner />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import {
   ACTION_ERROR,
   GET_CORGI_SUCCESS,
   GET_CORGIS_SUCCESS,
-  GET_DISPLAY_CORGIS_SUCCESS,
+  GET_GLOBAL_CORGIS_SUCCESS,
   CREATE_CORGI_START,
   CREATE_CORGI_SUCCESS,
   DELETE_CORGI_START,
@@ -60,10 +60,10 @@ export const ContractContextProvider = ({ Contract, children }) => {
     [Contract],
   );
 
-  const getDisplayCorgis = useCallback(() => {
+  const getGlobalCorgis = useCallback(() => {
     dispatchContract({ type: ACTION_START });
     Contract.get_global_corgis()
-      .then((corgis) => dispatchContract({ type: GET_DISPLAY_CORGIS_SUCCESS, payload: { corgis } }))
+      .then((corgis) => dispatchContract({ type: GET_GLOBAL_CORGIS_SUCCESS, payload: { corgis } }))
       .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
   }, [Contract]);
 
@@ -107,7 +107,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
     loading: contractState.loading,
     error: contractState.error,
     corgis: contractState.corgis,
-    displayCorgis: contractState.displayCorgis,
+    globalCorgis: contractState.globalCorgis,
     creating: contractState.creating,
     created: contractState.created,
     transfering: contractState.transfering,
@@ -121,7 +121,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
     createCorgi,
     deleteCorgi,
     transferCorgi,
-    getDisplayCorgis,
+    getGlobalCorgis,
   };
 
   return <ContractContext.Provider value={value}>{children}</ContractContext.Provider>;
