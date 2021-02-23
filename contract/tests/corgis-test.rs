@@ -6,7 +6,7 @@ use std::{
     time::{SystemTime, UNIX_EPOCH},
 };
 
-use corgis_nft::{Corgi, Model};
+use corgis_nft::{pack::pack, Corgi, Model};
 use near_sdk::{testing_env, MockedBlockchain, VMConfig, VMContext};
 use near_vm_logic::VMLimitConfig;
 
@@ -25,7 +25,7 @@ impl Deref for ModelMock {
 
 impl ModelMock {
     fn new() -> Self {
-        let context = Self::test_context(vec![], false, None);
+        let context = Self::test_context(vec![], false, &[0; 16]);
         Self {
             contract: Model::new(),
             context,
@@ -62,8 +62,8 @@ impl ModelMock {
         assert_eq!(new_corgi.background_color, background_color);
         assert_eq!(new_corgi.sender, "");
         assert_eq!(new_corgi.owner, self.signer_account_id());
-        // assert_eq!(new_corgi.created, self.context.block_timestamp);
-        // assert_eq!(new_corgi.modified, self.context.block_timestamp);
+        assert_eq!(new_corgi.created, self.context.block_timestamp);
+        assert_eq!(new_corgi.modified, self.context.block_timestamp);
 
         let corgi_by_id = self.get_corgi_by_id(new_corgi.id.clone());
         assert_eq!(corgi_by_id, new_corgi);
@@ -85,7 +85,8 @@ impl ModelMock {
         assert_eq!(&new_corgi, corgis_by_owner.get(0).unwrap());
         self.check_corgis_by_owner();
 
-        Self::test_context(vec![], false, Some(vec![3, 2, 1, i as u8]));
+        let new_seed = (pack(self.context.random_seed.as_slice()) + 1).to_ne_bytes();
+        self.context = Self::test_context(vec![], false, &new_seed);
 
         new_corgi
     }
@@ -186,7 +187,7 @@ impl ModelMock {
         }
     }
 
-    fn test_context(input: Vec<u8>, is_view: bool, random_seed: Option<Vec<u8>>) -> VMContext {
+    fn test_context(input: Vec<u8>, is_view: bool, random_seed: &[u8]) -> VMContext {
         let context = VMContext {
             current_account_id: "alice.testnet".to_string(),
             signer_account_id: "robert.testnet".to_string(),
@@ -205,7 +206,7 @@ impl ModelMock {
             storage_usage: 100_000,
             attached_deposit: 0,
             prepaid_gas: 10u64.pow(18),
-            random_seed: random_seed.unwrap_or_else(|| vec![3, 2, 1]),
+            random_seed: random_seed.to_vec(),
             is_view,
             output_data_receivers: vec![],
             epoch_height: 19,

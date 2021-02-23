@@ -199,22 +199,10 @@ impl Model {
         let owner = env::signer_account_id();
         env::log(format!("create corgi owned by {}", owner).as_bytes());
 
-        assert!(
-            name.len() <= 32,
-            "Corgi's `name` is too large, max 32 chars allowed"
-        );
-        assert!(
-            quote.len() <= 256,
-            "Corgi's `quote` is too large, max 256 chars allowed"
-        );
-        assert!(
-            color.len() <= 64,
-            "Corgi's `color` is too large, max 64 chars allowed"
-        );
-        assert!(
-            background_color.len() <= 64,
-            "Corgi's `background_color` is too large, max 64 chars allowed"
-        );
+        assert!(name.len() <= 32, "Name exceeds max 32 chars allowed");
+        assert!(quote.len() <= 256, "Quote exceeds max 256 chars allowed");
+        assert!(color.len() <= 64, "Color exceeds max 64 chars allowed");
+        assert!(background_color.len() <= 64, "Back color exceeds 64 chars");
 
         let now = env::block_timestamp();
         let corgi = Corgi {
@@ -228,7 +216,7 @@ impl Model {
             color,
             background_color,
             rate: {
-                let rate = pack(&env::random_seed()) % 100;
+                let rate = pack(env::random_seed().get(..16).unwrap()) % 100;
                 if rate > 10 {
                     Rarity::COMMON
                 } else if rate > 5 {
