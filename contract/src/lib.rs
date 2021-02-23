@@ -178,7 +178,7 @@ impl Model {
         Self::default()
     }
 
-    /// Creates a `Corgi` under the `signer_account_id`.
+    /// Creates a `Corgi` under the `predecessor_account_id`.
     ///
     /// Returns the `id` of the generated `Corgi` encoded using base64.
     pub fn create_corgi(
@@ -196,7 +196,7 @@ impl Model {
             background_color
         );
 
-        let owner = env::signer_account_id();
+        let owner = env::predecessor_account_id();
         env::log(format!("create corgi owned by {}", owner).as_bytes());
 
         assert!(name.len() <= 32, "Name exceeds max 32 chars allowed");
@@ -273,7 +273,7 @@ impl Model {
     pub fn delete_corgi(&mut self, id: String) {
         log!("::delete_corgi({})", id);
 
-        let owner = env::signer_account_id();
+        let owner = env::predecessor_account_id();
 
         self.corgis.remove(&id);
 
@@ -331,7 +331,7 @@ impl Model {
         let receiver_is_valid_id = env::is_valid_account_id(receiver.as_bytes());
         assert!(receiver_is_valid_id, "Receiver account is not a valid id");
 
-        let owner = env::signer_account_id();
+        let owner = env::predecessor_account_id();
 
         assert_ne!(receiver, owner, "Self transfers are not accepted");
 
