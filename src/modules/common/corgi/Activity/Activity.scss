@@ -1,0 +1,8 @@
+@import 'bootstrap';
+@import 'variables';
+
+.activity {
+  @extend .card-text;
+
+  color: $text-color-gray-dark;
+}

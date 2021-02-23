@@ -1,0 +1,22 @@
+@import 'variables';
+
+.rarity {
+  font-size: 0.85rem;
+  font-weight: 500;
+
+  &--common {
+    color: $text-color-rarity-common;
+  }
+
+  &--uncommon {
+    color: $text-color-rarity-uncommon;
+  }
+
+  &--rare {
+    color: $text-color-rarity-rare;
+  }
+
+  &--very_rare {
+    color: $text-color-rarity-very-rare;
+  }
+}

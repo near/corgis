@@ -2,7 +2,7 @@ import React, { useReducer, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import { initialNearState, nearReducer } from './reducer';
-import { CLEAR_STATE, SET_USER } from './types';
+import { CLEAR_STATE, SET_USER, LOADING_START, LOADING_SUCCESS } from './types';
 
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
@@ -35,6 +35,14 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
     dispatchNear({ type: SET_USER, payload: { user } });
   };
 
+  const loadingStart = () => {
+    dispatchNear({ type: LOADING_START });
+  };
+
+  const loadingSuccess = () => {
+    dispatchNear({ type: LOADING_SUCCESS });
+  };
+
   const clearState = () => {
     dispatchNear({ type: CLEAR_STATE });
   };
@@ -50,6 +58,16 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
   };
 
   useEffect(() => {
+    if (!nearState.user) {
+      loadingStart();
+    } else {
+      if (nearState.isLoading) {
+        loadingSuccess();
+      }
+    }
+  }, [nearState]);
+
+  useEffect(() => {
     setUser(currentUser);
   }, [currentUser]);
 
@@ -57,6 +75,7 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
     <NearContext.Provider
       value={{
         user: nearState.user,
+        isLoading: nearState.isLoading,
         nearContent: near,
         signIn,
         signOut,

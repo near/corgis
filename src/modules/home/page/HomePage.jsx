@@ -24,7 +24,7 @@ const HomePage = () => {
       <Poster requestSignIn={requestSignIn} user={user} />
 
       <div className='home__showcase'>
-        <CorgisShowCase corgis={globalCorgis} showRarity showOwner />
+        <CorgisShowCase corgis={globalCorgis} title='Recent activity' />
       </div>
     </div>
   );

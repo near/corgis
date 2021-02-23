@@ -19,6 +19,28 @@
 // Utilities
 @import '../../node_modules/bootstrap/scss/utilities/api';
 
+// Custom changes
 .badge {
   font-weight: 600;
+}
+
+// Blockquotes from node_modules/bootstrap/scss/type
+.blockquote {
+  margin-bottom: $blockquote-margin-y;
+  @include font-size($blockquote-font-size);
+
+  > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.blockquote-footer {
+  margin-top: -$blockquote-margin-y;
+  margin-bottom: $blockquote-margin-y;
+  @include font-size($blockquote-footer-font-size);
+  color: $blockquote-footer-color;
+
+  &::before {
+    content: '\2014\00A0'; // em dash, nbsp
+  }
 }

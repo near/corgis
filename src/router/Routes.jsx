@@ -14,7 +14,7 @@ import SharePage from '~modules/share/page/SharePage';
 import CorgiPage from '~modules/corgi/page/CorgiPage';
 
 const Routes = () => {
-  const { user } = useContext(NearContext);
+  const { user, isLoading } = useContext(NearContext);
 
   const isAuthenticated = !!user;
 
@@ -23,18 +23,18 @@ const Routes = () => {
       <Route exact path='/'>
         <HomePage />
       </Route>
-      <GuardedRoute auth={isAuthenticated} exact path='/generation'>
+      <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/generation'>
         <CharacterContextProvider>
           <GenerationPage />
         </CharacterContextProvider>
       </GuardedRoute>
-      <GuardedRoute auth={isAuthenticated} exact path='/account'>
+      <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/account'>
         <AccountPage />
       </GuardedRoute>
-      <GuardedRoute auth={isAuthenticated} path='/corgi/:id+'>
+      <GuardedRoute auth={isAuthenticated} isLoading={isLoading} path='/corgi/:id+'>
         <CorgiPage />
       </GuardedRoute>
-      <GuardedRoute auth={isAuthenticated} exact path='/share'>
+      <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/share'>
         <SharePage />
       </GuardedRoute>
       <Route>

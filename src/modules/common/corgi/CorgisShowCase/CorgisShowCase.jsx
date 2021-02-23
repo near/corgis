@@ -9,15 +9,18 @@ import { CorgisArrayType } from '~types/CorgiTypes';
 
 const CorgisShowCasePropTypes = {
   corgis: CorgisArrayType.isRequired,
-  showOwner: PropTypes.bool,
-  showRarity: PropTypes.bool,
+  title: PropTypes.string,
+  showActions: PropTypes.bool,
 };
 
-const CorgisShowCase = ({ corgis, showOwner = false, showRarity = false }) => (
+const CorgisShowCase = ({ corgis, title, showActions = false }) => (
   <div className='showcase'>
-    {corgis.map((corgi) => (
-      <CorgiCard corgi={corgi} key={corgi.id} showOwner={showOwner} showRarity={showRarity} />
-    ))}
+    {title && <h3 className='showcase__title'>{title}</h3>}
+    <div className='showcase__grid'>
+      {corgis.map((corgi) => (
+        <CorgiCard corgi={corgi} key={corgi.id} showActions={showActions} />
+      ))}
+    </div>
   </div>
 );
 

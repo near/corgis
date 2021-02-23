@@ -1,8 +1,11 @@
 import { CorgiAnimOne, CorgiAnimTwo, CorgiAnimThree, CorgiAnimFour } from './CorgiAnimations';
 import { CorgiCommon, CorgiUncommon, CorgiRare, CorgiVeryRare, CorgiRate, SwitchCorgiPhoto } from './CorgiPhotos';
-import CorgiCard from './CorgiCard/CorgiCard';
+import CorgiCard from './CorgiCard';
 import CorgisShowCase from './CorgisShowCase/CorgisShowCase';
 import CorgiSVG from './CorgiSVG/CorgiSVG';
+
+import Activity from './Activity';
+import Owner from './Owner';
 
 export {
   CorgiCard,
@@ -18,4 +21,6 @@ export {
   CorgiVeryRare,
   CorgiRate,
   SwitchCorgiPhoto,
+  Activity,
+  Owner,
 };

@@ -1,12 +1,13 @@
 import Button from './Button/Button';
 import Colorpicker from './Colorpicker/Colorpicker';
-import Dropdown from './Dropdown/Dropdown';
+import Dropdown from './Dropdown';
 import Egg from './Egg/Egg';
 import ExternalLink from './ExternalLink/ExternalLink';
 import InfoTile from './InfoTile/InfoTile';
 import Input from './Input/Input';
 import Modal from './Modal/Modal';
 import Quote from './Quote/Quote';
+import RarityString from './RarityString';
 import Spinner from './Spinner/Spinner';
 
 import {
@@ -23,6 +24,8 @@ import {
   CorgiVeryRare,
   CorgiRate,
   SwitchCorgiPhoto,
+  Activity,
+  Owner,
 } from './corgi';
 
 export {
@@ -35,6 +38,7 @@ export {
   Input,
   Modal,
   Quote,
+  RarityString,
   Spinner,
   CorgiCard,
   CorgisShowCase,
@@ -49,4 +53,6 @@ export {
   CorgiVeryRare,
   CorgiRate,
   SwitchCorgiPhoto,
+  Activity,
+  Owner,
 };

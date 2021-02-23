@@ -1,28 +1,15 @@
-@import 'variables';
+@import 'bootstrap';
 
 .quote {
-  padding: 0.25rem;
-
-  border-radius: $border-radius-basic;
-
-  background-color: white;
-
-  opacity: 0.7;
+  width: 100%;
 
   &__text {
-    margin: 0;
+    @extend .blockquote;
 
-    font-size: 0.75rem;
-    word-wrap: break-word;
-
-    filter: brightness(50%);
+    font-size: 1rem;
   }
 
-  &--big {
-    padding: 0.5rem;
-
-    .quote__text {
-      font-size: 1rem;
-    }
+  &__author {
+    @extend .blockquote-footer;
   }
 }

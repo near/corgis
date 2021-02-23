@@ -1,13 +1,40 @@
 .showcase {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  gap: 1rem;
+  &__title {
+    margin-bottom: 0.5rem;
 
-  width: 100%;
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+
+    width: 100%;
+  }
+}
+
+@media all and (min-width: 1440px) {
+  .showcase {
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+    }
+  }
+}
+
+@media all and (max-width: 1120px) {
+  .showcase {
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    }
+  }
 }
 
 @media all and (max-width: 360px) {
   .showcase {
-    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    }
   }
 }

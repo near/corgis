@@ -9,8 +9,10 @@ export const CorgiType = {
   color: PropTypes.string,
   background_color: PropTypes.string,
   rate: PropTypes.oneOf([RATES.COMMON, RATES.UNCOMMON, RATES.RARE, RATES.VERY_RARE]),
+  owner: PropTypes.string,
   sender: PropTypes.string,
-  message: PropTypes.string,
+  created: PropTypes.number,
+  modified: PropTypes.number,
 };
 
 export const CorgiTypeShape = PropTypes.shape(CorgiType);

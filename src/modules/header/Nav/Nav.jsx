@@ -32,7 +32,7 @@ const Nav = () => {
           </div>
 
           <div className='nav__item nav__item--expandable'>
-            <Dropdown dropdownTitle={`@${user.accountId}`}>
+            <Dropdown title={`@${user.accountId}`} wide>
               <ExternalLink
                 customClasses='nav__link'
                 description='Wallet'

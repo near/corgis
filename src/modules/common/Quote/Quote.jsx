@@ -1,32 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './Quote.scss';
 
-import classNames from 'classnames';
-
-import { FaQuoteLeft, FaQuoteRight } from 'react-icons/fa';
-
 import { CorgiType } from '~types/CorgiTypes';
-import { CardSizeType } from '~types/CardSizeType';
 import { getQuoteById } from '~helpers/quotes';
+import { usePrevious } from '~hooks/';
 
 const QuotePropTypes = {
-  color: CorgiType.color,
-  quoteId: CorgiType.quote,
-  size: CardSizeType,
+  id: CorgiType.quote,
 };
 
-const quoteIconSize = '0.35rem';
+const Quote = ({ id = '' }) => {
+  const [text, setText] = useState('');
+  const [author, setAuthor] = useState('');
 
-const Quote = ({ color = '#fafafa', quoteId = '0', size = 'small' }) => (
-  <div className={classNames('quote', `quote--${size}`)}>
-    <p className='quote__text' style={{ color }}>
-      <FaQuoteLeft size={quoteIconSize} style={{ verticalAlign: 'top', marginTop: '0.25rem' }} />{' '}
-      {getQuoteById(quoteId)}{' '}
-      <FaQuoteRight size={quoteIconSize} style={{ verticalAlign: 'top', marginTop: '0.25rem' }} />
-    </p>
-  </div>
-);
+  const prevId = usePrevious(id);
+
+  useEffect(() => {
+    if (id !== prevId) {
+      const quote = getQuoteById(id);
+
+      setText(quote.quote);
+      setAuthor(quote.author);
+    }
+  }, [id, prevId]);
+
+  return (
+    <figure className='quote'>
+      <blockquote className='quote__text'>{text}</blockquote>
+      <figcaption className='quote__author'>{author}</figcaption>
+    </figure>
+  );
+};
 
 Quote.propTypes = QuotePropTypes;
 

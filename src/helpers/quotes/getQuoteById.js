@@ -3,10 +3,17 @@ import { quotes } from '~assets/quotes/quotes';
 import { getRandomQuoteId } from '~helpers/quotes';
 
 /**
- * for simplicity, indexes are used instead of unique id
+ * For simplicity, indexes are used instead of unique id.
  * @param {string} id
+ *
+ * Each quote in JSON has the next structure:
+ * @typedef {Object} Quote
+ * @property {string} quote
+ * @property {string} author
+ *
+ * Returns Quote object
+ * @returns {Quote}
  */
 export default function getQuoteById(id) {
-  const { quote } = quotes[id] || quotes[getRandomQuoteId()];
-  return quote;
+  return quotes[Number(id)] || quotes[getRandomQuoteId()];
 }

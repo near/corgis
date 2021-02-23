@@ -27,7 +27,7 @@ const AccountPage = () => {
         <p className='account__description'>Create, collect, send or trade</p>
       </div>
 
-      <div className='account__corgis'>{!loading ? <CorgisShowCase corgis={corgis} showRarity /> : <Spinner />}</div>
+      <div className='account__corgis'>{!loading ? <CorgisShowCase corgis={corgis} showActions /> : <Spinner />}</div>
     </div>
   );
 };

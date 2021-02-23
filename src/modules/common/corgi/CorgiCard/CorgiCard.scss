@@ -1,99 +1,38 @@
+@import 'bootstrap';
 @import 'mixins';
 @import 'variables';
 
 .corgi-card {
-  width: 100%;
+  @extend .card;
 
-  padding: 0.75rem;
+  &__header {
+    @extend .card-header;
+    @include dis-flex(space-between, center);
 
-  border: $border-basic-gray;
-  border-radius: $border-radius-big;
-
-  &__image {
-    @include dis-flex-column(flex-start, center);
-
-    padding: 1rem;
-
-    border-radius: $border-radius-big;
+    background-color: transparent;
   }
 
-  &__quote {
+  &__image {
     @include flex-center;
 
-    min-height: 6rem;
-    max-width: 75%;
+    height: 10rem;
+    max-height: 10rem;
 
-    margin: 0 auto;
-    margin-bottom: 0.4rem;
+    padding: 1rem;
   }
 
   &__body {
-    @include dis-flex-column;
-
-    margin-top: 1rem;
+    @extend .card-body;
   }
 
   &__name {
-    margin: 0;
-    margin-bottom: 0.25rem;
+    @extend .card-title;
 
-    font-size: 1.1rem;
+    font-size: 1.25rem;
     font-weight: 500;
   }
 
-  &__text {
-    @include clear-mar-pad;
-
-    font-size: 1rem;
-    font-weight: 300;
-
-    &--owner {
-      margin-top: 1rem;
-
-      font-size: 0.75rem;
-
-      align-self: flex-end;
-    }
-  }
-
-  &__rarity {
-    font-size: 0.75rem;
-    font-weight: 500;
-
-    &--common {
-      color: $text-color-rarity-common;
-    }
-
-    &--uncommon {
-      color: $text-color-rarity-uncommon;
-    }
-
-    &--rare {
-      color: $text-color-rarity-rare;
-    }
-
-    &--very_rare {
-      color: $text-color-rarity-very-rare;
-    }
-  }
-
-  &__owner {
-    color: $color-main;
-  }
-}
-
-@media all and (max-width: 450px) {
-  .corgi-card {
-    &__quote {
-      max-width: 85%;
-    }
-  }
-}
-
-@media all and (max-width: 360px) {
-  .corgi-card {
-    &__quote {
-      max-width: 100%;
-    }
+  &__footer {
+    padding: 0.5rem 1rem;
   }
 }

@@ -1,0 +1,39 @@
+@import 'mixins';
+@import 'variables';
+
+.dropdown-item {
+  @include flex-center;
+  @include clear-mar-pad;
+
+  width: 100%;
+
+  background-color: $dropdown-item-background-color;
+
+  transition: background-color $transition-basic;
+
+  cursor: pointer;
+
+  &:hover {
+    background-color: $dropdown-item-background-color-hover;
+  }
+
+  & > * {
+    width: 100%;
+
+    padding: $padding-dropdown-item-wide;
+  }
+
+  &--divider {
+    border-top: $border-basic-main;
+
+    cursor: default;
+
+    &:hover {
+      background-color: $dropdown-item-background-color;
+    }
+
+    & > * {
+      padding: 0;
+    }
+  }
+}
