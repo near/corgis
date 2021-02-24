@@ -5,7 +5,7 @@ pub mod pack;
 
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
-    collections::UnorderedMap,
+    collections::{UnorderedMap, UnorderedSet},
     env, near_bindgen,
     serde::Serialize,
     wee_alloc::WeeAlloc,
@@ -62,6 +62,7 @@ pub trait NEP4 {
 pub struct Model {
     corgis: Dict<CorgiId, Corgi>,
     corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiId, ()>>,
+    escrows_by_owner: UnorderedMap<AccountId, UnorderedSet<AccountId>>,
 }
 
 /// Represents a `Corgi`.
@@ -124,27 +125,50 @@ impl Default for Model {
         Self {
             corgis: Dict::new("C".as_bytes().to_vec()),
             corgis_by_owner: UnorderedMap::new("O".as_bytes().to_vec()),
+            escrows_by_owner: UnorderedMap::new(vec![b'c']),
         }
     }
 }
 
 #[near_bindgen]
 impl NEP4 for Model {
-    fn grant_access(&mut self, _escrow_account_id: AccountId) {
-        todo!()
+    fn grant_access(&mut self, escrow_account_id: AccountId) {
+        let owner = env::predecessor_account_id();
+
+        let mut escrows = self
+            .escrows_by_owner
+            .get(&owner)
+            .unwrap_or_else(|| UnorderedSet::new(vec![b'd']));
+        escrows.insert(&escrow_account_id);
+        self.escrows_by_owner.insert(&owner, &escrows);
     }
 
-    fn revoke_access(&mut self, _escrow_account_id: AccountId) {
-        todo!()
+    fn revoke_access(&mut self, escrow_account_id: AccountId) {
+        let owner = env::predecessor_account_id();
+        let mut escrows = self
+            .escrows_by_owner
+            .get(&owner)
+            .expect("Access does not exist");
+        if !escrows.remove(&escrow_account_id) {
+            panic!("Did not find access for escrow ID `{}`", escrow_account_id);
+        }
+        self.escrows_by_owner.insert(&owner, &escrows);
     }
 
-    fn transfer_from(
-        &mut self,
-        _owner_id: AccountId,
-        _new_owner_id: AccountId,
-        _token_id: TokenId,
-    ) {
-        todo!()
+    fn transfer_from(&mut self, owner_id: AccountId, new_owner_id: AccountId, token_id: TokenId) {
+        let token_owner = self.get_token_owner(token_id.clone());
+
+        assert_eq!(
+            owner_id, token_owner,
+            "Attempt to transfer a token from a different owner"
+        );
+
+        assert!(
+            self.check_access(token_owner),
+            "Attempt to transfer a token with no access",
+        );
+
+        self.transfer(new_owner_id, token_id);
     }
 
     fn transfer(&mut self, new_owner_id: AccountId, token_id: TokenId) {
@@ -152,8 +176,8 @@ impl NEP4 for Model {
         self.transfer_corgi(new_owner_id, token_id);
     }
 
-    fn check_access(&self, _account_id: AccountId) -> bool {
-        todo!()
+    fn check_access(&self, account_id: AccountId) -> bool {
+        self.can_transfer_on_behalf(account_id)
     }
 
     fn get_token_owner(&self, token_id: TokenId) -> String {
@@ -240,9 +264,13 @@ impl Model {
     pub fn get_corgi_by_id(&self, id: CorgiId) -> Corgi {
         log!("::get_corgi_by_id({})", id);
 
-        let corgi = self.corgis.get(&id).expect("Corgi not found");
-        assert!(corgi.id == id);
-        corgi
+        match self.corgis.get(&id) {
+            None => panic!("The given corgi id `{}` was not found", id),
+            Some(corgi) => {
+                assert!(corgi.id == id);
+                corgi
+            }
+        }
     }
 
     /// Gets the `Corgi`s owned by the `owner` account id.
@@ -259,9 +287,13 @@ impl Model {
             Some(list) => list
                 .into_iter()
                 .map(|(id,_)| {
-                    let corgi = self.corgis.get(&id).expect("Could not find Corgi by id");
+                    let maybe_corgi = self.corgis.get(&id);
+                    assert!(maybe_corgi.is_some(), "Could not find Corgi by id `{}`", id);
+
+                    let corgi = maybe_corgi.unwrap();
                     assert!(corgi.id == id);
                     assert!(corgi.owner == owner, "The corgi with id `{}` owned by `{}` was found while fetching `{}`'s corgis", id, corgi.owner, owner);
+
                     corgi
                 })
                 .collect(),
@@ -271,19 +303,28 @@ impl Model {
     /// Delete the `Corgi` by `id`.
     /// Only the owner of the `Corgi` can delete it.
     pub fn delete_corgi(&mut self, id: String) {
+        let owner = env::predecessor_account_id();
+        self.delete_corgi_from(owner, id);
+    }
+
+    fn delete_corgi_from(&mut self, owner: AccountId, id: String) {
         log!("::delete_corgi({})", id);
 
-        let owner = env::predecessor_account_id();
+        assert!(self.can_transfer_on_behalf(owner.clone()));
 
-        self.corgis.remove(&id);
+        match self.corgis_by_owner.get(&owner) {
+            None => panic!("Account `{}` does not have corgis to delete from", owner),
+            Some(mut list) => {
+                if !list.remove(&id) {
+                    panic!("Corgi id `{}` does not belong to account `{}`", id, owner);
+                }
+                self.corgis_by_owner.insert(&owner, &list);
+            }
+        }
 
-        let mut list = self
-            .corgis_by_owner
-            .get(&owner)
-            .expect("The account does not have any corgis to delete from");
-        list.remove(&id);
-
-        self.corgis_by_owner.insert(&owner, &list);
+        if !self.corgis.remove(&id) {
+            panic!("Attempt to remove a nonexistent Corgi id `{}`", id);
+        }
     }
 
     /// Get all `Corgi`s from all users.
@@ -298,10 +339,12 @@ impl Model {
     pub fn get_global_corgis(&self) -> Vec<Corgi> {
         log!("::get_global_corgis()");
 
+        let page_limit = self.get_corgis_page_limit() as usize;
+
         let mut result = Vec::new();
         let mut id = self.corgis.first.clone();
         while id != "" {
-            if result.len() >= self.get_corgis_page_limit() as usize {
+            if result.len() >= page_limit as usize {
                 break;
             }
 
@@ -328,29 +371,43 @@ impl Model {
     pub fn transfer_corgi(&mut self, receiver: AccountId, id: String) {
         log!("::transfer_corgi({}, {})", receiver, id);
 
-        let receiver_is_valid_id = env::is_valid_account_id(receiver.as_bytes());
-        assert!(receiver_is_valid_id, "Receiver account is not a valid id");
+        if !env::is_valid_account_id(receiver.as_bytes()) {
+            panic!("Receiver account `{}` is not a valid account id", receiver);
+        }
 
         let owner = env::predecessor_account_id();
 
-        assert_ne!(receiver, owner, "Self transfers are not accepted");
+        if owner == receiver {
+            panic!("Account `{}` attempted to make a self transfer", receiver);
+        }
 
-        let mut corgi = self
-            .corgis
-            .get(&id)
-            .expect("The Corgi with the given id does not exist");
+        let mut corgi = match self.corgis.get(&id) {
+            None => panic!("Attempt to transfer a nonexistent Corgi id `{}`", id),
+            Some(corgi) => corgi,
+        };
 
         assert_eq!(corgi.id, id);
-        assert_eq!(
-            corgi.owner, owner,
-            "The specified Corgi does not belong to sender"
-        );
+
+        if !self.can_transfer_on_behalf(corgi.owner.clone()) {
+            panic!("The specified Corgi `{}` does not belong to sender", id);
+        }
+
+        self.delete_corgi_from(corgi.owner.clone(), id);
+
         corgi.owner = receiver;
         corgi.sender = owner;
         corgi.modified = env::block_timestamp();
 
-        self.delete_corgi(id);
         self.push_corgi(corgi);
+    }
+
+    pub fn can_transfer_on_behalf(&self, account_id: AccountId) -> bool {
+        let initiator = env::predecessor_account_id();
+        initiator == account_id
+            || self
+                .escrows_by_owner
+                .get(&account_id)
+                .map_or(false, |escrows| escrows.contains(&initiator))
     }
 
     fn push_corgi(&mut self, corgi: Corgi) -> Corgi {

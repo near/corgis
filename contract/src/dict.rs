@@ -51,14 +51,19 @@ impl<
         node.value
     }
 
-    pub fn remove(&mut self, key: &K) {
-        let removed_node = self.dict.remove(&key).expect("Id not found");
-        if removed_node.prev == K::default() {
-            self.first = removed_node.next;
-        } else {
-            let mut node = self.dict.get(&removed_node.prev).unwrap();
-            node.next = removed_node.next;
-            self.dict.insert(&removed_node.prev, &node);
+    pub fn remove(&mut self, key: &K) -> bool {
+        match self.dict.remove(&key) {
+            None => false,
+            Some(removed_node) => {
+                if removed_node.prev == K::default() {
+                    self.first = removed_node.next;
+                } else {
+                    let mut node = self.dict.get(&removed_node.prev).unwrap();
+                    node.next = removed_node.next;
+                    self.dict.insert(&removed_node.prev, &node);
+                }
+                true
+            }
         }
     }
 }
