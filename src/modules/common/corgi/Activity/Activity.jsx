@@ -18,11 +18,11 @@ const Activity = ({ created, modified, owner, sender }) => (
   <p className='activity'>
     {created === modified ? (
       <>
-        Minted {humanizeTime(created)} by <Owner owner={owner} />
+        Minted {humanizeTime(created)} ago by <Owner owner={owner} />
       </>
     ) : (
       <>
-        Gifted {humanizeTime(modified)} to <Owner owner={owner} /> by <Owner owner={sender} />
+        Gifted {humanizeTime(modified)} ago to <Owner owner={owner} /> by <Owner owner={sender} />
       </>
     )}
   </p>
