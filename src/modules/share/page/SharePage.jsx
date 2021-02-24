@@ -8,7 +8,7 @@ import { GiBowTieRibbon, GiImperialCrown } from 'react-icons/gi';
 
 import { ContractContext, NearContext } from '~contexts';
 
-import { CorgiCard, Spinner, SwitchCorgiPhoto } from '~modules/common';
+import { CorgiCard, CorgiSpinner, SwitchCorgiPhoto } from '~modules/common';
 
 const SharePage = () => {
   const { user } = useContext(NearContext);
@@ -28,7 +28,7 @@ const SharePage = () => {
   }, [getCorgi, id]);
 
   if (!corgi || loading) {
-    return <Spinner />;
+    return <CorgiSpinner />;
   }
 
   const sausage = Number(corgi.sausage).toFixed(4);

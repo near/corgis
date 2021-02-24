@@ -14,6 +14,10 @@
     background-color: #ffffff;
 
     transition: 0.1s ease-out;
+
+    box-sizing: border-box;
+
+    cursor: text;
   }
 
   &__error {

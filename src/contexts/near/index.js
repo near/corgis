@@ -1,8 +1,8 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { initialNearState, nearReducer } from './reducer';
-import { CLEAR_STATE, SET_USER, LOADING_START, LOADING_SUCCESS } from './types';
+import { CLEAR_STATE, LOADING_ERROR, LOADING_START, LOADING_SUCCESS, SET_USER } from './types';
 
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
@@ -43,6 +43,10 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
     dispatchNear({ type: LOADING_SUCCESS });
   };
 
+  const loadingError = (error) => {
+    dispatchNear({ type: LOADING_ERROR, payload: { error } });
+  };
+
   const clearState = () => {
     dispatchNear({ type: CLEAR_STATE });
   };
@@ -58,18 +62,28 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
   };
 
   useEffect(() => {
-    if (!nearState.user) {
+    if (currentUser && Object.keys(currentUser).length) {
+      setUser(currentUser);
+    }
+  }, [currentUser]);
+
+  useEffect(() => {
+    if (!nearState.user && !nearState.isLoading) {
       loadingStart();
-    } else {
-      if (nearState.isLoading) {
-        loadingSuccess();
-      }
     }
   }, [nearState]);
 
   useEffect(() => {
-    setUser(currentUser);
-  }, [currentUser]);
+    if (nearState.user && nearState.isLoading) {
+      loadingSuccess();
+    }
+  }, [nearState]);
+
+  useEffect(() => {
+    if (!nearState.user && !localStorage.getItem('undefined_wallet_auth_key')) {
+      loadingError('wallet not found');
+    }
+  }, [nearState]);
 
   return (
     <NearContext.Provider

@@ -5,7 +5,7 @@ import './AccountPage.scss';
 
 import { ContractContext } from '~contexts';
 
-import { CorgisShowCase, Spinner } from '~modules/common';
+import { CorgisShowCase, CorgiSpinner } from '~modules/common';
 
 const AccountPage = () => {
   const { corgis, created, loading, clearCreatedCorgi } = useContext(ContractContext);
@@ -16,7 +16,7 @@ const AccountPage = () => {
     }
   }, [created, clearCreatedCorgi]);
 
-  if (corgis && corgis.length === 0) {
+  if (!loading && corgis && corgis.length === 0) {
     return <Redirect to='/generation' />;
   }
 
@@ -27,7 +27,9 @@ const AccountPage = () => {
         <p className='account__description'>Create, collect, send or trade</p>
       </div>
 
-      <div className='account__corgis'>{!loading ? <CorgisShowCase corgis={corgis} showActions /> : <Spinner />}</div>
+      <div className='account__corgis'>
+        {!loading ? <CorgisShowCase corgis={corgis} showActions /> : <CorgiSpinner />}
+      </div>
     </div>
   );
 };

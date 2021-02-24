@@ -1,10 +1,10 @@
 import React from 'react';
 
-import './Spinner.scss';
+import './CorgiSpinner.scss';
 
 import corgiCircle from '~assets/images/corgi-circle.png';
 
-const Spinner = () => (
+const CorgiSpinner = () => (
   <div className='spinner-wrapper'>
     <div className='spinner'>
       <div className='spinner__gradient'></div>
@@ -14,4 +14,4 @@ const Spinner = () => (
   </div>
 );
 
-export default Spinner;
+export default CorgiSpinner;

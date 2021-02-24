@@ -4,8 +4,9 @@ import './Activity.scss';
 
 import humanizeTime from '~helpers/humanizeTime';
 
+import { Owner } from '~modules/common/corgi';
+
 import { CorgiType } from '~types/CorgiTypes';
-import { Owner } from '~modules/common';
 
 const ActivityPropTypes = {
   created: CorgiType.created,

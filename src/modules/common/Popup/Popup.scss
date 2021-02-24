@@ -1,0 +1,87 @@
+@import 'bootstrap';
+@import 'mixins';
+@import 'variables';
+
+.popup {
+  @extend .popover;
+
+  width: max-content;
+  max-width: 17.5rem;
+
+  display: none;
+
+  cursor: default;
+
+  &__title {
+    @extend .popover-header;
+  }
+
+  &__content {
+    @extend .popover-body;
+    @include dis-flex-column(flex-start, center);
+
+    word-break: break-all;
+  }
+
+  &--opened {
+    display: block;
+  }
+
+  &--top {
+    @extend .bs-popover-top;
+
+    left: 50%;
+
+    transform: translate(-50%, -100%);
+  }
+
+  &--top-left {
+    @extend .popup--top;
+
+    transform: translate(-75%, -100%);
+  }
+
+  &--top-right {
+    @extend .popup--top;
+
+    transform: translate(-25%, -100%);
+  }
+
+  &--bottom {
+    @extend .bs-popover-bottom;
+
+    top: 100%;
+    left: 50%;
+
+    transform: translateX(-50%);
+  }
+
+  &--bottom-left {
+    @extend .popup--bottom;
+
+    transform: translateX(-75%);
+  }
+
+  &--bottom-right {
+    @extend .popup--bottom;
+
+    transform: translateX(-25%);
+  }
+
+  &--left {
+    @extend .bs-popover-start;
+
+    top: 50%;
+
+    transform: translateY(-50%);
+  }
+
+  &--right {
+    @extend .bs-popover-end;
+
+    top: 50%;
+    left: calc(100% - 1px);
+
+    transform: translateY(-50%);
+  }
+}

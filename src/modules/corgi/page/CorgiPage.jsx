@@ -3,13 +3,12 @@ import { Redirect, useRouteMatch } from 'react-router-dom';
 
 import './CorgiPage.scss';
 
-import { ContractContext, NearContext, TransferContextProvider } from '~contexts';
+import { ContractContext } from '~contexts';
 
-import { CorgiCard, CorgiRate, Spinner } from '~modules/common';
+import { CorgiCard, CorgiRate, CorgiSpinner } from '~modules/common';
 import { SendModal, ShareActions, ShareModal } from '~modules/corgi/components';
 
 const CorgiPage = () => {
-  const { user } = useContext(NearContext);
   const { corgi, loading, getCorgi, transfering } = useContext(ContractContext);
 
   const [showSend, setSend] = useState(false);
@@ -42,33 +41,27 @@ const CorgiPage = () => {
   }
 
   if (!corgi || loading) {
-    return <Spinner />;
-  }
-
-  if (corgi.owner !== user.accountId) {
-    return <Redirect to='/account' />;
+    return <CorgiSpinner />;
   }
 
   return (
     <div className='corgi-page'>
-      <TransferContextProvider>
-        <SendModal corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
-        <ShareModal corgi={corgi} closeModal={closeModal} show={showShare} />
+      <SendModal corgi={corgi} transfering={transfering} show={showSend} closeModal={closeModal} />
+      <ShareModal corgi={corgi} closeModal={closeModal} show={showShare} />
 
-        <h1 className='corgi-page__title'>Meet {corgi.name}!</h1>
+      <h1 className='corgi-page__title'>Meet {corgi.name}!</h1>
 
-        <div className='corgi-page__card'>
-          <CorgiCard corgi={corgi} size='big' />
+      <div className='corgi-page__card'>
+        <CorgiCard corgi={corgi} size='big' />
+      </div>
+
+      <div className='corgi-page__content'>
+        <CorgiRate rate={corgi.rate} />
+
+        <div className='corgi-page__actions'>
+          <ShareActions openSendModal={openSendModal} openShareModal={openShareModal} />
         </div>
-
-        <div className='corgi-page__content'>
-          <CorgiRate rate={corgi.rate} />
-
-          <div className='corgi-page__actions'>
-            <ShareActions openSendModal={openSendModal} openShareModal={openShareModal} />
-          </div>
-        </div>
-      </TransferContextProvider>
+      </div>
     </div>
   );
 };

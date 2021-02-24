@@ -1,0 +1,19 @@
+@import 'mixins';
+
+.transfer {
+  @include dis-flex(space-between, center);
+
+  &__input {
+    margin: 0;
+    margin-right: 0.25rem;
+  }
+
+  &__submit {
+    margin: 0;
+    margin-left: 0.25rem;
+
+    .spinner-border {
+      margin: 0 auto;
+    }
+  }
+}

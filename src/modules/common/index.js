@@ -4,11 +4,12 @@ import Dropdown from './Dropdown';
 import Egg from './Egg/Egg';
 import ExternalLink from './ExternalLink/ExternalLink';
 import InfoTile from './InfoTile/InfoTile';
-import Input from './Input/Input';
+import Input from './Input';
 import Modal from './Modal/Modal';
-import Quote from './Quote/Quote';
-import RarityString from './RarityString';
-import Spinner from './Spinner/Spinner';
+import Popup from './Popup';
+import PopupWrapper from './PopupWrapper';
+
+import { BasicSpinner, CorgiSpinner } from './spinners';
 
 import {
   CorgiCard,
@@ -24,8 +25,6 @@ import {
   CorgiVeryRare,
   CorgiRate,
   SwitchCorgiPhoto,
-  Activity,
-  Owner,
 } from './corgi';
 
 export {
@@ -37,9 +36,10 @@ export {
   InfoTile,
   Input,
   Modal,
-  Quote,
-  RarityString,
-  Spinner,
+  Popup,
+  PopupWrapper,
+  BasicSpinner,
+  CorgiSpinner,
   CorgiCard,
   CorgisShowCase,
   CorgiSVG,
@@ -53,6 +53,4 @@ export {
   CorgiVeryRare,
   CorgiRate,
   SwitchCorgiPhoto,
-  Activity,
-  Owner,
 };

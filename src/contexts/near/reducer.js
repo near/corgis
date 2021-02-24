@@ -1,8 +1,9 @@
-import { CLEAR_STATE, LOADING_START, LOADING_SUCCESS, SET_USER } from './types';
+import { CLEAR_STATE, LOADING_ERROR, LOADING_START, LOADING_SUCCESS, SET_USER } from './types';
 
 export const initialNearState = {
   user: null,
   isLoading: true,
+  error: null,
 };
 
 export const nearReducer = (currentState = initialNearState, action) => {
@@ -17,12 +18,21 @@ export const nearReducer = (currentState = initialNearState, action) => {
       return {
         ...currentState,
         isLoading: true,
+        error: null,
       };
 
     case LOADING_SUCCESS:
       return {
         ...currentState,
         isLoading: false,
+        error: null,
+      };
+
+    case LOADING_ERROR:
+      return {
+        ...currentState,
+        isLoading: false,
+        error: action.payload.error,
       };
 
     case CLEAR_STATE:

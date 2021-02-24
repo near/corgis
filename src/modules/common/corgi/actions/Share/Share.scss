@@ -1,0 +1,35 @@
+@import 'variables';
+
+.share {
+  width: 100%;
+
+  .st-inline-share-buttons {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr);
+    grid-column-gap: 0.5rem;
+    grid-row-gap: 0.5rem;
+  }
+
+  .st-btn {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+
+    height: 2rem !important;
+    width: 2rem !important;
+    min-width: 2rem !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    border-radius: $border-radius-basic !important;
+
+    img {
+      top: 0 !important;
+    }
+
+    &:hover {
+      top: 0 !important;
+    }
+  }
+}

@@ -6,7 +6,6 @@ import './SendModal.scss';
 import classNames from 'classnames';
 
 import { CorgiAnimThree, CorgiCard, Modal } from '~modules/common';
-import { Transfer } from '~modules/corgi/components';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
 
@@ -31,8 +30,6 @@ const SendModal = ({ corgi, show, closeModal, transfering }) => (
             <span style={{ color: 'orange', fontSize: '0.7rem' }}>{corgi.rate}</span>
             <hr />
           </div>
-
-          <Transfer />
         </>
       ) : (
         <CorgiAnimThree color={corgi.color} />
