@@ -1,3 +1,5 @@
+use std::fmt::Display;
+
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
     collections::UnorderedMap,
@@ -5,38 +7,46 @@ use near_sdk::{
 
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Dict<K, V> {
-    pub dict: UnorderedMap<K, Node<K, V>>,
-    pub first: K,
+    heap: Heap<K, V>,
+    first: K,
 }
 
 #[derive(BorshDeserialize, BorshSerialize)]
-pub struct Node<K, V> {
-    pub next: K,
+pub struct Heap<K, V>(UnorderedMap<K, Node<K, V>>);
+
+#[derive(BorshDeserialize, BorshSerialize)]
+struct Node<K, V> {
+    next: K,
     prev: K,
-    pub value: V,
+    value: V,
+}
+
+pub struct DictIntoIterator<'a, K, V> {
+    heap: &'a Heap<K, V>,
+    curr: K,
 }
 
 impl<
-        K: Default + PartialEq + Clone + BorshDeserialize + BorshSerialize,
+        K: Default + PartialEq + Clone + BorshDeserialize + BorshSerialize + Display,
         V: BorshDeserialize + BorshSerialize,
     > Dict<K, V>
 {
     pub fn new(id: Vec<u8>) -> Self {
         Self {
-            dict: UnorderedMap::new(id),
+            heap: Heap(UnorderedMap::new(id)),
             first: K::default(),
         }
     }
 
     pub fn get(&self, key: &K) -> Option<V> {
-        self.dict.get(key).map(|n| n.value)
+        self.heap.0.get(key).map(|n| n.value)
     }
 
     pub fn push_front(&mut self, key: &K, value: V) -> V {
         if self.first != K::default() {
-            let mut node = self.dict.get(&self.first).unwrap();
+            let mut node = self.heap.get_node(&self.first);
             node.prev = key.clone();
-            self.dict.insert(&self.first, &node);
+            self.heap.0.insert(&self.first, &node);
         }
 
         let node = Node {
@@ -46,21 +56,21 @@ impl<
         };
 
         self.first = key.clone();
-        self.dict.insert(&key, &node);
+        self.heap.0.insert(&key, &node);
 
         node.value
     }
 
     pub fn remove(&mut self, key: &K) -> bool {
-        match self.dict.remove(&key) {
+        match self.heap.0.remove(&key) {
             None => false,
             Some(removed_node) => {
                 if removed_node.prev == K::default() {
                     self.first = removed_node.next;
                 } else {
-                    let mut node = self.dict.get(&removed_node.prev).unwrap();
+                    let mut node = self.heap.get_node(&removed_node.prev);
                     node.next = removed_node.next;
-                    self.dict.insert(&removed_node.prev, &node);
+                    self.heap.0.insert(&removed_node.prev, &node);
                 }
                 true
             }
@@ -68,32 +78,38 @@ impl<
     }
 }
 
+impl<K: BorshDeserialize + BorshSerialize + Display, V: BorshDeserialize + BorshSerialize>
+    Heap<K, V>
+{
+    fn get_node(&self, key: &K) -> Node<K, V> {
+        let node = self.0.get(key);
+        assert!(node.is_some(), "Element `{}` not found in heap map", key);
+        node.unwrap()
+    }
+}
+
 impl<
-        K: Default + PartialEq + Clone + BorshDeserialize + BorshSerialize,
+        'a,
+        K: Default + PartialEq + Clone + BorshDeserialize + BorshSerialize + Display,
         V: BorshDeserialize + BorshSerialize,
-    > IntoIterator for Dict<K, V>
+    > IntoIterator for &'a Dict<K, V>
 {
     type Item = (K, V);
 
-    type IntoIter = DictIntoIterator<K, V>;
+    type IntoIter = DictIntoIterator<'a, K, V>;
 
     fn into_iter(self) -> Self::IntoIter {
         Self::IntoIter {
-            dict: self.dict,
-            curr: self.first,
+            heap: &self.heap,
+            curr: self.first.clone(),
         }
     }
 }
 
-pub struct DictIntoIterator<K, V> {
-    dict: UnorderedMap<K, Node<K, V>>,
-    curr: K,
-}
-
 impl<
-        K: Default + PartialEq + Clone + BorshDeserialize + BorshSerialize,
+        K: Default + PartialEq + Clone + BorshDeserialize + BorshSerialize + Display,
         V: BorshDeserialize + BorshSerialize,
-    > Iterator for DictIntoIterator<K, V>
+    > Iterator for DictIntoIterator<'_, K, V>
 {
     type Item = (K, V);
 
@@ -101,8 +117,7 @@ impl<
         if self.curr == K::default() {
             None
         } else {
-            let node = self.dict.get(&self.curr).expect("Not able to get element");
-
+            let node = self.heap.get_node(&self.curr);
             let result = Some((self.curr.clone(), node.value));
             self.curr = node.next;
             result

@@ -114,7 +114,7 @@ checksum = "4785bdd1c96b2a846b2bd7cc02e86b6b3dbf14e7e53446c4f54c92a361040822"
 
 [[package]]
 name = "corgis-nft"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "base64 0.13.0",
  "near-sdk",

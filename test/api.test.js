@@ -11,7 +11,7 @@ const config = getConfig('development');
 
 const NEP4Methods = {
   viewMethods: ['get_token_owner'],
-  changeMethods: ['transfer'],
+  changeMethods: ['grant_access', 'revoke_access', 'transfer_from', 'transfer', 'check_access'],
 };
 
 const contractMethods = {
@@ -52,11 +52,12 @@ async function initContractWithNewTestAccount() {
 
 describe('Corgis contract integration tests', () => {
 
-  let alice, bob, pageLimit;
+  let alice, bob, ted, pageLimit;
 
   beforeAll(async () => {
     alice = await initContractWithNewTestAccount();
     bob = await initContractWithNewTestAccount();
+    ted = await initContractWithNewTestAccount();
 
     pageLimit = await alice.contract.get_corgis_page_limit();
   });
@@ -65,6 +66,7 @@ describe('Corgis contract integration tests', () => {
     const accid = 'corgis-nft.testnet';
     await alice.account.deleteAccount(accid);
     await bob.account.deleteAccount(accid);
+    await ted.account.deleteAccount(accid);
   });
 
   test('check that test account are actually different', async () => {
@@ -189,9 +191,31 @@ describe('Corgis contract integration tests', () => {
     }
   });
 
-  test('NEP4 transfer corgi', async () => {
+  test('NEP4 transfer/get_token_owner', async () => {
     const newCorgi = await alice.contract.create_corgi({ name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
     await alice.contract.transfer({ new_owner_id: bob.accountId, token_id: newCorgi.id });
+    const newOwner = await alice.contract.get_token_owner({ token_id: newCorgi.id });
+    expect(newOwner).toBe(bob.accountId);
+  });
+
+  test('NEP4 grant/revoke access', async () => {
+    await alice.contract.grant_access({ escrow_account_id: ted.accountId});
+
+    let hasAccess = await ted.contract.check_access({ account_id: alice.accountId});
+    expect(hasAccess).toBe(true);
+
+    await alice.contract.revoke_access({ escrow_account_id: ted.accountId});
+
+    hasAccess = await ted.contract.check_access({ account_id: alice.accountId});
+    expect(hasAccess).toBe(false);
+  });
+
+  test('NEP4 transfer_from', async () => {
+    const newCorgi = await alice.contract.create_corgi({ name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+    await alice.contract.grant_access({ escrow_account_id: ted.accountId});
+
+    await ted.contract.transfer_from({ owner_id: alice.accountId, new_owner_id: bob.accountId, token_id: newCorgi.id });
+
     const newOwner = await alice.contract.get_token_owner({ token_id: newCorgi.id });
     expect(newOwner).toBe(bob.accountId);
   });

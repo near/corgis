@@ -1,9 +1,9 @@
 use std::{
+    convert::TryInto,
     ops::{Deref, DerefMut},
     time::{SystemTime, UNIX_EPOCH},
 };
 
-use corgis_nft::pack::pack;
 use near_sdk::{testing_env, MockedBlockchain, VMConfig, VMContext};
 use near_vm_logic::VMLimitConfig;
 
@@ -50,9 +50,10 @@ impl<T> MockedContext<T> {
     }
 
     fn update_context(&mut self) {
-        let random_seed = (pack(self.context.random_seed.as_slice()) + 1)
-            .to_ne_bytes()
-            .to_vec();
+        let random_seed = (u128::from_le_bytes(self.context.random_seed[..16].try_into().unwrap())
+            + 1)
+        .to_ne_bytes()
+        .to_vec();
         self.context =
             Self::create_context(self.context.predecessor_account_id.clone(), &random_seed);
     }

@@ -27,6 +27,14 @@ fn ted() -> String {
     "ted.mock".to_string()
 }
 
+fn trent() -> String {
+    "trent.mock".to_string()
+}
+
+fn any_corgi_id() -> String {
+    "<?>".to_string()
+}
+
 struct ContractChecker {
     contract: Model,
     ids: Vec<(String, String)>,
@@ -228,7 +236,7 @@ fn initial_state() {
 #[should_panic(expected = "The given corgi id `<?>` was not found")]
 fn should_panic_when_corgi_id_does_not_exist() {
     init_test().run_as(alice(), |contract| {
-        contract.get_corgi_by_id("<?>".to_string());
+        contract.get_corgi_by_id(any_corgi_id());
     });
 }
 
@@ -312,18 +320,18 @@ fn create_and_delete_corgi() {
 
 #[test]
 #[should_panic(expected = "Account `alice.mock` does not have corgis to delete from")]
-fn should_panic_when_there_are_no_corgis_to_delete() {
+fn delete_should_panic_when_there_are_no_corgis() {
     init_test().run_as(alice(), |contract| {
-        contract.delete_corgi("<?>".to_string());
+        contract.delete_corgi(any_corgi_id());
     });
 }
 
 #[test]
 #[should_panic(expected = "Corgi id `<?>` does not belong to account `alice.mock`")]
-fn should_panic_when_corgi_to_delete_does_not_exist() {
+fn delete_should_panic_when_corgi_does_not_exist() {
     init_test().run_as(alice(), |contract| {
         contract.create_test_corgi(42);
-        contract.delete_corgi("<?>".to_string());
+        contract.delete_corgi(any_corgi_id());
     });
 }
 
@@ -392,14 +400,12 @@ fn should_panic_when_self_transfer() {
 #[should_panic(expected = "Attempt to transfer a nonexistent Corgi id `<?>`")]
 fn should_panic_when_transfer_corgi_does_not_exist() {
     init_test().run_as(alice(), |contract| {
-        contract.transfer_corgi(charlie(), "<?>".to_string());
+        contract.transfer_corgi(charlie(), any_corgi_id());
     });
 }
 
 #[test]
-#[should_panic(
-    expected = "The specified Corgi `sVNcd4PqiCm2sM9ncEU5eYtNFsOb8L/glJTF2fEu7jA=` does not belong to sender"
-)]
+#[should_panic(expected = "Sender does not own `sVNcd4PqiCm2sM9ncEU5eYtNFsOb8L/glJTF2fEu7jA=`")]
 fn should_panic_when_sender_is_not_owner() {
     init_test().run_as(alice(), |contract| {
         let id = contract.create_test_corgi(42).id;
@@ -454,6 +460,57 @@ fn nep4_grant_access() {
         })
         .run_as(ted(), |contract| {
             assert!(!contract.check_access(alice()));
+        });
+}
+
+#[test]
+#[should_panic(expected = "Account `alice.mock` does not have any escrow")]
+fn neap4_should_panic_when_access_is_empty() {
+    init_test().run_as(alice(), |contract| {
+        contract.revoke_access(ted());
+    });
+}
+
+#[test]
+#[should_panic(expected = "Escrow `ted.mock` does not have access to `alice.mock`")]
+fn neap4_should_panic_when_revoking_invalid_access() {
+    init_test().run_as(alice(), |contract| {
+        contract.grant_access(trent());
+        contract.revoke_access(ted());
+    });
+}
+
+#[test]
+#[should_panic(expected = "The given corgi id `<?>` was not found")]
+fn nep4_transfer_should_panic_when_id_does_not_exist() {
+    init_test().run_as(ted(), |contract| {
+        contract.transfer_from(alice(), bob(), any_corgi_id());
+    });
+}
+
+#[test]
+#[should_panic(expected = "Attempt to transfer token from `alice.mock`")]
+fn nep4_transfer_should_panic_when_not_owner() {
+    init_test()
+        .run_as(alice(), |contract| {
+            contract.create_test_corgi(42);
+        })
+        .run_as(charlie(), |contract| {
+            let token_id = contract.ids[0].0.clone();
+            contract.transfer_from(bob(), charlie(), token_id);
+        });
+}
+
+#[test]
+#[should_panic(expected = "Attempt to transfer a token with no access")]
+fn nep4_transfer_should_panic_when_not_allowed() {
+    init_test()
+        .run_as(alice(), |contract| {
+            contract.create_test_corgi(42);
+        })
+        .run_as(charlie(), |contract| {
+            let token_id = contract.ids[0].0.clone();
+            contract.transfer_from(alice(), bob(), token_id);
         });
 }
 
