@@ -42,6 +42,7 @@ const ActionsDropdown = ({ id }) => {
       listStyles={{ left: 'auto', right: 0 }}
       hideTitleBorder
       hideArrow
+      isTight
     >
       <PopupWrapper
         popup={{ title: 'Gift me to your friend!', position: 'bottom-left', children: <Transfer id={id} /> }}

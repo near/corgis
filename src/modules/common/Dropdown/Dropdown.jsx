@@ -13,7 +13,7 @@ import DropdownItem from './DropdownItem';
 
 const DropdownPropTypes = {
   title: PropTypes.oneOfType([PropTypes.string, ReactChildrenType]).isRequired,
-  wide: PropTypes.bool,
+  isTight: PropTypes.bool,
   listStyles: StylesType,
   hideTitleBorder: PropTypes.bool,
   hideArrow: PropTypes.bool,
@@ -22,7 +22,7 @@ const DropdownPropTypes = {
 
 const Dropdown = ({
   title = '',
-  wide = false,
+  isTight = false,
   listStyles = {},
   hideTitleBorder = false,
   hideArrow = false,
@@ -46,7 +46,7 @@ const Dropdown = ({
     <div
       className={classNames('dropdown', {
         'dropdown--opened': isOpened,
-        'dropdown--wide': wide,
+        'dropdown--tight': isTight,
       })}
       ref={dropdownRef}
     >
@@ -57,7 +57,14 @@ const Dropdown = ({
         {title}
         {!hideArrow && (
           <div className='dropdown__arrow-wrapper'>
-            <svg className='dropdown__arrow' width='24' height='24' xmlns='http://www.w3.org/2000/svg' fillRule='evenodd' clipRule='evenodd'>
+            <svg
+              className='dropdown__arrow'
+              width='24'
+              height='24'
+              xmlns='http://www.w3.org/2000/svg'
+              fillRule='evenodd'
+              clipRule='evenodd'
+            >
               <path d='M23.245 4l-11.245 14.374-11.219-14.374-.781.619 12 15.381 12-15.391-.755-.609z' />
             </svg>
           </div>

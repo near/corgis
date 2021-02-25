@@ -13,16 +13,30 @@ const ButtonPropTypes = {
   disabled: PropTypes.bool,
   isSquare: PropTypes.bool,
   badge: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  reducible: PropTypes.bool,
   children: ReactChildrenType,
 };
 
-const Button = ({ action = () => {}, description, disabled = false, isSquare = false, badge, children }) => (
+const Button = ({
+  action = () => {},
+  description,
+  disabled = false,
+  isSquare = false,
+  reducible = false,
+  badge,
+  children,
+}) => (
   <button
-    className={classNames('button', { 'button--disabled': disabled, 'button--square': isSquare })}
+    className={classNames('button', {
+      'button--disabled': disabled,
+      'button--square': isSquare,
+      'button--reducible': reducible,
+    })}
     onClick={action}
     disabled={disabled}
   >
-    {children || description} {(badge || badge === 0) && !disabled && <span className='button__badge badge'>{badge}</span>}
+    {children || description}{' '}
+    {(badge || badge === 0) && !disabled && <span className='button__badge badge'>{badge}</span>}
   </button>
 );
 

@@ -5,9 +5,7 @@ import './Nav.scss';
 
 import { ContractContext, NearContext } from '~contexts';
 
-import { Button, Dropdown, ExternalLink } from '~modules/common';
-
-import GenerationLink from '../GenerationLink/GenerationLink';
+import { Button, Dropdown, ExternalLink, GenerationLink } from '~modules/common';
 
 const Nav = () => {
   const { nearContent, user, signIn, signOut } = useContext(NearContext);
@@ -26,13 +24,17 @@ const Nav = () => {
       {user ? (
         <>
           <div className='nav__item'>
+            <GenerationLink />
+          </div>
+
+          <div className='nav__item'>
             <Link to='/account'>
-              <Button description='My Corgis' badge={corgis ? corgis.length : 0} />
+              <Button description='My Corgis' badge={corgis ? corgis.length : 0} reducible />
             </Link>
           </div>
 
-          <div className='nav__item nav__item--expandable'>
-            <Dropdown title={`@${user.accountId}`} wide>
+          <div className='nav__item'>
+            <Dropdown title={`@${user.accountId}`}>
               <ExternalLink
                 customClasses='nav__link'
                 description='Wallet'
@@ -45,10 +47,6 @@ const Nav = () => {
                 Sign out
               </Link>
             </Dropdown>
-          </div>
-
-          <div className='nav__item'>
-            <GenerationLink />
           </div>
         </>
       ) : (

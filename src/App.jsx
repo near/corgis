@@ -20,7 +20,7 @@ const App = () => {
     if (user && !deleting && !transfering) {
       getCorgis(user.accountId);
     }
-  }, [user, getCorgis, created, deleting, transfering]);
+  }, [user, created, deleting, transfering]);
 
   return (
     <div className='App'>

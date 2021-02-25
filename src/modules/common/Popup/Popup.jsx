@@ -13,7 +13,10 @@ const PopupPropTypes = {
 };
 
 const Popup = ({ isOpened = false, title, position = 'top', children }) => (
-  <div className={classNames('popup', `popup--${position}`, { 'popup--opened': isOpened })}>
+  <div
+    className={classNames('popup', `popup--${position}`, { 'popup--opened': isOpened })}
+    onClick={(event) => event.stopPropagation()}
+  >
     {title && <h4 className='popup__title'>{title}</h4>}
 
     <div className='popup__content'>{children}</div>

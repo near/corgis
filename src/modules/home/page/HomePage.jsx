@@ -17,7 +17,7 @@ const HomePage = () => {
 
   useEffect(() => {
     getGlobalCorgis();
-  }, [getGlobalCorgis]);
+  }, []);
 
   return (
     <div className='home'>

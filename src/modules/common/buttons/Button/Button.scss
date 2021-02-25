@@ -39,3 +39,9 @@
     padding: $padding-button-square;
   }
 }
+
+@media all and (max-width: 500px) {
+  .button--reducible {
+    padding: $padding-dropdown-item-semi-tight;
+  }
+}

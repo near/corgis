@@ -1,6 +1,5 @@
 import Header from './Header';
-import Nav from './Nav/Nav';
-import GenerationLink from './GenerationLink/GenerationLink';
-import CorgisLogo from './CorgisLogo/CorgisLogo';
+import Nav from './Nav';
+import CorgisLogo from './CorgisLogo';
 
-export { Header, Nav, GenerationLink, CorgisLogo };
+export { Header, Nav, CorgisLogo };

@@ -50,4 +50,10 @@
 
     transform: translateY(-3%);
   }
+
+  &__action {
+    @include flex-center;
+
+    height: $generation-link-size-big;
+  }
 }

@@ -68,7 +68,7 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
   }, [currentUser]);
 
   useEffect(() => {
-    if (!nearState.user && !nearState.isLoading) {
+    if (!nearState.user && !nearState.isLoading && !nearState.error) {
       loadingStart();
     }
   }, [nearState]);
@@ -80,7 +80,8 @@ export const NearContextProvider = ({ currentUser, nearConfig, wallet, near, chi
   }, [nearState]);
 
   useEffect(() => {
-    if (!nearState.user && !localStorage.getItem('undefined_wallet_auth_key')) {
+    if (!nearState.user && !localStorage.getItem('undefined_wallet_auth_key') && !nearState.error) {
+      localStorage.clear();
       loadingError('wallet not found');
     }
   }, [nearState]);

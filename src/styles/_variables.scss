@@ -38,6 +38,9 @@ $dropdown-item-background-color-hover: $color-gray-light;
 
 // component sizes
 
+$generation-link-size: 2.5rem;
+$generation-link-size-big: 4rem;
+
 // margins and paddings
 
 $padding-page: 0 5%;
@@ -47,9 +50,9 @@ $padding-button: $padding-button-square 1.5rem;
 
 $padding-infotile: $padding-button;
 
-$padding-dropdown-item: 0.25rem;
-
-$padding-dropdown-item-wide: $padding-dropdown-item 1.5rem;
+$padding-dropdown-item-tight: 0.25rem;
+$padding-dropdown-item-semi-tight: $padding-dropdown-item-tight $padding-dropdown-item-tight * 3;
+$padding-dropdown-item: $padding-dropdown-item-tight 1.5rem;
 
 // gaps
 

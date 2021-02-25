@@ -35,19 +35,17 @@ const PopupWrapper = React.forwardRef(({ popup = { title: '', position: 'top', c
     setIsPopupOpened(false);
   };
 
-  const PopupWrapperRef = useRef(null);
+  const popupWrapperRef = useRef(null);
 
-  useDetectClickOutside(PopupWrapperRef, handleClickOutside);
+  useDetectClickOutside(popupWrapperRef, handleClickOutside);
 
   return (
-    <div className='popup-wrapper' ref={PopupWrapperRef}>
+    <div className='popup-wrapper' ref={popupWrapperRef} onClick={() => togglePopup()}>
       <Popup isOpened={isPopupOpened} title={popup.title} position={popup.position}>
         {popup.children}
       </Popup>
 
-      <div className='popup-wrapper__content' onClick={() => togglePopup()}>
-        {children}
-      </div>
+      <div className='popup-wrapper__content'>{children}</div>
     </div>
   );
 });

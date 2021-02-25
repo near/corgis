@@ -1,4 +1,5 @@
 import Button from './Button';
 import CheckMarkButton from './CheckMarkButton';
+import GenerationLink from './GenerationLink';
 
-export { Button, CheckMarkButton };
+export { Button, CheckMarkButton, GenerationLink };
