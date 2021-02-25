@@ -3,9 +3,10 @@ import React, { useCallback, useEffect, useReducer } from 'react';
 import { getRandomQuoteId } from '~helpers/quotes';
 
 import { characterReducer, initialCharacterState } from './reducer';
-import { SET_NAME, SET_COLOR, SET_BACKGROUND_COLOR, SET_QUOTE, CLEAR_STATE } from './types';
+import { SET_CHARACTER, SET_NAME, SET_COLOR, SET_BACKGROUND_COLOR, SET_QUOTE, CLEAR_STATE } from './types';
 
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import genRandomCharacter from '~helpers/generators/genRandomCharacter';
 
 export const CharacterContext = React.createContext(initialCharacterState);
 
@@ -34,6 +35,10 @@ export const CharacterContextProvider = ({ children }) => {
     dispatchCharacter({ type: SET_QUOTE, payload: { quote: getRandomQuoteId() } });
   }, []);
 
+  const generateRandomCharacter = () => {
+    dispatchCharacter({ type: SET_CHARACTER, payload: { character: genRandomCharacter() } });
+  };
+
   useEffect(() => {
     generateQuote();
   }, [generateQuote, characterState.name]);
@@ -47,6 +52,7 @@ export const CharacterContextProvider = ({ children }) => {
     setName,
     setColor,
     setBackgroundColor,
+    generateRandomCharacter,
   };
 
   return <CharacterContext.Provider value={value}>{children}</CharacterContext.Provider>;

@@ -20,10 +20,7 @@ const Colorpicker = ({ title, color, pickColor }) => {
         <input className='colorpicker__input' type='color' value={color} onChange={(event) => handleColor(event)} />
       </label>
 
-      <div className='colorpicker__description'>
-        <p className='colorpicker__title'>{title || 'Colorpicker'}</p>
-        <p className='colorpicker__hex'>{color}</p>
-      </div>
+      <p className='colorpicker__title'>{title || 'Colorpicker'}</p>
     </div>
   );
 };

@@ -17,6 +17,30 @@
   border-radius: $size / 2;
 }
 
+@mixin margin-between($gap: 1rem, $direction: row) {
+  @if $direction == row {
+    margin: 0 $gap;
+
+    &:first-child {
+      margin-left: 0;
+    }
+
+    &:last-child {
+      margin-right: 0;
+    }
+  } @else if $direction == column {
+    margin: $gap 0;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
 @mixin fill-parent {
   height: 100%;
   width: 100%;

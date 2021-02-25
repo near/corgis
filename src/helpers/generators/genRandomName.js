@@ -1,4 +1,6 @@
-const generate = require('project-name-generator');
+import generate from 'project-name-generator';
+
+import toTitleCase from '~helpers/toTitleCase';
 
 /**
  * Returns a random name that consists of 2 alliterative words
@@ -6,5 +8,5 @@ const generate = require('project-name-generator');
  * @returns {string}
  */
 export default function genRandomName() {
-  return generate({ words: 2, alliterative: true }).spaced;
+  return toTitleCase(generate({ words: 2 }).spaced);
 }

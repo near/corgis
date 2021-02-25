@@ -1,35 +1,26 @@
+@import 'mixins';
+@import 'variables';
+
 .colorpicker {
-  display: flex;
-  flex-flow: row;
-  align-items: center;
+  @include dis-flex(flex-start, center);
 
   &__result {
-    width: 50px;
-    height: 50px;
+    @include basicSquare($colorpicker-size);
 
-    border: 2px solid #24272a;
-    border-radius: 5px;
-
-    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+    border: $border-basic-gray;
+    border-radius: $border-radius-basic;
 
     cursor: pointer;
   }
 
   &__input {
-    display: none;
-  }
-
-  &__description {
-    margin-left: 1rem;
+    visibility: hidden;
   }
 
   &__title {
     margin: 0;
+    margin-left: 1rem;
 
     font-weight: 600;
-  }
-
-  &__hex {
-    margin: 0;
   }
 }

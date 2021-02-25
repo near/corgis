@@ -1,3 +1,4 @@
+import genRandomCharacter from './genRandomCharacter';
 import genRandomName from './genRandomName';
 
-export { genRandomName };
+export { genRandomCharacter, genRandomName };

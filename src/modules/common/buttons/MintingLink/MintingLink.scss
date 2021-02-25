@@ -1,0 +1,14 @@
+@import 'mixins';
+@import 'variables';
+
+.minting-link {
+  @include basicRound($minting-link-size);
+
+  &__icon {
+    @include basicSquare(100%);
+  }
+
+  &--big {
+    @include basicRound($minting-link-size-big);
+  }
+}

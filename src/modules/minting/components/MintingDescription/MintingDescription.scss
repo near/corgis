@@ -1,0 +1,30 @@
+@import 'mixins';
+@import 'variables';
+
+.minting-description {
+  @include fill-parent;
+
+  padding: 1rem;
+
+  border-radius: $border-radius-big;
+
+  background-color: $color-gray-light;
+
+  &__list {
+    @include dis-flex-column(space-between, stretch);
+
+    height: 100%;
+
+    padding-left: 1rem;
+
+    list-style-type: disc;
+  }
+
+  &__item {
+    @include margin-between(0.75rem, column);
+  }
+
+  &__text {
+    text-align: justify;
+  }
+}

@@ -1,0 +1,51 @@
+@import 'mixins';
+@import 'variables';
+
+.minting-form {
+  @include dis-flex-column(space-between, stretch);
+  @include fill-parent;
+
+  padding: 0.5rem;
+
+  border-radius: $border-radius-big;
+
+  background-color: $color-gray-light;
+
+  &__area {
+    @include dis-flex-column(flex-start, stretch);
+    @include margin-between(1rem, column);
+  }
+
+  &__header {
+    @include dis-flex(flex-start, center);
+
+    margin-bottom: 0.75rem;
+  }
+
+  &__title {
+    font-weight: 600;
+    font-size: 1.5em;
+  }
+
+  &__icon {
+    margin-left: 0.5rem;
+    padding: 0.25rem;
+
+    border-radius: 50%;
+
+    background-color: $color-black;
+    color: $color-white;
+
+    font-size: 1rem;
+
+    cursor: pointer;
+  }
+
+  &__colorpicker {
+    @include margin-between(0.5rem, column);
+  }
+
+  &__donation {
+    margin-bottom: 0.75rem;
+  }
+}

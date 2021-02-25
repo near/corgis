@@ -1,0 +1,17 @@
+@import 'mixins';
+
+.donation {
+  @include dis-flex(space-between, center);
+
+  & > * {
+    @include margin-between(0.25rem, row);
+  }
+
+  &__text {
+    white-space: nowrap;
+  }
+
+  &__input {
+    flex-grow: 1;
+  }
+}

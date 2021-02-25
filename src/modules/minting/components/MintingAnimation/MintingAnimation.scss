@@ -1,0 +1,33 @@
+@import 'animations';
+@import 'classes';
+@import 'mixins';
+@import 'variables';
+
+.minting-animation {
+  @include dis-flex-column(flex-start, center);
+  position: relative;
+
+  &__header {
+    @extend .page-header;
+    @extend .page-title;
+  }
+
+  &__background {
+    @include flex-center;
+    flex-direction: column;
+
+    width: 100%;
+
+    padding: 4rem 0;
+
+    border-radius: $border-radius-big;
+  }
+
+  &__corgi {
+    @include animateBounceCorgi;
+  }
+
+  &__shadow {
+    @include animateStretchShadow;
+  }
+}

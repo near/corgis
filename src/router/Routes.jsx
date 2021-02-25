@@ -1,17 +1,15 @@
 import React, { useContext } from 'react';
 import { Switch, Route } from 'react-router-dom';
 
-import { NearContext } from '~contexts';
+import { CharacterContextProvider, NearContext } from '~contexts';
 
 import GuardedRoute from '~router/GuardedRoute';
 
-import { CharacterContextProvider } from '~contexts/';
-
-import AccountPage from '~modules/account/page/AccountPage';
-import HomePage from '~modules/home/page/HomePage';
-import GenerationPage from '~modules/generation/page/GenerationPage';
+import AccountPage from '~modules/account/page';
+import CorgiPage from '~modules/corgi/page';
+import HomePage from '~modules/home/page';
+import MintingPage from '~modules/minting/page';
 import SharePage from '~modules/share/page/SharePage';
-import CorgiPage from '~modules/corgi/page/CorgiPage';
 
 const Routes = () => {
   const { user, isLoading } = useContext(NearContext);
@@ -23,9 +21,9 @@ const Routes = () => {
       <Route exact path='/'>
         <HomePage />
       </Route>
-      <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/generation'>
+      <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/minting'>
         <CharacterContextProvider>
-          <GenerationPage />
+          <MintingPage />
         </CharacterContextProvider>
       </GuardedRoute>
       <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/account'>

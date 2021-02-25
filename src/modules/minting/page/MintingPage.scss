@@ -1,0 +1,57 @@
+@import 'classes';
+@import 'mixins';
+
+.minting {
+  @include dis-flex-column(flex-start, center);
+
+  width: 100%;
+
+  &__header {
+    @extend .page-header;
+    @extend .page-title;
+  }
+
+  &__field {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 1fr;
+    grid-column-gap: 1rem;
+    grid-row-gap: 1rem;
+  }
+}
+
+@media all and (max-width: 1120px) {
+  .minting {
+    &__field {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    &__description {
+      grid-column-start: 1;
+      grid-column-end: 3;
+    }
+  }
+}
+
+@media all and (max-width: 700px) {
+  .minting {
+    &__field {
+      grid-template-columns: 1fr;
+    }
+
+    &__form {
+      order: 2;
+    }
+
+    &__screen {
+      order: 1;
+    }
+
+    &__description {
+      order: 3;
+
+      grid-column-start: 1;
+      grid-column-end: 1;
+    }
+  }
+}

@@ -1,0 +1,11 @@
+@import 'mixins';
+@import 'variables';
+
+.minting-screen {
+  @include flex-center;
+  @include fill-parent;
+
+  padding: 4rem 0;
+
+  border-radius: $border-radius-big;
+}
