@@ -9,7 +9,7 @@
   z-index: 1;
 
   &__title {
-    @include flex-center;
+    @include dis-flex(space-between, center);
 
     width: max-content;
 
@@ -33,6 +33,19 @@
     }
   }
 
+  &__arrow-wrapper {
+    @include basicSquare(24px);
+
+    transform: scale(0.5);
+    transform-origin: right;
+  }
+
+  &__arrow {
+    transition: $transition-basic / 2 ease-out;
+
+    transform: rotate(0deg);
+  }
+
   &__list {
     @include dis-flex-column(flex-start, stretch);
     @include clear-mar-pad;
@@ -53,10 +66,16 @@
   &--opened {
     .dropdown__title {
       border-radius: $border-radius-dropdown-title;
+
+      background-color: $dropdown-item-background-color-hover;
     }
 
     .dropdown__list {
       visibility: visible;
+    }
+
+    .dropdown__arrow {
+      transform: rotate(-180deg);
     }
   }
 
