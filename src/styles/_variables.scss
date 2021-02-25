@@ -7,6 +7,7 @@ $color-green: #4caf50;
 $color-blue: #1976d2;
 $color-purple: #7b1fa2;
 $color-brown: #a97c50;
+$color-red: #dc3545;
 
 $color-gray: #bdbdbd;
 $color-gray-light: #f8f8f8;
@@ -41,7 +42,8 @@ $dropdown-item-background-color-hover: $color-gray-light;
 
 $padding-page: 0 5%;
 
-$padding-button: 0.25rem 1.5rem;
+$padding-button-square: 0.25rem;
+$padding-button: $padding-button-square 1.5rem;
 
 $padding-infotile: $padding-button;
 

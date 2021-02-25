@@ -1,3 +1,5 @@
+@import 'variables';
+
 .input {
   position: relative;
 
@@ -8,52 +10,60 @@
   &__field {
     width: 100%;
 
-    border: 1px solid black;
-    border-radius: 2px;
+    border: $border-basic-black;
+    border-radius: $border-radius-basic;
 
     background-color: #ffffff;
 
-    transition: 0.1s ease-out;
+    transition: box-shadow $transition-basic-ease-out;
 
     box-sizing: border-box;
 
     cursor: text;
+
+    z-index: 1;
   }
 
   &__error {
     position: absolute;
-    top: 0;
+    top: 100%;
     left: 0;
 
-    width: 100%;
-    max-height: 0;
+    width: max-content;
+    max-width: 25rem;
 
     padding: 0.5rem;
     margin: 0;
 
-    background-color: #fbb040;
-    color: #ffffff;
+    border: $border-basic-gray;
+    border-radius: $border-radius-basic;
+
+    background-color: $color-white;
+    color: $color-red;
 
     opacity: 0;
 
-    overflow: hidden;
+    word-break: keep-all;
 
-    transition: 0.4s ease-out;
+    transition: $transition-basic-ease-out;
+
+    transform: translateY(-0.5rem) scale(0);
+    transform-origin: 0 0;
 
     z-index: -1;
   }
 
   &--show-error {
     .input__field {
-      background-color: #ef9a9a;
+      box-shadow: inset 0 0 0.25rem 1px $color-red;
+
+      transition: box-shadow $transition-basic-ease-out;
     }
 
     .input__error {
-      top: 100%;
-
-      max-height: 1000%;
-
       opacity: 1;
+
+      transform: translateY(0) scale(1);
     }
   }
 }

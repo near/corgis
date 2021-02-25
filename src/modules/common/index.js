@@ -1,4 +1,6 @@
-import Button from './Button/Button';
+import { Button, CheckMarkButton } from './buttons';
+import { BasicSpinner, CorgiSpinner } from './spinners';
+
 import Colorpicker from './Colorpicker/Colorpicker';
 import Dropdown from './Dropdown';
 import Egg from './Egg/Egg';
@@ -8,8 +10,6 @@ import Input from './Input';
 import Modal from './Modal/Modal';
 import Popup from './Popup';
 import PopupWrapper from './PopupWrapper';
-
-import { BasicSpinner, CorgiSpinner } from './spinners';
 
 import {
   CorgiCard,
@@ -29,6 +29,7 @@ import {
 
 export {
   Button,
+  CheckMarkButton,
   Colorpicker,
   Dropdown,
   Egg,

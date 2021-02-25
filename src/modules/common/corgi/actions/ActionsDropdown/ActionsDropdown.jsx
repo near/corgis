@@ -40,6 +40,7 @@ const ActionsDropdown = ({ id }) => {
         </svg>
       }
       listStyles={{ left: 'auto', right: 0 }}
+      hideTitleBorder
     >
       <PopupWrapper
         popup={{ title: 'Gift me to your friend!', position: 'bottom-left', children: <Transfer id={id} /> }}

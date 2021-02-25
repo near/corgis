@@ -15,10 +15,11 @@ const DropdownPropTypes = {
   title: PropTypes.oneOfType([PropTypes.string, ReactChildrenType]).isRequired,
   wide: PropTypes.bool,
   listStyles: StylesType,
+  hideTitleBorder: PropTypes.bool,
   children: ReactChildrenType,
 };
 
-const Dropdown = ({ title = '', wide = false, listStyles = {}, children }) => {
+const Dropdown = ({ title = '', wide = false, listStyles = {}, hideTitleBorder = false, children }) => {
   const [isOpened, setIsOpened] = useState(false);
 
   const handleOpen = () => {
@@ -41,7 +42,10 @@ const Dropdown = ({ title = '', wide = false, listStyles = {}, children }) => {
       })}
       ref={dropdownRef}
     >
-      <button className='dropdown__title' onClick={() => handleOpen()}>
+      <button
+        className={classNames('dropdown__title', { 'dropdown__title--hide-border': hideTitleBorder })}
+        onClick={() => handleOpen()}
+      >
         {title}
       </button>
 

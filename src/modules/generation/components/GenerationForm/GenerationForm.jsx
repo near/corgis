@@ -21,29 +21,15 @@ const GenerationForm = () => {
   const { createCorgi } = useContext(ContractContext);
   const { name, quote, color, backgroundColor, setName, setColor, setBackgroundColor } = useContext(CharacterContext);
 
-  const [timeoutId, setTimeoutId] = useState(null);
-
   const [errorMessage, setErrorMessage] = useState('');
-  const [showError, setShowError] = useState(false);
 
-  const clearTimeoutId = () => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-      setTimeoutId(null);
-    }
-  };
-
-  const hideError = () => {
-    setShowError(false);
-    clearTimeoutId();
+  const clearError = () => {
+    setErrorMessage('');
   };
 
   const handleName = (event) => {
     setName(event.target.value);
-
-    if (showError) {
-      hideError();
-    }
+    clearError();
   };
 
   const generateRandomName = () => {
@@ -70,43 +56,14 @@ const GenerationForm = () => {
 
     if (validationMessage === CORGI_VALIDATION_MESSAGES.SUCCESS) {
       createCorgi(name, color, backgroundColor, quote);
-
-      hideError();
     } else {
       setErrorMessage(validationMessage);
-      setShowError(true);
     }
   };
 
   useEffect(() => {
-    if (!timeoutId && showError) {
-      setTimeoutId(
-        setTimeout(() => {
-          hideError();
-        }, 5000),
-      );
-    }
-
-    return () => {
-      clearTimeoutId();
-    };
-  }, [timeoutId, showError, setTimeoutId, setShowError]);
-
-  useEffect(() => {
-    if (!timeoutId && !showError && errorMessage && errorMessage.length) {
-      setTimeoutId(
-        setTimeout(() => {
-          setErrorMessage('');
-
-          clearTimeoutId();
-        }, 1000),
-      );
-    }
-
-    return () => {
-      clearTimeoutId();
-    };
-  }, [timeoutId, showError, errorMessage, setTimeoutId, setErrorMessage]);
+    clearError();
+  }, [errorMessage]);
 
   return (
     <form className='generation-form' onSubmit={(event) => onSubmit(event)}>
@@ -120,7 +77,6 @@ const GenerationForm = () => {
             onChange={handleName}
             placeholder='Sweet Corgi'
             error={errorMessage}
-            showError={showError}
             required
           />
         </div>

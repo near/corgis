@@ -34,4 +34,8 @@
     background-color: $button-background-color-disabled;
     color: $button-text-color-disabled;
   }
+
+  &--square {
+    padding: $padding-button-square;
+  }
 }

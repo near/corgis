@@ -15,7 +15,7 @@
 
     padding: $padding-dropdown-item;
 
-    border: $border-basic-main;
+    border: $border-basic-gray;
     border-radius: $border-radius-basic;
 
     background-color: $dropdown-item-background-color;
@@ -26,6 +26,10 @@
 
     &:hover {
       background-color: $dropdown-item-background-color-hover;
+    }
+
+    &--hide-border {
+      border: none;
     }
   }
 
@@ -38,7 +42,7 @@
 
     min-width: 100%;
 
-    border: $border-basic-main;
+    border: $border-basic-gray;
     border-radius: $border-radius-dropdown-list;
 
     background-color: $color-white;
