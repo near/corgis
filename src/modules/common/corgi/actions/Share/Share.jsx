@@ -6,7 +6,7 @@ import { InlineShareButtons } from 'sharethis-reactjs';
 
 import { CorgiType } from '~types/CorgiTypes';
 
-const SharePropTypes = { id: CorgiType.id };
+const SharePropTypes = { id: CorgiType.id.isRequired };
 
 const Share = ({ id }) => (
   <div className='share'>

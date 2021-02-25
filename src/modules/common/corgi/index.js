@@ -3,6 +3,7 @@ import { CorgiAnimOne, CorgiAnimTwo, CorgiAnimThree, CorgiAnimFour } from './Cor
 import { CorgiCommon, CorgiUncommon, CorgiRare, CorgiVeryRare, CorgiRate, SwitchCorgiPhoto } from './CorgiPhotos';
 
 import CorgiCard from './CorgiCard';
+import CorgiLink from './CorgiLink';
 import CorgisShowCase from './CorgisShowCase';
 import CorgiSVG from './CorgiSVG';
 
@@ -15,6 +16,7 @@ import { ActionsDropdown, Confirmation, Share, Transfer } from './actions';
 
 export {
   CorgiCard,
+  CorgiLink,
   CorgisShowCase,
   CorgiSVG,
   CorgiAnimOne,

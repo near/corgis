@@ -12,7 +12,7 @@ import { USER_VALIDATION_MESSAGES } from '~constants/validation/account';
 
 import { CorgiType } from '~types/CorgiTypes';
 
-const TransferPropTypes = { id: CorgiType.id };
+const TransferPropTypes = { id: CorgiType.id.isRequired };
 
 const Transfer = ({ id }) => {
   const { nearContent, user } = useContext(NearContext);

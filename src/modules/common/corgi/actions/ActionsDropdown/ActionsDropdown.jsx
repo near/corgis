@@ -9,7 +9,7 @@ import { Confirmation, Share, Transfer } from '~modules/common/corgi';
 
 import { CorgiType } from '~types/CorgiTypes';
 
-const ActionsDropdownPropTypes = { id: CorgiType.id };
+const ActionsDropdownPropTypes = { id: CorgiType.id.isRequired };
 
 const ActionsDropdown = ({ id }) => {
   const { deleteCorgi, deleting } = useContext(ContractContext);

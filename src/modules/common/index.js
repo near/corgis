@@ -13,6 +13,7 @@ import PopupWrapper from './PopupWrapper';
 
 import {
   CorgiCard,
+  CorgiLink,
   CorgisShowCase,
   CorgiSVG,
   CorgiAnimOne,
@@ -42,6 +43,7 @@ export {
   BasicSpinner,
   CorgiSpinner,
   CorgiCard,
+  CorgiLink,
   CorgisShowCase,
   CorgiSVG,
   CorgiAnimOne,

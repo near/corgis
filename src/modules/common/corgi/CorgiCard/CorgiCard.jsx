@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import './CorgiCard.scss';
 
-import { ActionsDropdown, Activity, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
+import { ActionsDropdown, Activity, CorgiLink, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
 
 import { SAUSAGE } from '~constants/corgi';
 
@@ -23,14 +23,16 @@ const CorgiCard = ({ corgi, showActions = false }) => {
         {showActions && <ActionsDropdown id={id} />}
       </div>
 
-      <Link to={`/corgi/${id}`}>
+      <CorgiLink id={id}>
         <div className='corgi-card__image' style={{ backgroundColor: background_color }}>
           <CorgiSVG color={color} sausage={SAUSAGE[rate] || SAUSAGE.COMMON} />
         </div>
-      </Link>
+      </CorgiLink>
 
       <div className='corgi-card__body'>
-        <h5 className='corgi-card__name'>{name}</h5>
+        <CorgiLink id={id}>
+          <h5 className='corgi-card__name'>{name}</h5>
+        </CorgiLink>
         <Quote id={quote} />
       </div>
 
