@@ -24,7 +24,7 @@ const CorgiCard = ({ corgi, showActions = false, big = false }) => {
       <div className='corgi-card__header'>
         <RarityString rate={rate} />
 
-        {showActions && <ActionsDropdown id={id} showOnlyShare={user.accountId !== owner} />}
+        {showActions && <ActionsDropdown id={id} showOnlyShare={!user || user.accountId !== owner} />}
       </div>
 
       <CorgiLink id={id}>

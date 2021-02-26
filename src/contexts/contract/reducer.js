@@ -121,6 +121,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
         creating: false,
         created: false,
         transfering: false,
+        transfered: false,
       };
 
     default:

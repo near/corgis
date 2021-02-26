@@ -14,7 +14,13 @@ import Routes from '~router/Routes';
 
 const App = () => {
   const { user } = useContext(NearContext);
-  const { created, deleted, transfered, getCorgis } = useContext(ContractContext);
+  const { created, deleted, transfered, getCorgis, clearState } = useContext(ContractContext);
+
+  useEffect(() => {
+    if (created || deleted || transfered) {
+      clearState();
+    }
+  }, [created, deleted, transfered]);
 
   useEffect(() => {
     if (user && !created && !deleted && !transfered) {

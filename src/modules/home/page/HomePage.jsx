@@ -16,7 +16,11 @@ const HomePage = () => {
   };
 
   useEffect(() => {
-    if (!created && !deleted && !transfered) {
+    getGlobalCorgis();
+  }, []);
+
+  useEffect(() => {
+    if (created || deleted || transfered) {
       getGlobalCorgis();
     }
   }, [created, deleted, transfered]);
