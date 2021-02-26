@@ -21,6 +21,9 @@ const Routes = () => {
       <Route exact path='/'>
         <HomePage />
       </Route>
+      <Route exact path='/corgi/:id+'>
+        <CorgiPage />
+      </Route>
       <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/minting'>
         <CharacterContextProvider>
           <MintingPage />
@@ -28,9 +31,6 @@ const Routes = () => {
       </GuardedRoute>
       <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/account'>
         <AccountPage />
-      </GuardedRoute>
-      <GuardedRoute auth={isAuthenticated} isLoading={isLoading} path='/corgi/:id+'>
-        <CorgiPage />
       </GuardedRoute>
       <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/share'>
         <SharePage />

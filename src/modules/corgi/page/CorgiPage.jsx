@@ -41,7 +41,7 @@ const CorgiPage = () => {
         <CorgiRate rate={corgi.rate} />
 
         <div className='corgi-page__actions'>
-          <CorgiActions id={id} showOnlyShare={user.accountId !== corgi.owner} />
+          <CorgiActions id={id} showOnlyShare={!user || user.accountId !== corgi.owner} />
         </div>
       </div>
     </div>

@@ -21,7 +21,7 @@ const MintingPage = () => {
 
   return (
     <div className='minting'>
-      <h1 className='minting__title'>{creating ? 'Generating...' : 'Create a Corgi'}</h1>
+      <h1 className='minting__title'>{creating ? 'Minting...' : 'Create a Corgi'}</h1>
 
       {creating ? (
         <MintingAnimation />
