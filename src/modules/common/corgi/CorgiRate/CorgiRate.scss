@@ -1,0 +1,34 @@
+@import 'mixins';
+@import 'classes';
+
+.corgi-rate {
+  position: relative;
+
+  max-width: 15rem;
+
+  &__title {
+    margin-bottom: 0.5rem;
+
+    font-weight: 500;
+  }
+
+  &__list {
+    @include dis-flex-column(flex-start, stretch);
+  }
+
+  &__item {
+    @include margin-between(0.5rem, column);
+  }
+
+  &--row {
+    max-width: inherit;
+
+    .corgi-rate__list {
+      flex-direction: row;
+    }
+
+    .corgi-rate__item {
+      @include margin-between(0.5rem, row);
+    }
+  }
+}

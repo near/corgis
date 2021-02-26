@@ -3,13 +3,6 @@
 .share {
   width: 100%;
 
-  .st-inline-share-buttons {
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr);
-    grid-column-gap: 0.5rem;
-    grid-row-gap: 0.5rem;
-  }
-
   .st-btn {
     display: flex !important;
     justify-content: center !important;
@@ -30,6 +23,62 @@
 
     &:hover {
       top: 0 !important;
+    }
+  }
+
+  &--grid {
+    .st-inline-share-buttons {
+      display: grid !important;
+      grid-template-columns: repeat(4, 1fr);
+      grid-column-gap: 0.5rem;
+      grid-row-gap: 0.5rem;
+    }
+  }
+
+  &--flex {
+    .st-inline-share-buttons {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      flex-grow: 1 !important;
+    }
+  }
+
+  &--row {
+    .st-inline-share-buttons {
+      flex-direction: row !important;
+    }
+
+    .st-btn {
+      margin: 0 0.5rem !important;
+
+      &:first-child {
+        margin-left: 0 !important;
+      }
+
+      &:last-child {
+        margin-right: 0 !important;
+      }
+    }
+  }
+
+  &--column {
+    width: auto;
+
+    .st-inline-share-buttons {
+      flex-direction: column !important;
+    }
+
+    .st-btn {
+      margin: 0.5rem 0 !important;
+
+      &:first-child {
+        margin-top: 0 !important;
+      }
+
+      &:last-child {
+        margin-bottom: 0 !important;
+      }
     }
   }
 }

@@ -10,7 +10,6 @@ import {
   DELETE_CORGI_SUCCESS,
   TRANSFER_CORGI_START,
   TRANSFER_CORGI_SUCCESS,
-  CLEAR_CREATED_CORGI,
   CLEAR_STATE,
 } from './types';
 
@@ -21,7 +20,9 @@ export const initialContractState = {
   creating: false,
   created: false,
   transfering: false,
+  transfered: false,
   deleting: false,
+  deleted: false,
   corgi: null,
   globalCorgis: [],
 };
@@ -92,6 +93,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
       return {
         ...currentState,
         transfering: false,
+        transfered: true,
         error: null,
       };
 
@@ -104,7 +106,9 @@ export const contractReducer = (currentState = initialContractState, action) => 
     case DELETE_CORGI_SUCCESS:
       return {
         ...currentState,
+        corgi: null,
         deleting: false,
+        deleted: true,
         error: null,
       };
 
@@ -112,13 +116,11 @@ export const contractReducer = (currentState = initialContractState, action) => 
       return {
         ...currentState,
         error: null,
-      };
-
-    case CLEAR_CREATED_CORGI:
-      return {
-        ...currentState,
+        deleting: false,
+        deleted: false,
         creating: false,
         created: false,
+        transfering: false,
       };
 
     default:

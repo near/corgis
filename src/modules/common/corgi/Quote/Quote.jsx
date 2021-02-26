@@ -2,9 +2,11 @@ import React, { useState, useEffect } from 'react';
 
 import './Quote.scss';
 
-import { CorgiType } from '~types/CorgiTypes';
-import { getQuoteById } from '~helpers/quotes';
 import { usePrevious } from '~hooks/';
+
+import { getQuoteById } from '~helpers/quotes';
+
+import { CorgiType } from '~types/CorgiTypes';
 
 const QuotePropTypes = {
   id: CorgiType.quote,

@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback } from 'react';
+import React, { useReducer, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -13,7 +13,6 @@ import {
   DELETE_CORGI_SUCCESS,
   TRANSFER_CORGI_START,
   TRANSFER_CORGI_SUCCESS,
-  CLEAR_CREATED_CORGI,
   CLEAR_STATE,
 } from './types';
 
@@ -101,7 +100,16 @@ export const ContractContextProvider = ({ Contract, children }) => {
 
   const clearState = () => dispatchContract({ type: CLEAR_STATE });
 
-  const clearCreatedCorgi = () => dispatchContract({ type: CLEAR_CREATED_CORGI });
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      clearState();
+      clearTimeout(timeoutId);
+    }, 100);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [contractState.deleted, contractState.created, contractState.trasfered]);
 
   const value = {
     loading: contractState.loading,
@@ -111,11 +119,12 @@ export const ContractContextProvider = ({ Contract, children }) => {
     creating: contractState.creating,
     created: contractState.created,
     transfering: contractState.transfering,
+    transfered: contractState.transfered,
     deleting: contractState.deleting,
+    deleted: contractState.deleted,
     corgi: contractState.corgi,
     info: contractState.info,
     clearState,
-    clearCreatedCorgi,
     getCorgi,
     getCorgis,
     createCorgi,

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import './CorgiCard.scss';
+
+import classNames from 'classnames';
 
 import { ActionsDropdown, Activity, CorgiLink, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
 
@@ -10,13 +11,13 @@ import { SAUSAGE } from '~constants/corgi';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
 
-const CorgiCardPropTypes = { corgi: CorgiTypeShape.isRequired, showActions: PropTypes.bool };
+const CorgiCardPropTypes = { corgi: CorgiTypeShape.isRequired, showActions: PropTypes.bool, big: PropTypes.bool };
 
-const CorgiCard = ({ corgi, showActions = false }) => {
+const CorgiCard = ({ corgi, showActions = false, big = false }) => {
   const { id, background_color, color, quote, name, rate, owner, sender, created, modified } = corgi;
 
   return (
-    <div className='corgi-card'>
+    <div className={classNames('corgi-card', { 'corgi-card--big': big })}>
       <div className='corgi-card__header'>
         <RarityString rate={rate} />
 

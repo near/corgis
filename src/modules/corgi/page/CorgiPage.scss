@@ -1,54 +1,52 @@
 @import 'mixins';
 
 .corgi-page {
-  @include dis-flex-column(flex-start, center);
+  @include dis-flex(center, stretch);
 
   width: 100%;
   max-width: 100%;
 
   padding: 0 1rem;
 
-  &__card {
-    max-width: 950px;
+  & > * {
+    @include margin-between(2rem, row);
+  }
 
-    margin: 0 auto;
+  &__card {
+    max-width: 30rem;
   }
 
   &__content {
-    display: flex;
-    justify-content: space-evenly;
+    @include dis-flex-column(space-between, stretch);
+
+    & > * {
+      @include margin-between(1rem, column);
+    }
   }
 
   &__actions {
-    width: 30%;
+    margin-top: 1rem;
   }
 }
 
-@media all and (max-width: 900px) {
+@media all and (max-width: 685px) {
   .corgi-page {
-    &__actions {
-      width: 35%;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    & > * {
+      @include margin-between(0.5rem, column);
     }
-  }
-}
 
-@media all and (max-width: 700px) {
-  .corgi-page {
-    &__actions {
-      width: 45%;
+    &__card {
+      max-width: 100%;
     }
-  }
-}
 
-@media all and (max-width: 525px) {
-  .corgi-page {
     &__content {
-      flex-direction: column;
-      align-items: center;
-    }
+      flex-direction: row;
+      justify-content: space-evenly;
 
-    &__actions {
-      width: 100%;
+      margin: 0;
     }
   }
 }

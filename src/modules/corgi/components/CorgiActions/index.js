@@ -1,3 +1,3 @@
 import CorgiActions from './CorgiActions';
 
-export { CorgiActions };
+export default CorgiActions;

@@ -1,9 +1,13 @@
-@import 'mixins';
+@import 'classes';
 
 .account {
-  &__header {
-    @include dis-flex-column(flex-start, center);
+  @extend .page;
 
-    margin-bottom: 1rem;
+  &__title {
+    @extend .page-title;
+  }
+
+  &__corgis {
+    width: 100%;
   }
 }

@@ -1,15 +1,11 @@
 import { Button, CheckMarkButton, MintingLink } from './buttons';
+import { Popup, PopupWrapper } from './popups';
 import { BasicSpinner, CorgiSpinner } from './spinners';
 
 import Colorpicker from './Colorpicker';
 import Dropdown from './Dropdown';
-import Egg from './Egg/Egg';
-import ExternalLink from './ExternalLink/ExternalLink';
-import InfoTile from './InfoTile/InfoTile';
+import ExternalLink from './ExternalLink';
 import Input from './Input';
-import Modal from './Modal/Modal';
-import Popup from './Popup';
-import PopupWrapper from './PopupWrapper';
 
 import {
   CorgiCard,
@@ -26,6 +22,7 @@ import {
   CorgiVeryRare,
   CorgiRate,
   SwitchCorgiPhoto,
+  Egg,
 } from './corgi';
 
 export {
@@ -36,9 +33,7 @@ export {
   Dropdown,
   Egg,
   ExternalLink,
-  InfoTile,
   Input,
-  Modal,
   Popup,
   PopupWrapper,
   BasicSpinner,

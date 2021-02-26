@@ -3,6 +3,8 @@
 .header {
   @include dis-flex(space-between, center);
 
+  width: 100%;
+
   padding: 1rem 0;
 }
 

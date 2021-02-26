@@ -1,21 +1,28 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import './Share.scss';
+
+import classNames from 'classnames';
 
 import { InlineShareButtons } from 'sharethis-reactjs';
 
 import { CorgiType } from '~types/CorgiTypes';
 
-const SharePropTypes = { id: CorgiType.id.isRequired };
+const SharePropTypes = {
+  id: CorgiType.id.isRequired,
+  display: PropTypes.oneOf(['grid', 'flex']),
+  flexDirection: PropTypes.oneOf(['row', 'column']),
+};
 
-const Share = ({ id }) => (
-  <div className='share'>
+const Share = ({ id, display = 'grid', flexDirection = 'row' }) => (
+  <div className={classNames('share', `share--${display}`, display === 'flex' && `share--${flexDirection}`)}>
     <InlineShareButtons
       config={{
         alignment: 'center',
         color: 'social',
         enabled: true,
-        labels: 'cta',
+        // labels: 'cta',
         language: 'en',
         networks: ['telegram', 'linkedin', 'facebook', 'twitter', 'pinterest', 'whatsapp', 'vk', 'wechat'],
 
