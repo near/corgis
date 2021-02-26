@@ -72,10 +72,10 @@ const Dropdown = ({
       </button>
 
       <ul className='dropdown__list' style={listStyles}>
-        {children.length ? (
+        {children.length > 1 ? (
           children.map((child, index) => (
             // TODO: item ids
-            <DropdownItem key={`dropdownItem-idSlug${index}`} isDivider={child.props.divider === 'true'}>
+            <DropdownItem key={`dropdownItem-idSlug${index}`} isDivider={child.props && child.props.divider === 'true'}>
               {child}
             </DropdownItem>
           ))

@@ -1,19 +1,18 @@
 import React, { useContext, useEffect, useRef } from 'react';
+import PropTypes from 'prop-types';
 
 import './ActionsDropdown.scss';
 
 import { ContractContext } from '~contexts/';
 
-import { Dropdown, PopupWrapper, BasicSpinner } from '~modules/common';
-import { Confirmation, Share, Transfer } from '~modules/common/corgi';
-
-import { ACTION_MESSAGES } from '~constants/corgi';
+import { Dropdown } from '~modules/common';
+import { DeletePopup, GiftPopup, SharePopup, TradePopup } from '~modules/common/corgi';
 
 import { CorgiType } from '~types/CorgiTypes';
 
-const ActionsDropdownPropTypes = { id: CorgiType.id.isRequired };
+const ActionsDropdownPropTypes = { id: CorgiType.id.isRequired, showOnlyShare: PropTypes.bool };
 
-const ActionsDropdown = ({ id }) => {
+const ActionsDropdown = ({ id, showOnlyShare = false }) => {
   const { deleteCorgi, deleting } = useContext(ContractContext);
 
   const confirmationPopupRef = useRef();
@@ -46,40 +45,17 @@ const ActionsDropdown = ({ id }) => {
       hideArrow
       isTight
     >
-      <PopupWrapper
-        popup={{ title: ACTION_MESSAGES.GIFT.POPUP_TITLE, position: 'bottom-left', children: <Transfer id={id} /> }}
-      >
-        <span>{ACTION_MESSAGES.GIFT.BUTTON_DESCRIPTION}</span>
-      </PopupWrapper>
+      {!showOnlyShare && <GiftPopup id={id} />}
 
-      <PopupWrapper
-        popup={{
-          title: ACTION_MESSAGES.TRADE.POPUP_TITLE,
-          position: 'bottom-left',
-          children: <span>In development...</span>,
-        }}
-      >
-        <span>{ACTION_MESSAGES.TRADE.BUTTON_DESCRIPTION}</span>
-      </PopupWrapper>
+      {!showOnlyShare && <TradePopup />}
 
-      <PopupWrapper
-        popup={{ title: ACTION_MESSAGES.SHARE.POPUP_TITLE, position: 'bottom-left', children: <Share id={id} /> }}
-      >
-        <span>{ACTION_MESSAGES.SHARE.BUTTON_DESCRIPTION}</span>
-      </PopupWrapper>
+      <SharePopup id={id} />
 
-      <span divider='true'></span>
+      {!showOnlyShare && <span divider='true'></span>}
 
-      <PopupWrapper
-        ref={confirmationPopupRef}
-        popup={{
-          title: !deleting ? ACTION_MESSAGES.DELETE.POPUP_TITLE : ACTION_MESSAGES.DELETE.POPUP_TITLE_ACTION_CONFIRMED,
-          position: 'bottom-left',
-          children: !deleting ? <Confirmation onConfirm={onConfirm} onReject={onReject} /> : <BasicSpinner />,
-        }}
-      >
-        <span>{ACTION_MESSAGES.DELETE.BUTTON_DESCRIPTION}</span>
-      </PopupWrapper>
+      {!showOnlyShare && (
+        <DeletePopup ref={confirmationPopupRef} onConfirm={onConfirm} onReject={onReject} deleting={deleting} />
+      )}
     </Dropdown>
   );
 };

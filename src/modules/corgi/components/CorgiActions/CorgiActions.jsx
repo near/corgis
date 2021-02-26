@@ -2,12 +2,9 @@ import React, { useContext, useEffect, useRef } from 'react';
 
 import './CorgiActions.scss';
 
-import { ContractContext } from '~contexts/';
+import { ContractContext } from '~contexts';
 
-import { BasicSpinner, Button, PopupWrapper } from '~modules/common';
-import { Confirmation, Share, Transfer } from '~modules/common/corgi';
-
-import { ACTION_MESSAGES } from '~constants/corgi';
+import { DeletePopup, GiftPopup, SharePopup, TradePopup } from '~modules/common/corgi';
 
 import { CorgiType } from '~types/CorgiTypes';
 
@@ -15,7 +12,7 @@ const CorgiActionsPropTypes = {
   id: CorgiType.id.isRequired,
 };
 
-const CorgiActions = ({ id }) => {
+const CorgiActions = ({ id, showOnlyShare = false }) => {
   const { deleteCorgi, deleting } = useContext(ContractContext);
 
   const confirmationPopupRef = useRef();
@@ -38,32 +35,21 @@ const CorgiActions = ({ id }) => {
 
   return (
     <div className='corgi-actions'>
-      <PopupWrapper
-        popup={{ title: ACTION_MESSAGES.GIFT.POPUP_TITLE, position: 'top', children: <Transfer id={id} /> }}
-      >
-        <Button description={ACTION_MESSAGES.GIFT.BUTTON_DESCRIPTION} />
-      </PopupWrapper>
+      {!showOnlyShare && <GiftPopup id={id} asButton />}
 
-      <PopupWrapper
-        popup={{ title: ACTION_MESSAGES.TRADE.POPUP_TITLE, position: 'top', children: <span>In development...</span> }}
-      >
-        <Button description={ACTION_MESSAGES.TRADE.BUTTON_DESCRIPTION} />
-      </PopupWrapper>
+      {!showOnlyShare && <TradePopup asButton />}
 
-      <PopupWrapper popup={{ title: ACTION_MESSAGES.SHARE.POPUP_TITLE, position: 'top', children: <Share id={id} /> }}>
-        <Button description={ACTION_MESSAGES.SHARE.BUTTON_DESCRIPTION} />
-      </PopupWrapper>
+      <SharePopup id={id} asButton />
 
-      <PopupWrapper
-        ref={confirmationPopupRef}
-        popup={{
-          title: !deleting ? ACTION_MESSAGES.DELETE.POPUP_TITLE : ACTION_MESSAGES.DELETE.POPUP_TITLE_ACTION_CONFIRMED,
-          position: 'top',
-          children: !deleting ? <Confirmation onConfirm={onConfirm} onReject={onReject} /> : <BasicSpinner />,
-        }}
-      >
-        <Button description={ACTION_MESSAGES.DELETE.BUTTON_DESCRIPTION} danger />
-      </PopupWrapper>
+      {!showOnlyShare && (
+        <DeletePopup
+          ref={confirmationPopupRef}
+          onConfirm={onConfirm}
+          onReject={onReject}
+          deleting={deleting}
+          asButton
+        />
+      )}
     </div>
   );
 };

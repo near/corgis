@@ -19,7 +19,7 @@ const AccountPage = () => {
       <h1 className='account__title'>Your Pack</h1>
 
       <div className='account__corgis'>
-        {!loading ? <CorgisShowCase corgis={corgis} showActions /> : <CorgiSpinner />}
+        {!loading ? <CorgisShowCase corgis={corgis} /> : <CorgiSpinner />}
       </div>
     </div>
   );

@@ -7,8 +7,10 @@ import { ContractContext } from '~contexts';
 
 import { CorgiCard, CorgiRate, CorgiSpinner } from '~modules/common';
 import { CorgiActions } from '~modules/corgi/components';
+import { NearContext } from '~contexts/';
 
 const CorgiPage = () => {
+  const { user } = useContext(NearContext);
   const { corgi, loading, getCorgi, deleted, transfered } = useContext(ContractContext);
 
   const {
@@ -39,7 +41,7 @@ const CorgiPage = () => {
         <CorgiRate rate={corgi.rate} />
 
         <div className='corgi-page__actions'>
-          <CorgiActions id={id} />
+          <CorgiActions id={id} showOnlyShare={user.accountId !== corgi.owner} />
         </div>
       </div>
     </div>

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import './CorgiCard.scss';
 
 import classNames from 'classnames';
+
+import { NearContext } from '~contexts';
 
 import { ActionsDropdown, Activity, CorgiLink, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
 
@@ -14,6 +16,7 @@ import { CorgiTypeShape } from '~types/CorgiTypes';
 const CorgiCardPropTypes = { corgi: CorgiTypeShape.isRequired, showActions: PropTypes.bool, big: PropTypes.bool };
 
 const CorgiCard = ({ corgi, showActions = false, big = false }) => {
+  const { user } = useContext(NearContext);
   const { id, background_color, color, quote, name, rate, owner, sender, created, modified } = corgi;
 
   return (
@@ -21,7 +24,7 @@ const CorgiCard = ({ corgi, showActions = false, big = false }) => {
       <div className='corgi-card__header'>
         <RarityString rate={rate} />
 
-        {showActions && <ActionsDropdown id={id} />}
+        {showActions && <ActionsDropdown id={id} showOnlyShare={user.accountId !== owner} />}
       </div>
 
       <CorgiLink id={id}>

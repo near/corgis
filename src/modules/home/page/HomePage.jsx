@@ -9,15 +9,17 @@ import { CorgisShowCase } from '~modules/common';
 
 const HomePage = () => {
   const { user, signIn } = useContext(NearContext);
-  const { getGlobalCorgis, globalCorgis } = useContext(ContractContext);
+  const { created, deleted, transfered, getGlobalCorgis, globalCorgis } = useContext(ContractContext);
 
   const requestSignIn = () => {
     signIn();
   };
 
   useEffect(() => {
-    getGlobalCorgis();
-  }, []);
+    if (!created && !deleted && !transfered) {
+      getGlobalCorgis();
+    }
+  }, [created, deleted, transfered]);
 
   return (
     <div className='home'>

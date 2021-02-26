@@ -2,6 +2,17 @@ import { CorgiAnimOne, CorgiAnimTwo, CorgiAnimThree, CorgiAnimFour } from './Cor
 
 import { CorgiCommon, CorgiUncommon, CorgiRare, CorgiVeryRare, SwitchCorgiPhoto } from './CorgiPhotos';
 
+import {
+  ActionsDropdown,
+  Confirmation,
+  Share,
+  Transfer,
+  DeletePopup,
+  GiftPopup,
+  SharePopup,
+  TradePopup,
+} from './actions';
+
 import CorgiCard from './CorgiCard';
 import CorgiLink from './CorgiLink';
 import CorgiRate from './CorgiRate';
@@ -14,8 +25,6 @@ import Activity from './Activity';
 import Owner from './Owner';
 import RarityString from './RarityString';
 import Quote from './Quote';
-
-import { ActionsDropdown, Confirmation, Share, Transfer } from './actions';
 
 export {
   CorgiCard,
@@ -41,4 +50,8 @@ export {
   Confirmation,
   Share,
   Transfer,
+  DeletePopup,
+  GiftPopup,
+  SharePopup,
+  TradePopup,
 };
