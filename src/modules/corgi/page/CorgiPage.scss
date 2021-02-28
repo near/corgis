@@ -26,6 +26,10 @@
 
   &__actions {
     margin-top: 1rem;
+
+    & > * {
+      @include margin-between(1rem, column);
+    }
   }
 }
 

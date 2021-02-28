@@ -23,6 +23,10 @@ import {
   CorgiRate,
   SwitchCorgiPhoto,
   Egg,
+  Owner,
+  RarityString,
+  Quote,
+  CorgiActions,
 } from './corgi';
 
 export {
@@ -32,6 +36,10 @@ export {
   Colorpicker,
   Dropdown,
   Egg,
+  Owner,
+  RarityString,
+  Quote,
+  CorgiActions,
   ExternalLink,
   Input,
   Popup,

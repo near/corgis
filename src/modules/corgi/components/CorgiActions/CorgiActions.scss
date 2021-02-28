@@ -1,9 +1,0 @@
-@import 'mixins';
-
-.corgi-actions {
-  @include dis-flex-column(space-evenly, stretch);
-
-  & > * {
-    @include margin-between(0.5rem, column);
-  }
-}

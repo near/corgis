@@ -5,12 +5,9 @@ import './CorgiPage.scss';
 
 import { ContractContext } from '~contexts';
 
-import { CorgiCard, CorgiRate, CorgiSpinner } from '~modules/common';
-import { CorgiActions } from '~modules/corgi/components';
-import { NearContext } from '~contexts/';
+import { CorgiActions, CorgiCard, CorgiRate, CorgiSpinner } from '~modules/common';
 
 const CorgiPage = () => {
-  const { user } = useContext(NearContext);
   const { corgi, loading, getCorgi, deleted, transfered } = useContext(ContractContext);
 
   const {
@@ -34,14 +31,14 @@ const CorgiPage = () => {
   return (
     <div className='corgi-page'>
       <div className='corgi-page__card'>
-        <CorgiCard corgi={corgi} big />
+        <CorgiCard corgi={corgi} big hideActions />
       </div>
 
       <div className='corgi-page__content'>
         <CorgiRate rate={corgi.rate} />
 
         <div className='corgi-page__actions'>
-          <CorgiActions id={id} showOnlyShare={!user || user.accountId !== corgi.owner} />
+          <CorgiActions id={id} owner={corgi.owner} />
         </div>
       </div>
     </div>

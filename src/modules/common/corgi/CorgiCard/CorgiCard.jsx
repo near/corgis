@@ -1,22 +1,20 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import './CorgiCard.scss';
 
 import classNames from 'classnames';
 
-import { NearContext } from '~contexts';
-
-import { ActionsDropdown, Activity, CorgiLink, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
+import { Activity, CorgiLink, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
 
 import { SAUSAGE } from '~constants/corgi';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
+import CorgiActions from '~modules/common/corgi/actions/CorgiActions';
 
-const CorgiCardPropTypes = { corgi: CorgiTypeShape.isRequired, showActions: PropTypes.bool, big: PropTypes.bool };
+const CorgiCardPropTypes = { corgi: CorgiTypeShape.isRequired, hideActions: PropTypes.bool, big: PropTypes.bool };
 
-const CorgiCard = ({ corgi, showActions = false, big = false }) => {
-  const { user } = useContext(NearContext);
+const CorgiCard = ({ corgi, hideActions = false, big = false }) => {
   const { id, background_color, color, quote, name, rate, owner, sender, created, modified } = corgi;
 
   return (
@@ -24,7 +22,7 @@ const CorgiCard = ({ corgi, showActions = false, big = false }) => {
       <div className='corgi-card__header'>
         <RarityString rate={rate} />
 
-        {showActions && <ActionsDropdown id={id} showOnlyShare={!user || user.accountId !== owner} />}
+        {!hideActions && <CorgiActions id={id} owner={owner} isDropdown />}
       </div>
 
       <CorgiLink id={id}>
