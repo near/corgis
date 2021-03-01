@@ -1,13 +1,19 @@
 @import 'classes';
 
-.account {
+.user {
   @extend .page;
 
   &__title {
     @extend .page-title;
+
+    align-self: start;
   }
 
   &__corgis {
     width: 100%;
+  }
+
+  &__error {
+    @extend .page-title;
   }
 }

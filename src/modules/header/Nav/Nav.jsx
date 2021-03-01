@@ -28,7 +28,7 @@ const Nav = () => {
           </div>
 
           <div className='nav__item'>
-            <Link to='/account'>
+            <Link to={`/user/${user.accountId}`}>
               <Button description='My Corgis' badge={corgis ? corgis.length : 0} reducible />
             </Link>
           </div>
@@ -43,7 +43,7 @@ const Nav = () => {
                 target='_blank'
               />
 
-              <Link className='nav__link' to='/' onClick={() => signOutAction()}>
+              <Link className='nav__link' to='#' onClick={() => signOutAction()}>
                 Sign out
               </Link>
             </Dropdown>

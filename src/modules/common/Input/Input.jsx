@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import './Input.scss';
@@ -26,6 +26,8 @@ const Input = ({
   value = '',
   required = false,
 }) => {
+  const inputRef = useRef(null);
+
   const prevValue = usePrevious(value);
 
   const [timeoutId, setTimeoutId] = useState(null);
@@ -91,15 +93,27 @@ const Input = ({
     };
   }, [timeoutId, isErrorShown, errorMessage, setTimeoutId, setErrorMessage]);
 
+  useLayoutEffect(() => {
+    if (autoFocus && inputRef && inputRef.current) {
+      const focusTimeoutId = setTimeout(() => {
+        inputRef.current.focus();
+      }, 10);
+
+      return () => {
+        clearTimeout(focusTimeoutId);
+      };
+    }
+  }, [inputRef]);
+
   return (
     <div className='input' className={classNames('input', { 'input--show-error': isErrorShown && errorMessage })}>
       <input
         className='input__field'
+        ref={inputRef}
         type={type}
         value={value}
         onChange={(event) => onChange(event)}
         placeholder={placeholder}
-        autoFocus={autoFocus}
         required={required}
       />
       <p className='input__error'>{errorMessage}</p>

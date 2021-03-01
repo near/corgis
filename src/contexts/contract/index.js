@@ -1,4 +1,4 @@
-import React, { useReducer, useCallback, useEffect } from 'react';
+import React, { useReducer, useCallback, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -21,6 +21,7 @@ import { contractReducer, initialContractState } from './reducer';
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
 import BOATLOAD_OF_GAS from '~constants/corgi';
+import { NearContext } from '~contexts/';
 
 export const ContractContext = React.createContext();
 
@@ -39,6 +40,8 @@ const ContractContextProviderPropTypes = {
 export const ContractContextProvider = ({ Contract, children }) => {
   const [contractState, dispatchContract] = useReducer(contractReducer, initialContractState);
 
+  const { user } = useContext(NearContext);
+
   const getCorgi = useCallback(
     (id) => {
       dispatchContract({ type: ACTION_START });
@@ -51,13 +54,19 @@ export const ContractContextProvider = ({ Contract, children }) => {
 
   const getCorgis = useCallback(
     (owner) => {
-      dispatchContract({ type: ACTION_START });
-      Contract.get_corgis_by_owner({ owner })
-        .then((corgis) => dispatchContract({ type: GET_CORGIS_SUCCESS, payload: { corgis } }))
-        .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
+      return Contract.get_corgis_by_owner({ owner }).then((corgis) => corgis);
     },
     [Contract],
   );
+
+  const getCorgisByCurrentUser = useCallback(() => {
+    if (user) {
+      dispatchContract({ type: ACTION_START });
+      Contract.get_corgis_by_owner({ owner: user.accountId })
+        .then((corgis) => dispatchContract({ type: GET_CORGIS_SUCCESS, payload: { corgis } }))
+        .catch((error) => dispatchContract({ type: ACTION_ERROR, payload: { error } }));
+    }
+  }, [user, Contract]);
 
   const getGlobalCorgis = useCallback(() => {
     dispatchContract({ type: ACTION_START });
@@ -127,6 +136,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
     clearState,
     getCorgi,
     getCorgis,
+    getCorgisByCurrentUser,
     createCorgi,
     deleteCorgi,
     transferCorgi,

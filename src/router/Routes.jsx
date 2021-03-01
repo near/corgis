@@ -5,11 +5,10 @@ import { CharacterContextProvider, NearContext } from '~contexts';
 
 import GuardedRoute from '~router/GuardedRoute';
 
-import AccountPage from '~modules/account/page';
 import CorgiPage from '~modules/corgi/page';
 import HomePage from '~modules/home/page';
 import MintingPage from '~modules/minting/page';
-import SharePage from '~modules/share/page/SharePage';
+import UserPage from '~modules/user/page';
 
 const Routes = () => {
   const { user, isLoading } = useContext(NearContext);
@@ -24,16 +23,13 @@ const Routes = () => {
       <Route exact path='/corgi/:id+'>
         <CorgiPage />
       </Route>
+      <Route exact path='/user/:id'>
+        <UserPage />
+      </Route>
       <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/minting'>
         <CharacterContextProvider>
           <MintingPage />
         </CharacterContextProvider>
-      </GuardedRoute>
-      <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/account'>
-        <AccountPage />
-      </GuardedRoute>
-      <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/share'>
-        <SharePage />
       </GuardedRoute>
       <Route>
         <h1>Not found This page. Please go back to continue or you can contact us about the issue.</h1>

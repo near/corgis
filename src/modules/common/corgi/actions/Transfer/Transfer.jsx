@@ -2,8 +2,6 @@ import React, { useContext, useState } from 'react';
 
 import './Transfer.scss';
 
-import * as nearlib from 'near-api-js';
-
 import { ContractContext, NearContext } from '~contexts';
 
 import { CheckMarkButton, Input, BasicSpinner } from '~modules/common';
@@ -11,6 +9,7 @@ import { CheckMarkButton, Input, BasicSpinner } from '~modules/common';
 import { USER_VALIDATION_MESSAGES } from '~constants/validation/account';
 
 import { CorgiType } from '~types/CorgiTypes';
+import checkAccountLegit from '~helpers/checkAccountLegit';
 
 const TransferPropTypes = { id: CorgiType.id.isRequired };
 
@@ -22,27 +21,18 @@ const Transfer = ({ id }) => {
 
   const [errorMessage, setErrorMessage] = useState('');
 
-  const checkAccountLegit = async (newReceiver) => {
+  const checkAccount = async (newReceiver) => {
     if (newReceiver === user.accountId) {
       setErrorMessage(USER_VALIDATION_MESSAGES.OWN_ACCOUNT);
       return false;
     }
 
-    try {
-      const isAccountExist = !!(await new nearlib.Account(nearContent.connection, newReceiver).state());
-
-      if (isAccountExist) {
-        return true;
-      } else {
-        setErrorMessage(USER_VALIDATION_MESSAGES.NOT_EXIST);
-      }
-    } catch (error) {
+    if (await checkAccountLegit(newReceiver, nearContent.connection)) {
+      return true;
+    } else {
       setErrorMessage(USER_VALIDATION_MESSAGES.NOT_EXIST);
-
-      console.error(error);
+      return false;
     }
-
-    return false;
   };
 
   const clearError = () => {
@@ -59,7 +49,7 @@ const Transfer = ({ id }) => {
 
     clearError();
 
-    if (await checkAccountLegit(receiver)) {
+    if (await checkAccount(receiver)) {
       transferCorgi(receiver, id);
     }
   };
