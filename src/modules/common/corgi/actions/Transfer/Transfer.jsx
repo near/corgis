@@ -57,11 +57,11 @@ const Transfer = ({ id }) => {
   const onSubmit = async (event) => {
     event.preventDefault();
 
+    clearError();
+
     if (await checkAccountLegit(receiver)) {
       transferCorgi(receiver, id);
     }
-
-    clearError();
   };
 
   return (
@@ -73,6 +73,7 @@ const Transfer = ({ id }) => {
           placeholder='account.testnet'
           type='text'
           error={errorMessage}
+          autoFocus
           required
         />
       </div>

@@ -8,7 +8,12 @@
   width: max-content;
   max-width: 17.5rem;
 
-  display: none;
+  // display: none;
+  visibility: hidden;
+
+  opacity: 0;
+
+  transition: visibility 0s 0.3s, opacity 0.3s ease-out;
 
   cursor: default;
 
@@ -24,7 +29,12 @@
   }
 
   &--opened {
-    display: block;
+    // display: block;
+    visibility: visible;
+
+    opacity: 1;
+
+    transition: opacity 0.3s ease-out;
   }
 
   &--top {

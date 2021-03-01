@@ -73,7 +73,15 @@ const MintingForm = () => {
           <FaRandom onClick={() => generateRandomName()} className='minting-form__icon' />
         </div>
 
-        <Input type='text' value={name} onChange={handleName} placeholder='Sweet Corgi' error={errorMessage} required />
+        <Input
+          type='text'
+          value={name}
+          onChange={handleName}
+          placeholder='Sweet Corgi'
+          error={errorMessage}
+          autoFocus
+          required
+        />
       </div>
 
       <div className='minting-form__area'>

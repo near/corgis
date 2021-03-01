@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { usePrevious } from '~hooks/';
 
 const InputPropTypes = {
+  autoFocus: PropTypes.bool,
   error: PropTypes.string,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
@@ -16,7 +17,15 @@ const InputPropTypes = {
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 };
 
-const Input = ({ error = '', onChange = () => {}, placeholder = '', type = 'text', value = '', required = false }) => {
+const Input = ({
+  autoFocus = false,
+  error = '',
+  onChange = () => {},
+  placeholder = '',
+  type = 'text',
+  value = '',
+  required = false,
+}) => {
   const prevValue = usePrevious(value);
 
   const [timeoutId, setTimeoutId] = useState(null);
@@ -90,6 +99,7 @@ const Input = ({ error = '', onChange = () => {}, placeholder = '', type = 'text
         value={value}
         onChange={(event) => onChange(event)}
         placeholder={placeholder}
+        autoFocus={autoFocus}
         required={required}
       />
       <p className='input__error'>{errorMessage}</p>

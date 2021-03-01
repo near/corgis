@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 
 import { ContractContext, NearContext } from '~contexts';
 
+import { Dropdown } from '~modules/common';
 import { DeletePopup, GiftPopup, SharePopup, TradePopup } from '~modules/common/corgi';
 
-import { CorgiType, CorgiTypeShape } from '~types/CorgiTypes';
-import { Dropdown } from '~modules/common';
+import { CorgiType } from '~types/CorgiTypes';
 
 const CorgiActionsPropTypes = {
   id: CorgiType.id.isRequired,
@@ -16,45 +16,23 @@ const CorgiActionsPropTypes = {
 
 const CorgiActions = ({ id, owner, isDropdown = false }) => {
   const { user } = useContext(NearContext);
-  const { deleteCorgi, deleting, deleted, transfered } = useContext(ContractContext);
+  const { deleted, transfered } = useContext(ContractContext);
 
   const [showOnlyShare, setShowOnlyShare] = useState(false);
 
   const dropdownRef = useRef();
-  const confirmationPopupRef = useRef();
-
-  const onConfirm = () => {
-    deleteCorgi(id);
-  };
-
-  const onReject = () => {
-    if (confirmationPopupRef && confirmationPopupRef.current) {
-      confirmationPopupRef.current.hidePopup();
-    }
-  };
-
-  useEffect(() => {
-    if (!deleting && confirmationPopupRef && confirmationPopupRef.current) {
-      confirmationPopupRef.current.hidePopup();
-    }
-  }, [deleting, confirmationPopupRef]);
-
-  useEffect(() => {
-    if (deleted || transfered) {
-      if (dropdownRef && dropdownRef.current) {
-        dropdownRef.current.closeDropdown();
-      }
-      // if (confirmationPopupRef && confirmationPopupRef.current) {
-      //   confirmationPopupRef.current.hidePopup();
-      // }
-    }
-  }, [deleted, transfered, dropdownRef]);
 
   useEffect(() => {
     if (!user || user.accountId !== owner) {
       setShowOnlyShare(true);
     }
   }, [user, owner]);
+
+  useEffect(() => {
+    if ((deleted || transfered) && dropdownRef && dropdownRef.current) {
+      dropdownRef.current.closeDropdown();
+    }
+  }, [deleted, transfered, dropdownRef]);
 
   return (
     <>
@@ -79,9 +57,7 @@ const CorgiActions = ({ id, owner, isDropdown = false }) => {
 
           {!showOnlyShare && <span divider='true'></span>}
 
-          {!showOnlyShare && (
-            <DeletePopup ref={confirmationPopupRef} onConfirm={onConfirm} onReject={onReject} deleting={deleting} />
-          )}
+          {!showOnlyShare && <DeletePopup id={id} />}
         </Dropdown>
       ) : (
         <>
@@ -91,15 +67,7 @@ const CorgiActions = ({ id, owner, isDropdown = false }) => {
 
           <SharePopup id={id} asButton />
 
-          {!showOnlyShare && (
-            <DeletePopup
-              ref={confirmationPopupRef}
-              onConfirm={onConfirm}
-              onReject={onReject}
-              deleting={deleting}
-              asButton
-            />
-          )}
+          {!showOnlyShare && <DeletePopup id={id} asButton />}
         </>
       )}
     </>
