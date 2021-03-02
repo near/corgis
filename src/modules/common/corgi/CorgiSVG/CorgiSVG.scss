@@ -1,43 +1,15 @@
+@import 'animations';
+
 .corgi {
   height: 100%;
 
   margin: auto;
 
   &__tail {
-    float: left;
-
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-
-    animation: swing ease-in-out 0.5s infinite alternate;
-
-    transform-origin: bottom left;
+    @include animateShakeTail;
   }
 
-  &__tougue {
-    float: left;
-
-    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
-
-    animation: move linear 0.2s infinite alternate;
-
-    transform-origin: top;
-  }
-}
-
-@keyframes swing {
-  0% {
-    transform: rotate(1deg);
-  }
-  100% {
-    transform: rotate(-1deg);
-  }
-}
-
-@keyframes move {
-  0% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-10px);
+  &__tongue {
+    @include animateSwingTongue;
   }
 }

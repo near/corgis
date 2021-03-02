@@ -62,3 +62,43 @@
   animation-iteration-count: infinite;
   animation-name: stretch-shadow;
 }
+
+// Swing tongue
+@keyframes swing-tongue {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-10px);
+  }
+}
+
+@mixin animateSwingTongue {
+  animation-direction: alternate;
+  animation-duration: 0.2s;
+  animation-iteration-count: infinite;
+  animation-name: swing-tongue;
+  animation-timing-function: ease-out;
+
+  transform-origin: top;
+}
+
+// Shake tail
+@keyframes shake-tail {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-2deg);
+  }
+}
+
+@mixin animateShakeTail {
+  animation-direction: alternate;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-name: shake-tail;
+  animation-timing-function: linear;
+
+  transform-origin: bottom left;
+}
