@@ -3,11 +3,12 @@ import { Redirect } from 'react-router-dom';
 
 import './MintingPage.scss';
 
-import { CharacterContext, ContractContext } from '~contexts';
+import { CharacterContext, ContractContext, NearContext } from '~contexts';
 
 import { MintingAnimation, MintingDescription, MintingForm, MintingScreen } from '~modules/minting/components';
 
 const MintingPage = () => {
+  const { user } = useContext(NearContext);
   const { creating, created } = useContext(ContractContext);
   const { generateRandomCharacter } = useContext(CharacterContext);
 
@@ -16,7 +17,7 @@ const MintingPage = () => {
   }, [created]);
 
   if (created) {
-    return <Redirect to='/account' />;
+    return <Redirect to={user ? `/user/${user.accountId}` : '/'} />;
   }
 
   return (

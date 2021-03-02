@@ -84,4 +84,9 @@ $transition-basic-ease-out: $transition-basic ease-out;
 
 // filters
 
-$near-logo-filter: invert(44%) sepia(36%) saturate(0%) hue-rotate(166deg) brightness(124%) contrast(118%);
+// #9a9a9a
+$gray-filter: invert(44%) sepia(36%) saturate(0%) hue-rotate(166deg) brightness(124%) contrast(118%);
+
+$near-logo-filter: $gray-filter;
+
+$minting-animation-shadow-filter: $gray-filter;

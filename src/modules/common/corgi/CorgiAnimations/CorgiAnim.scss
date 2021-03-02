@@ -1,0 +1,27 @@
+@import 'mixins';
+
+.corgi-anim {
+  @include basicSquare(10rem);
+
+  position: relative;
+
+  &__svg {
+    @include absolute-center;
+  }
+
+  &--one {
+    transform: rotate(-20deg);
+  }
+
+  &--two {
+    transform: rotate(70deg);
+  }
+
+  &--three {
+    transform: rotate(-2deg);
+  }
+
+  &--four {
+    transform: rotate(-2deg);
+  }
+}

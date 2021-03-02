@@ -6,10 +6,11 @@ import { CorgiType } from '~types/CorgiTypes';
 const CorgiAnimTwoPropTypes = { color: CorgiType.color };
 
 const CorgiAnimTwo = ({ color }) => (
-  <div style={{ width: '100%' }}>
+  <div className='corgi-anim corgi-anim--two'>
     <svg
-      width='199px'
-      height='271px'
+      className='corgi-anim__svg'
+      width='191px'
+      height='263px'
       viewBox='0 0 199 271'
       version='1.1'
       xmlns='http://www.w3.org/2000/svg'

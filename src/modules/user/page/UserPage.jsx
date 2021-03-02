@@ -1,5 +1,5 @@
-import React, { useContext, useEffect, useLayoutEffect, useState } from 'react';
-import { Redirect, useRouteMatch } from 'react-router-dom';
+import React, { useContext, useEffect, useState } from 'react';
+import { useRouteMatch } from 'react-router-dom';
 
 import './UserPage.scss';
 
@@ -31,7 +31,6 @@ const UserPage = () => {
   };
 
   const fetchUser = async () => {
-    console.log('fetch');
     setIsAccountLoading(true);
 
     if (user && id === user.accountId) {
@@ -52,6 +51,12 @@ const UserPage = () => {
       setCorgis(null);
     }
   }, [id, prevId, isAccountLoading]);
+
+  useEffect(() => {
+    if (user && id === user.accountId) {
+      setCorgis(corgis);
+    }
+  }, [user, id, corgis]);
 
   useEffect(() => {
     let mounted = true;

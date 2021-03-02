@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { ContractContext } from '~contexts';
@@ -16,7 +16,7 @@ const {
 const DeletePopupPropTypes = { id: CorgiType.id.isRequired, asButton: PropTypes.bool };
 
 const DeletePopup = ({ id, asButton = false }) => {
-  const { deleting, deleteCorgi } = useContext(ContractContext);
+  const { deleting, deleted, deleteCorgi } = useContext(ContractContext);
 
   const popupRef = useRef();
 
@@ -29,6 +29,12 @@ const DeletePopup = ({ id, asButton = false }) => {
       popupRef.current.hidePopup();
     }
   };
+
+  useEffect(() => {
+    if (deleted && popupRef && popupRef.current) {
+      popupRef.current.hidePopup();
+    }
+  }, [deleted]);
 
   return (
     <PopupWrapper
