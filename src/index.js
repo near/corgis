@@ -2,7 +2,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import * as nearlib from 'near-api-js';
+import * as nearAPI from 'near-api-js';
 import getConfig from './config';
 
 import { ContractContextProvider, NearContextProvider } from '~contexts';
@@ -14,13 +14,13 @@ async function InitContract() {
   const nearConfig = getConfig(process.env.NODE_ENV || 'development');
 
   // Initializing connection to the NEAR
-  const near = await nearlib.connect({
-    deps: { keyStore: new nearlib.keyStores.BrowserLocalStorageKeyStore() },
+  const near = await nearAPI.connect({
+    deps: { keyStore: new nearAPI.keyStores.BrowserLocalStorageKeyStore() },
     ...nearConfig,
   });
 
   // Needed to access wallet
-  const walletConnection = new nearlib.WalletConnection(near);
+  const walletConnection = new nearAPI.WalletConnection(near);
 
   // Load in account data
   let currentUser;
@@ -32,7 +32,7 @@ async function InitContract() {
   }
 
   // Initializing our contract APIs by contract name and configuration.
-  const contract = new nearlib.Contract(walletConnection.account(), nearConfig.contractName, {
+  const contract = new nearAPI.Contract(walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
     viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis'],
     // Change methods can modify the state. But you don't receive the returned value when called.
