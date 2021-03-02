@@ -4,7 +4,7 @@
 .colorpicker {
   @include dis-flex(flex-start, center);
 
-  &__result {
+  &__button {
     @include basicSquare($colorpicker-size);
 
     border: $border-basic-gray;
@@ -13,8 +13,28 @@
     cursor: pointer;
   }
 
-  &__input {
+  &__window {
+    position: absolute;
+
+    opacity: 0;
+
+    transition: visibility 0s 0.2s, opacity 0.2s;
+
+    transform: translateY(-100%);
+
     visibility: hidden;
+
+    cursor: initial;
+
+    z-index: 1000;
+
+    &--opened {
+      opacity: 1;
+
+      transition: visibility 0s 0s, opacity 0.2s;
+
+      visibility: visible;
+    }
   }
 
   &__title {
