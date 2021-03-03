@@ -5,8 +5,6 @@ import './CorgiCard.scss';
 
 import classNames from 'classnames';
 
-import { CorgiActionsContextProvider } from '~contexts';
-
 import { Activity, CorgiLink, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
 
 import { SAUSAGE } from '~constants/corgi';
@@ -24,11 +22,7 @@ const CorgiCard = ({ corgi, hideActions = false, big = false }) => {
       <div className='corgi-card__header'>
         <RarityString rate={rate} />
 
-        {!hideActions && (
-          <CorgiActionsContextProvider corgi={corgi}>
-            <CorgiActions isDropdown />
-          </CorgiActionsContextProvider>
-        )}
+        {!hideActions && <CorgiActions id={id} owner={owner} isDropdown />}
       </div>
 
       <CorgiLink id={id}>

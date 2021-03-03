@@ -1,15 +1,20 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { ContractContext, CorgiActionsContext, NearContext } from '~contexts';
+import { ContractContext, NearContext } from '~contexts';
 
 import { Dropdown } from '~modules/common';
 import { DeletePopup, GiftPopup, SharePopup, TradePopup } from '~modules/common/corgi';
 
-const CorgiActionsPropTypes = { isDropdown: PropTypes.bool };
+import { CorgiType } from '~types/CorgiTypes';
 
-const CorgiActions = ({ isDropdown = false }) => {
-  const { owner } = useContext(CorgiActionsContext);
+const CorgiActionsPropTypes = {
+  id: CorgiType.id.isRequired,
+  owner: CorgiType.owner.isRequired,
+  isDropdown: PropTypes.bool,
+};
+
+const CorgiActions = ({ id, owner, isDropdown = false }) => {
   const { user } = useContext(NearContext);
   const { deleted, transfered } = useContext(ContractContext);
 
@@ -44,25 +49,25 @@ const CorgiActions = ({ isDropdown = false }) => {
           hideArrow
           isTight
         >
-          {!showOnlyShare && <GiftPopup />}
+          {!showOnlyShare && <GiftPopup id={id} />}
 
           {!showOnlyShare && <TradePopup />}
 
-          <SharePopup />
+          <SharePopup id={id} />
 
           {!showOnlyShare && <span divider='true'></span>}
 
-          {!showOnlyShare && <DeletePopup />}
+          {!showOnlyShare && <DeletePopup id={id} />}
         </Dropdown>
       ) : (
         <>
-          {!showOnlyShare && <GiftPopup asButton />}
+          {!showOnlyShare && <GiftPopup id={id} asButton />}
 
           {!showOnlyShare && <TradePopup asButton />}
 
-          <SharePopup asButton />
+          <SharePopup id={id} asButton />
 
-          {!showOnlyShare && <DeletePopup asButton />}
+          {!showOnlyShare && <DeletePopup id={id} asButton />}
         </>
       )}
     </>
