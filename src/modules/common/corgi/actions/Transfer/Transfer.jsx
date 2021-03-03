@@ -2,18 +2,16 @@ import React, { useContext, useState } from 'react';
 
 import './Transfer.scss';
 
-import { ContractContext, NearContext } from '~contexts';
+import { ContractContext, CorgiActionsContext, NearContext } from '~contexts';
 
 import { CheckMarkButton, Input, BasicSpinner } from '~modules/common';
 
 import { USER_VALIDATION_MESSAGES } from '~constants/validation/account';
 
-import { CorgiType } from '~types/CorgiTypes';
 import checkAccountLegit from '~helpers/checkAccountLegit';
 
-const TransferPropTypes = { id: CorgiType.id.isRequired };
-
-const Transfer = ({ id }) => {
+const Transfer = () => {
+  const { id } = useContext(CorgiActionsContext);
   const { nearContent, user } = useContext(NearContext);
   const { transfering, transferCorgi } = useContext(ContractContext);
 
@@ -72,7 +70,5 @@ const Transfer = ({ id }) => {
     </form>
   );
 };
-
-Transfer.propTypes = TransferPropTypes;
 
 export default Transfer;
