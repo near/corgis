@@ -3,8 +3,6 @@
 .corgi {
   height: 100%;
 
-  margin: auto;
-
   &__tail {
     @include animateShakeTail;
   }

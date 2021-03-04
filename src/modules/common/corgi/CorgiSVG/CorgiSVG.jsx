@@ -11,20 +11,24 @@ import COLORS from '~constants/Colors';
 
 import { CorgiType } from '~types/CorgiTypes';
 
+const fullWidth = 525;
+const viewBoxHeight = 374;
+
+const backPartMargin = 221;
+
+const padding = 16;
+
 const CorgiSVGPropTypes = {
   color: CorgiType.color.isRequired,
   sausage: PropTypes.number.isRequired,
 };
-
-const fullWidth = 525;
-const backPartMargin = 221;
 
 const CorgiSVG = React.forwardRef(({ color, sausage }, ref) => {
   // add 1 point to remove stitch
   const sa = Number(sausage) + 1;
 
   const backPosition = Number(sausage) + backPartMargin;
-  const lengthFull = Number(sausage) + fullWidth;
+  const viewBoxWidth = Number(sausage) + fullWidth;
 
   const tongueAnimDelay = genRandomInt(0, 500);
   const tailAnimDelay = genRandomInt(0, 500);
@@ -35,10 +39,18 @@ const CorgiSVG = React.forwardRef(({ color, sausage }, ref) => {
   const svgRef = useRef();
 
   useImperativeHandle(ref, () => ({
-    async convertToPng(name) {
+    async convertToPng(name, backgroundColor) {
       if (svgRef && svgRef.current) {
-        await convertSvg.saveSvgAsPng(svgRef.current, name);
-        return convertSvg.svgAsPngUri(svgRef.current, name).then((uri) => uri);
+        const config = {
+          backgroundColor,
+          height: viewBoxHeight + padding * 2,
+          width: viewBoxWidth + padding * 2,
+          left: -padding,
+          top: -padding,
+        };
+
+        await convertSvg.saveSvgAsPng(svgRef.current, name, config);
+        return convertSvg.svgAsPngUri(svgRef.current, config).then((uri) => uri);
       }
     },
   }));
@@ -49,7 +61,7 @@ const CorgiSVG = React.forwardRef(({ color, sausage }, ref) => {
         ref={svgRef}
         width='100%'
         height='100%'
-        viewBox={`0 0 ${lengthFull} 374`}
+        viewBox={`0 0 ${viewBoxWidth} ${viewBoxHeight}`}
         version='1.1'
         xmlns='http://www.w3.org/2000/svg'
         xlink='http://www.w3.org/1999/xlink'

@@ -21,7 +21,7 @@ const CorgiPNG = () => {
 
   const convertToPng = async () => {
     if (svgRef && svgRef.current) {
-      setCorgiPng(await svgRef.current.convertToPng(corgi.name));
+      setCorgiPng(await svgRef.current.convertToPng(corgi.name, corgi.background_color));
     }
   };
 
