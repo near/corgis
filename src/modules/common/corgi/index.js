@@ -9,6 +9,7 @@ import CorgiLink from './CorgiLink';
 import CorgiRate from './CorgiRate';
 import CorgisShowCase from './CorgisShowCase';
 import CorgiSVG from './CorgiSVG';
+import CorgiPNG from './CorgiPNG';
 
 import Egg from './Egg';
 
@@ -22,6 +23,7 @@ export {
   CorgiLink,
   CorgisShowCase,
   CorgiSVG,
+  CorgiPNG,
   CorgiAnimOne,
   CorgiAnimTwo,
   CorgiAnimThree,

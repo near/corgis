@@ -1,14 +1,10 @@
 import 'regenerator-runtime/runtime';
 
 import React, { useContext, useEffect } from 'react';
-import { HashRouter as Router } from 'react-router-dom';
 
 import './App.scss';
 
 import { ContractContext, NearContext } from '~contexts';
-
-import { Header } from '~modules/header';
-import { Footer } from '~modules/footer';
 
 import Routes from '~router/Routes';
 
@@ -31,13 +27,8 @@ const App = () => {
   return (
     <div className='App'>
       <div className='page'>
-        <Router hashType='noslash'>
-          <Header />
-          <Routes />
-        </Router>
+        <Routes />
       </div>
-
-      <Footer />
     </div>
   );
 };

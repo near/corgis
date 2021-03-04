@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useEffect, useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import './CorgiSVG.scss';
+
+import * as convertSvg from 'save-svg-as-png';
 
 import { genRandomInt } from '~helpers/generators';
 
@@ -10,14 +12,14 @@ import COLORS from '~constants/Colors';
 import { CorgiType } from '~types/CorgiTypes';
 
 const CorgiSVGPropTypes = {
-  color: CorgiType.color,
+  color: CorgiType.color.isRequired,
   sausage: PropTypes.number.isRequired,
 };
 
 const fullWidth = 525;
 const backPartMargin = 221;
 
-const CorgiSVG = ({ color, sausage }) => {
+const CorgiSVG = React.forwardRef(({ color, sausage }, ref) => {
   // add 1 point to remove stitch
   const sa = Number(sausage) + 1;
 
@@ -30,9 +32,21 @@ const CorgiSVG = ({ color, sausage }) => {
   const tongueAnimDuration = genRandomInt(150, 250);
   const tailAnimDuration = genRandomInt(450, 550);
 
+  const svgRef = useRef();
+
+  useImperativeHandle(ref, () => ({
+    async convertToPng(name) {
+      if (svgRef && svgRef.current) {
+        await convertSvg.saveSvgAsPng(svgRef.current, name);
+        return convertSvg.svgAsPngUri(svgRef.current, name).then((uri) => uri);
+      }
+    },
+  }));
+
   return (
     <div className='corgi'>
       <svg
+        ref={svgRef}
         width='100%'
         height='100%'
         viewBox={`0 0 ${lengthFull} 374`}
@@ -383,7 +397,7 @@ const CorgiSVG = ({ color, sausage }) => {
       </svg>
     </div>
   );
-};
+});
 
 CorgiSVG.propTypes = CorgiSVGPropTypes;
 

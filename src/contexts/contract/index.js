@@ -44,6 +44,13 @@ export const ContractContextProvider = ({ Contract, children }) => {
 
   const getCorgi = useCallback(
     (id) => {
+      return Contract.get_corgi_by_id({ id }).then((corgi) => corgi);
+    },
+    [Contract],
+  );
+
+  const getActiveCorgi = useCallback(
+    (id) => {
       dispatchContract({ type: ACTION_START });
       Contract.get_corgi_by_id({ id })
         .then((corgi) => dispatchContract({ type: GET_CORGI_SUCCESS, payload: { corgi } }))
@@ -135,6 +142,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
     info: contractState.info,
     clearState,
     getCorgi,
+    getActiveCorgi,
     getCorgis,
     getCorgisByCurrentUser,
     createCorgi,

@@ -40,6 +40,7 @@
         "react-router-dom": "5.2.0",
         "react-scripts": "4.0.1",
         "regenerator-runtime": "^0.13.5",
+        "save-svg-as-png": "^1.4.17",
         "sharethis-reactjs": "^1.6.0",
         "tinycolor2": "^1.4.1"
     },

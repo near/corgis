@@ -9,7 +9,7 @@ import { CorgiActions, CorgiCard, CorgiRate, CorgiSpinner } from '~modules/commo
 
 const CorgiPage = () => {
   const { user } = useContext(NearContext);
-  const { corgi, loading, getCorgi, deleted, transfered } = useContext(ContractContext);
+  const { corgi, loading, getActiveCorgi, deleted, transfered } = useContext(ContractContext);
 
   const {
     params: { id },
@@ -17,7 +17,7 @@ const CorgiPage = () => {
 
   useEffect(() => {
     if (id) {
-      getCorgi(id);
+      getActiveCorgi(id);
     }
   }, [id, transfered]);
 

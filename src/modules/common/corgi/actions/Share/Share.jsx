@@ -3,15 +3,11 @@ import PropTypes from 'prop-types';
 
 import './Share.scss';
 
-import corgiFull from '~assets/images/corgi-full.png';
-
 import classNames from 'classnames';
 
 import { InlineShareButtons } from 'sharethis-reactjs';
 
-import { CorgiActionsContext } from '~contexts/';
-
-console.log(corgiFull.slice(1));
+import { CorgiActionsContext } from '~contexts';
 
 const SharePropTypes = {
   display: PropTypes.oneOf(['grid', 'flex']),
@@ -19,7 +15,7 @@ const SharePropTypes = {
 };
 
 const Share = ({ display = 'grid', flexDirection = 'row' }) => {
-  const { id, name } = useContext(CorgiActionsContext);
+  const { id, name, color, background_color, rate } = useContext(CorgiActionsContext);
 
   return (
     <div className={classNames('share', `share--${display}`, display === 'flex' && `share--${flexDirection}`)}>
@@ -38,7 +34,7 @@ const Share = ({ display = 'grid', flexDirection = 'row' }) => {
           url: `${window.location.origin}${window.location.pathname}#corgi/${id}`,
 
           title: name,
-          image: `${window.location.origin}${corgiFull}`,
+          image: `${window.location.origin}${window.location.pathname}/#assets/corgi/${id}`,
         }}
       />
     </div>
