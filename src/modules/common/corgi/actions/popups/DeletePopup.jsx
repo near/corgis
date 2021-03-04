@@ -16,7 +16,7 @@ const DeletePopupPropTypes = { asButton: PropTypes.bool };
 
 const DeletePopup = ({ asButton = false }) => {
   const { id } = useContext(CorgiActionsContext);
-  const { deleting, deleteCorgi } = useContext(ContractContext);
+  const { deleting, deleted, deleteCorgi } = useContext(ContractContext);
 
   const popupRef = useRef();
 
