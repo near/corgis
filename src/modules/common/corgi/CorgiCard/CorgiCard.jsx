@@ -5,12 +5,11 @@ import './CorgiCard.scss';
 
 import classNames from 'classnames';
 
-import { Activity, CorgiLink, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
+import { Activity, CorgiActions, CorgiLink, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
 
 import { SAUSAGE } from '~constants/corgi';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
-import CorgiActions from '~modules/common/corgi/actions/CorgiActions';
 
 const CorgiCardPropTypes = { corgi: CorgiTypeShape.isRequired, hideActions: PropTypes.bool, big: PropTypes.bool };
 
@@ -22,7 +21,7 @@ const CorgiCard = ({ corgi, hideActions = false, big = false }) => {
       <div className='corgi-card__header'>
         <RarityString rate={rate} />
 
-        {!hideActions && <CorgiActions id={id} owner={owner} isDropdown />}
+        {!hideActions && <CorgiActions corgi={corgi} isDropdown />}
       </div>
 
       <CorgiLink id={id}>

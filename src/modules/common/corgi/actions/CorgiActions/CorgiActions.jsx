@@ -1,22 +1,20 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { ContractContext, NearContext } from '~contexts';
+import { ContractContext, CorgiActionsContextProvider, NearContext } from '~contexts';
 
 import { Dropdown } from '~modules/common';
 import { DeletePopup, GiftPopup, SharePopup, TradePopup } from '~modules/common/corgi';
 
-import { CorgiType } from '~types/CorgiTypes';
+import { CorgiTypeShape } from '~types/CorgiTypes';
 
-const CorgiActionsPropTypes = {
-  id: CorgiType.id.isRequired,
-  owner: CorgiType.owner.isRequired,
-  isDropdown: PropTypes.bool,
-};
+const CorgiActionsPropTypes = { corgi: CorgiTypeShape.isRequired, isDropdown: PropTypes.bool };
 
-const CorgiActions = ({ id, owner, isDropdown = false }) => {
+const CorgiActions = ({ corgi, isDropdown = false }) => {
   const { user } = useContext(NearContext);
   const { deleted, transfered } = useContext(ContractContext);
+
+  const { owner } = corgi;
 
   const [showOnlyShare, setShowOnlyShare] = useState(false);
 
@@ -35,7 +33,7 @@ const CorgiActions = ({ id, owner, isDropdown = false }) => {
   }, [deleted, transfered, dropdownRef]);
 
   return (
-    <>
+    <CorgiActionsContextProvider corgi={corgi}>
       {isDropdown ? (
         <Dropdown
           ref={dropdownRef}
@@ -49,28 +47,28 @@ const CorgiActions = ({ id, owner, isDropdown = false }) => {
           hideArrow
           isTight
         >
-          {!showOnlyShare && <GiftPopup id={id} />}
+          {!showOnlyShare && <GiftPopup />}
 
           {!showOnlyShare && <TradePopup />}
 
-          <SharePopup id={id} />
+          <SharePopup />
 
           {!showOnlyShare && <span divider='true'></span>}
 
-          {!showOnlyShare && <DeletePopup id={id} />}
+          {!showOnlyShare && <DeletePopup />}
         </Dropdown>
       ) : (
         <>
-          {!showOnlyShare && <GiftPopup id={id} asButton />}
+          {!showOnlyShare && <GiftPopup asButton />}
 
           {!showOnlyShare && <TradePopup asButton />}
 
-          <SharePopup id={id} asButton />
+          <SharePopup asButton />
 
-          {!showOnlyShare && <DeletePopup id={id} asButton />}
+          {!showOnlyShare && <DeletePopup asButton />}
         </>
       )}
-    </>
+    </CorgiActionsContextProvider>
   );
 };
 

@@ -38,7 +38,7 @@ const CorgiPage = () => {
         <CorgiRate rate={corgi.rate} />
 
         <div className='corgi-page__actions'>
-          <CorgiActions id={id} owner={corgi.owner} />
+          <CorgiActions corgi={corgi} />
         </div>
       </div>
     </div>
