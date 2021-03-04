@@ -2,16 +2,15 @@ import React, { useContext, useEffect, useState } from 'react';
 
 import './MintingForm.scss';
 
-import { FaRandom } from 'react-icons/fa';
-
-import randomColor from 'randomcolor';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRandom } from '@fortawesome/free-solid-svg-icons';
 
 import { CharacterContext, ContractContext } from '~contexts';
 
 import { Button, Colorpicker, Input } from '~modules/common';
 // import { Donation } from '~modules/minting/components';
 
-import { genRandomName } from '~helpers/generators';
+import { genRandomColor, genRandomName } from '~helpers/generators';
 
 import { CORGI_VALIDATION_MESSAGES } from '~constants/validation/corgi';
 
@@ -45,8 +44,8 @@ const MintingForm = () => {
   };
 
   const generateRandomColor = () => {
-    setColor(randomColor());
-    setBackgroundColor(randomColor());
+    setColor(genRandomColor());
+    setBackgroundColor(genRandomColor());
   };
 
   const onSubmit = (event) => {
@@ -70,7 +69,7 @@ const MintingForm = () => {
       <div className='minting-form__area'>
         <div className='minting-form__header'>
           <h3 className='minting-form__title'>My Corgi is called</h3>
-          <FaRandom onClick={() => generateRandomName()} className='minting-form__icon' />
+          <FontAwesomeIcon icon={faRandom} onClick={() => generateRandomName()} className='minting-form__icon' />
         </div>
 
         <Input
@@ -87,7 +86,7 @@ const MintingForm = () => {
       <div className='minting-form__area'>
         <div className='minting-form__header'>
           <h3 className='minting-form__title'>Colors</h3>
-          <FaRandom onClick={() => generateRandomColor()} className='minting-form__icon' />
+          <FontAwesomeIcon icon={faRandom} onClick={() => generateRandomColor()} className='minting-form__icon' />
         </div>
 
         <div className='minting-form__colorpickers'>

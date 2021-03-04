@@ -1,6 +1,4 @@
-import randomColor from 'randomcolor';
-
-import { genRandomName } from '~helpers/generators';
+import { genRandomColor, genRandomName } from '~helpers/generators';
 import { getRandomQuoteId } from '~helpers/quotes';
 
 /**
@@ -20,7 +18,7 @@ export default function genRandomCharacter() {
   return {
     name: genRandomName(),
     quote: getRandomQuoteId(),
-    color: randomColor(),
-    backgroundColor: randomColor(),
+    color: genRandomColor(),
+    backgroundColor: genRandomColor(),
   };
 }
