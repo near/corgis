@@ -20,7 +20,7 @@ use std::{convert::TryInto, mem::size_of, usize};
 #[global_allocator]
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
-/// Fee to pay in (yocto Ⓝ) to allow the user to store Corgis in our contract.
+/// Fee to pay (in yocto Ⓝ) to allow the user to store Corgis on-chain.
 pub const MINT_FEE: u128 = 1_000_000_000_000_000_000_000_000;
 
 const CORGIS: &[u8] = b"a";
