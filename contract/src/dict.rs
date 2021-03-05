@@ -8,7 +8,7 @@ use near_sdk::{
 /// Keeps a mapping from `K` keys to `V` values.
 /// It combines `UnorderedMap` to store elements and implements a linked list
 /// to allow the user to maintain the insertion order.
-/// Any key/value pair is added to the beginning of the list.
+/// Any key-value pair is added to the beginning of the list.
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Dict<K, V> {
     heap: Heap<K, V>,
@@ -46,8 +46,15 @@ impl<
         self.heap.0.get(key).map(|node| node.value)
     }
 
+    /// Adds the key-value pair into this `Dict`.
+    /// This pair is now the first in the collection, *i.e.*,
+    /// the first element returned by the `into_iter` iterator.
+    ///
+    /// The `default` value for `K` cannot be used as valid key,
+    /// as it is used to signal the end of the linked list.
+    /// Moreover, the `Dict` does not accept duplicated keys.
     pub fn push_front(&mut self, key: &K, value: V) -> V {
-        assert!(*key != K::default(), "Attempt to push `default` into heap");
+        assert!(key != &K::default(), "Attempt to push `default` into heap");
 
         if self.first != K::default() {
             let mut node = self.heap.get_node(&self.first);
@@ -63,7 +70,8 @@ impl<
         };
 
         self.first = key.clone();
-        self.heap.0.insert(&key, &node);
+        let was_updated = self.heap.0.insert(&key, &node);
+        assert!(was_updated.is_none());
 
         node.value
     }
