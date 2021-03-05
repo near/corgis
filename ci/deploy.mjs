@@ -41,7 +41,7 @@ console.log(`> Deploy to ${chalk.bold(config.nodeUrl)} with contract name ${chal
 config.contractName = subAccountPrefix + '.' + masterAccount;
 fs.writeFileSync('version', subAccountPrefix);
 
-const initialBalanceAmount = '50';
+const initialBalanceAmount = '100';
 const initialBalance = utils.format.parseNearAmount(initialBalanceAmount);
 console.log(`> Initial balance to use if account is created Ⓝ  ${chalk.yellow.bold(initialBalanceAmount)}`);
 
@@ -63,7 +63,7 @@ const account = await (async () => {
         return await near.account(config.contractName);
     } catch (e) {
         if (!e.message.includes('does not exist while viewing')) {
-            console.log(e.message);
+            console.error(e.message);
             exit(1);
         }
 
