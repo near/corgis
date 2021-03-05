@@ -48,6 +48,11 @@ impl<T> MockedContext<T> {
         self
     }
 
+    pub fn attach_deposit(&mut self, attached_deposit: u128) -> &mut Self {
+        self.context.attached_deposit = attached_deposit;
+        self
+    }
+
     fn update_context(&mut self) {
         let random_seed = (u128::from_le_bytes(self.context.random_seed[..16].try_into().unwrap())
             + 1)

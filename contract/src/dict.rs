@@ -32,7 +32,7 @@ pub struct DictIntoIterator<'a, K, V> {
 
 impl<
         K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize + Debug,
-        V: BorshDeserialize + BorshSerialize + Debug,
+        V: BorshDeserialize + BorshSerialize,
     > Dict<K, V>
 {
     pub fn new(id: Vec<u8>) -> Self {
@@ -81,29 +81,38 @@ impl<
             None => None,
             Some(removed_node) => {
                 if removed_node.prev == K::default() {
-                    self.first = removed_node.next;
+                    self.first = removed_node.next.clone();
                 } else {
                     let mut node = self.heap.get_node(&removed_node.prev);
-                    node.next = removed_node.next;
+                    node.next = removed_node.next.clone();
                     self.heap.0.insert(&removed_node.prev, &node);
                 }
+
+                if removed_node.next != K::default() {
+                    let mut node = self.heap.get_node(&removed_node.next);
+                    node.prev = removed_node.prev;
+                    self.heap.0.insert(&removed_node.next, &node);
+                }
+
                 Some(removed_node.value)
             }
         }
     }
 }
 
-impl<K: BorshDeserialize + BorshSerialize, V: BorshDeserialize + BorshSerialize> Heap<K, V> {
+impl<K: BorshDeserialize + BorshSerialize + Debug, V: BorshDeserialize + BorshSerialize>
+    Heap<K, V>
+{
     fn get_node(&self, key: &K) -> Node<K, V> {
         let node = self.0.get(&key);
-        assert!(node.is_some(), "Element was not found in heap map");
+        assert!(node.is_some(), "Key `{:?}` was not found in heap map", key);
         node.unwrap()
     }
 }
 
 impl<
         'a,
-        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize,
+        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize + Debug,
         V: BorshDeserialize + BorshSerialize,
     > IntoIterator for &'a Dict<K, V>
 {
@@ -120,7 +129,7 @@ impl<
 }
 
 impl<
-        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize,
+        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize + Debug,
         V: BorshDeserialize + BorshSerialize,
     > Iterator for DictIntoIterator<'_, K, V>
 {

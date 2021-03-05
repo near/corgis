@@ -65,6 +65,14 @@ impl MockedContext<ContractChecker> {
         self.context.predecessor_account_id.clone()
     }
 
+    fn last_id(&self) -> String {
+        self.ids[0].0.clone()
+    }
+
+    fn get_id(&self, i: usize) -> String {
+        self.ids[i].0.clone()
+    }
+
     fn create_test_corgi(&mut self, i: usize) -> CorgiDTO {
         let name = format!("doggy dog {}", i);
         let quote = "To err is human — to forgive, canine";
@@ -75,12 +83,11 @@ impl MockedContext<ContractChecker> {
             .get_corgis_by_owner(self.predecessor_account_id())
             .len();
 
-        self.context.attached_deposit = corgis_nft::MINT_FEE;
-        let new_corgi = self.contract.create_corgi(
-            name.to_string(),
-            quote.to_string(),
-            color.to_string(),
-            background_color.to_string(),
+        let new_corgi = self.attach_deposit(MINT_FEE).contract.create_corgi(
+            name.clone(),
+            quote.into(),
+            color.into(),
+            background_color.into(),
         );
 
         println!("Created corgi id: {}", new_corgi.id);
@@ -95,7 +102,7 @@ impl MockedContext<ContractChecker> {
         assert_eq!(new_corgi.modified, self.context.block_timestamp);
 
         let account = self.predecessor_account_id();
-        self.ids.push((new_corgi.id.clone(), account));
+        self.ids.insert(0, (new_corgi.id.clone(), account));
 
         let corgi_by_id = self.get_corgi_by_id(new_corgi.id.clone());
         assert_eq!(corgi_by_id, new_corgi);
@@ -124,33 +131,6 @@ impl MockedContext<ContractChecker> {
         let (id, _) = self.ids[i].clone();
         println!("del {}", id);
         self.delete_corgi(id);
-    }
-
-    fn transfer_corgi(&mut self, receiver: String, id: String) {
-        let pre_global_corgis_count = self.get_global_corgis().len();
-        let mut pre_corgis_by_receiver = self.get_corgis_by_owner(receiver.clone());
-        let pre_corgis_by_sender = self.get_corgis_by_owner(self.predecessor_account_id());
-
-        self.contract.transfer_corgi(receiver.clone(), id.clone());
-
-        let corgi = self.get_corgi_by_id(id.to_string());
-        assert_eq!(corgi.owner, receiver);
-
-        let global_corgis = self.get_global_corgis();
-        assert_eq!(global_corgis.len(), pre_global_corgis_count);
-        assert_eq!(global_corgis.get(0).unwrap(), &corgi);
-
-        assert_eq!(self.get_corgis_by_owner(receiver.clone()), {
-            pre_corgis_by_receiver.insert(0, corgi);
-            pre_corgis_by_receiver
-        });
-
-        assert_eq!(self.get_corgis_by_owner(self.predecessor_account_id()), {
-            pre_corgis_by_sender
-                .into_iter()
-                .filter(|corgi| corgi.id != id)
-                .collect::<Vec<CorgiDTO>>()
-        });
     }
 
     fn delete_corgi(&mut self, id: String) {
@@ -183,6 +163,33 @@ impl MockedContext<ContractChecker> {
         );
     }
 
+    fn transfer_corgi(&mut self, receiver: String, id: String) {
+        let pre_global_corgis_count = self.get_global_corgis().len();
+        let mut pre_corgis_by_receiver = self.get_corgis_by_owner(receiver.clone());
+        let pre_corgis_by_sender = self.get_corgis_by_owner(self.predecessor_account_id());
+
+        self.contract.transfer_corgi(receiver.clone(), id.clone());
+
+        let corgi = self.get_corgi_by_id(id.to_string());
+        assert_eq!(corgi.owner, receiver);
+
+        let global_corgis = self.get_global_corgis();
+        assert_eq!(global_corgis.len(), pre_global_corgis_count);
+        assert_eq!(global_corgis.get(0).unwrap(), &corgi);
+
+        assert_eq!(self.get_corgis_by_owner(receiver.clone()), {
+            pre_corgis_by_receiver.insert(0, corgi);
+            pre_corgis_by_receiver
+        });
+
+        assert_eq!(self.get_corgis_by_owner(self.predecessor_account_id()), {
+            pre_corgis_by_sender
+                .into_iter()
+                .filter(|corgi| corgi.id != id)
+                .collect::<Vec<CorgiDTO>>()
+        });
+    }
+
     fn check_global_corgis(&self, global_corgis: Vec<CorgiDTO>) {
         assert_eq!(
             &global_corgis
@@ -191,7 +198,6 @@ impl MockedContext<ContractChecker> {
                 .collect::<Vec<(String, String)>>(),
             &{
                 let mut ids = self.ids.clone();
-                ids.reverse();
                 ids.truncate(self.get_corgis_page_limit() as usize);
                 ids
             }
@@ -211,13 +217,12 @@ impl MockedContext<ContractChecker> {
                 .map(|corgi| &corgi.id)
                 .collect::<Vec<&String>>();
 
-            let mut ids = self
+            let ids = self
                 .ids
                 .iter()
                 .filter(|(_, o)| o == owner)
                 .map(|(id, _)| id)
                 .collect::<Vec<&String>>();
-            ids.reverse();
 
             assert_eq!(ids_by_owner, ids);
         }
@@ -253,8 +258,9 @@ fn should_panic_when_corgi_id_does_not_exist() {
 #[should_panic(expected = "Deposit must be MINT_FEE but was 0")]
 fn create_free_corgi_should_panic() {
     init_test().run_as(alice(), |contract| {
-        contract.context.attached_deposit = 0;
-        contract.create_corgi("N".into(), "Q".into(), "C".into(), "B".into());
+        contract
+            .attach_deposit(0)
+            .create_corgi("N".into(), "Q".into(), "C".into(), "B".into());
     });
 }
 
@@ -262,8 +268,7 @@ fn create_free_corgi_should_panic() {
 #[should_panic(expected = "Name exceeds max 32 chars allowed")]
 fn should_panic_when_name_is_too_large() {
     init_test().run_as(alice(), |contract| {
-        contract.context.attached_deposit = MINT_FEE;
-        contract.create_corgi(
+        contract.attach_deposit(MINT_FEE).create_corgi(
             ['?'; 32 + 1].iter().collect(),
             "Q".into(),
             "C".into(),
@@ -276,8 +281,7 @@ fn should_panic_when_name_is_too_large() {
 #[should_panic(expected = "Quote exceeds max 256 chars allowed")]
 fn should_panic_when_quote_is_too_large() {
     init_test().run_as(alice(), |contract| {
-        contract.context.attached_deposit = MINT_FEE;
-        contract.create_corgi(
+        contract.attach_deposit(MINT_FEE).create_corgi(
             "N".into(),
             ['?'; 256 + 1].iter().collect(),
             "C".into(),
@@ -290,8 +294,7 @@ fn should_panic_when_quote_is_too_large() {
 #[should_panic(expected = "Color exceeds max 64 chars allowed")]
 fn should_panic_when_color_is_too_large() {
     init_test().run_as(alice(), |contract| {
-        contract.context.attached_deposit = MINT_FEE;
-        contract.create_corgi(
+        contract.attach_deposit(MINT_FEE).create_corgi(
             "N".into(),
             "Q".into(),
             ['?'; 64 + 1].iter().collect(),
@@ -304,8 +307,7 @@ fn should_panic_when_color_is_too_large() {
 #[should_panic(expected = "Back color exceeds 64 chars")]
 fn should_panic_when_background_color_is_too_large() {
     init_test().run_as(alice(), |contract| {
-        contract.context.attached_deposit = MINT_FEE;
-        contract.create_corgi(
+        contract.attach_deposit(MINT_FEE).create_corgi(
             "N".into(),
             "Q".into(),
             "C".into(),
@@ -334,8 +336,8 @@ fn create_a_few_corgis() {
 fn create_and_delete_corgi() {
     init_test().run_as(alice(), |contract| {
         for i in 1..=20 {
-            let id = contract.create_test_corgi(i as usize).id.clone();
-            contract.delete_corgi(id);
+            contract.create_test_corgi(i as usize);
+            contract.delete_corgi(contract.last_id());
         }
     });
 }
@@ -364,9 +366,11 @@ fn create_and_delete_a_few_corgis() {
             contract.create_test_corgi(i);
         }
 
-        contract.delete_corgi_by_index(2);
-        contract.delete_corgi_by_index(3);
         contract.delete_corgi_by_index(0);
+        contract.delete_corgi_by_index(0);
+        contract.delete_corgi_by_index(2);
+        contract.delete_corgi_by_index(9);
+        contract.delete_corgi_by_index(3);
     });
 }
 
@@ -388,8 +392,8 @@ fn prevent_to_delete_someone_else_corgi() {
 #[test]
 fn transfer_a_corgi() {
     init_test().run_as(alice(), |contract| {
-        let id = contract.create_test_corgi(42).id.clone();
-        contract.transfer_corgi(charlie(), id);
+        contract.create_test_corgi(42);
+        contract.transfer_corgi(charlie(), contract.last_id());
     });
 }
 
@@ -400,12 +404,11 @@ fn transfer_a_few_corgis() {
             contract.create_test_corgi(i);
         }
 
-        let ids = contract.ids.clone();
-        contract.transfer_corgi(charlie(), ids[2].clone().0);
-        contract.transfer_corgi(charlie(), ids[9].clone().0);
-        contract.transfer_corgi(charlie(), ids[0].clone().0);
-        contract.transfer_corgi(charlie(), ids[3].clone().0);
-        contract.transfer_corgi(charlie(), ids[7].clone().0);
+        contract.transfer_corgi(charlie(), contract.get_id(2));
+        contract.transfer_corgi(charlie(), contract.get_id(9));
+        contract.transfer_corgi(charlie(), contract.get_id(0));
+        contract.transfer_corgi(charlie(), contract.get_id(3));
+        contract.transfer_corgi(charlie(), contract.get_id(7));
     });
 }
 
@@ -413,8 +416,8 @@ fn transfer_a_few_corgis() {
 #[should_panic(expected = "Account `alice.mock` attempted to make a self transfer")]
 fn should_panic_when_self_transfer() {
     init_test().run_as(alice(), |contract| {
-        let id = contract.create_test_corgi(42).id.clone();
-        contract.transfer_corgi(alice(), id);
+        contract.create_test_corgi(42);
+        contract.transfer_corgi(alice(), contract.last_id());
     });
 }
 
@@ -430,9 +433,9 @@ fn should_panic_when_transfer_corgi_does_not_exist() {
 #[should_panic(expected = "Sender does not own `FKoXLpmDjH4AtzasQaUoq`")]
 fn should_panic_when_sender_is_not_owner() {
     init_test().run_as(alice(), |contract| {
-        let id = contract.create_test_corgi(42).id.clone();
-        contract.transfer_corgi(charlie(), id.clone());
-        contract.transfer_corgi(charlie(), id.clone());
+        contract.create_test_corgi(42);
+        contract.transfer_corgi(charlie(), contract.last_id());
+        contract.transfer_corgi(charlie(), contract.last_id());
     });
 }
 
@@ -440,8 +443,8 @@ fn should_panic_when_sender_is_not_owner() {
 #[should_panic(expected = "Receiver account `invalid.mock.` is not a valid account id")]
 fn should_panic_when_transfer_receiver_is_invalid() {
     init_test().run_as(alice(), |contract| {
-        let id = contract.create_test_corgi(42).id.clone();
-        contract.transfer_corgi("invalid.mock.".to_string(), id);
+        contract.create_test_corgi(42);
+        contract.transfer_corgi("invalid.mock.".into(), contract.last_id());
     });
 }
 
