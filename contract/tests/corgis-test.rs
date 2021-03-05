@@ -1,6 +1,6 @@
 use std::{
     cmp::min,
-    collections::HashSet,
+    collections::{HashMap, HashSet},
     ops::{Deref, DerefMut},
     panic::{self, catch_unwind, AssertUnwindSafe},
 };
@@ -9,30 +9,27 @@ mod context;
 
 use context::MockedContext;
 
-use corgis_nft::{Corgi, Model, NEP4};
+use corgis_nft::{Bid, CorgiDTO, CorgiId, ForSale, Model, MINT_FEE};
+use near_sdk::{bs58, json_types::U64, AccountId};
 
-fn alice() -> String {
+fn alice() -> AccountId {
     "alice.mock".to_string()
 }
 
-fn bob() -> String {
+fn bob() -> AccountId {
     "bob.mock".to_string()
 }
 
-fn charlie() -> String {
+fn charlie() -> AccountId {
     "charlie.mock".to_string()
 }
 
-fn ted() -> String {
-    "ted.mock".to_string()
+fn diana() -> AccountId {
+    "diana.mock".to_string()
 }
 
-fn trent() -> String {
-    "trent.mock".to_string()
-}
-
-fn any_corgi_id() -> String {
-    "<?>".to_string()
+fn any_corgi_id() -> CorgiId {
+    bs58::encode(vec![0, 1, 2]).into_string()
 }
 
 struct ContractChecker {
@@ -65,7 +62,7 @@ impl MockedContext<ContractChecker> {
         self.context.predecessor_account_id.clone()
     }
 
-    fn create_test_corgi(&mut self, i: usize) -> Corgi {
+    fn create_test_corgi(&mut self, i: usize) -> CorgiDTO {
         let name = format!("doggy dog {}", i);
         let quote = "To err is human — to forgive, canine";
         let color = "green";
@@ -75,6 +72,7 @@ impl MockedContext<ContractChecker> {
             .get_corgis_by_owner(self.predecessor_account_id())
             .len();
 
+        self.context.attached_deposit = corgis_nft::MINT_FEE;
         let new_corgi = self.contract.create_corgi(
             name.to_string(),
             quote.to_string(),
@@ -148,7 +146,7 @@ impl MockedContext<ContractChecker> {
             pre_corgis_by_sender
                 .into_iter()
                 .filter(|corgi| corgi.id != id)
-                .collect::<Vec<Corgi>>()
+                .collect::<Vec<CorgiDTO>>()
         });
     }
 
@@ -182,11 +180,11 @@ impl MockedContext<ContractChecker> {
         );
     }
 
-    fn check_global_corgis(&self, global_corgis: Vec<Corgi>) {
+    fn check_global_corgis(&self, global_corgis: Vec<CorgiDTO>) {
         assert_eq!(
             &global_corgis
                 .into_iter()
-                .map(|corgi| (corgi.id, corgi.owner))
+                .map(|corgi| (corgi.id.clone(), corgi.owner.clone()))
                 .collect::<Vec<(String, String)>>(),
             &{
                 let mut ids = self.ids.clone();
@@ -233,7 +231,15 @@ fn initial_state() {
 }
 
 #[test]
-#[should_panic(expected = "The given corgi id `<?>` was not found")]
+#[should_panic(expected = "Could not decode `012`:")]
+fn corgi_by_id_should_panic_when_id_is_not_base58() {
+    init_test().run_as(alice(), |contract| {
+        contract.get_corgi_by_id("012".to_string());
+    });
+}
+
+#[test]
+#[should_panic(expected = "The given corgi id `15T` was not found")]
 fn should_panic_when_corgi_id_does_not_exist() {
     init_test().run_as(alice(), |contract| {
         contract.get_corgi_by_id(any_corgi_id());
@@ -244,6 +250,7 @@ fn should_panic_when_corgi_id_does_not_exist() {
 #[should_panic(expected = "Name exceeds max 32 chars allowed")]
 fn should_panic_when_name_is_too_large() {
     init_test().run_as(alice(), |contract| {
+        contract.context.attached_deposit = MINT_FEE;
         contract.create_corgi(
             ['?'; 32 + 1].iter().collect(),
             "Q".into(),
@@ -257,6 +264,7 @@ fn should_panic_when_name_is_too_large() {
 #[should_panic(expected = "Quote exceeds max 256 chars allowed")]
 fn should_panic_when_quote_is_too_large() {
     init_test().run_as(alice(), |contract| {
+        contract.context.attached_deposit = MINT_FEE;
         contract.create_corgi(
             "N".into(),
             ['?'; 256 + 1].iter().collect(),
@@ -270,6 +278,7 @@ fn should_panic_when_quote_is_too_large() {
 #[should_panic(expected = "Color exceeds max 64 chars allowed")]
 fn should_panic_when_color_is_too_large() {
     init_test().run_as(alice(), |contract| {
+        contract.context.attached_deposit = MINT_FEE;
         contract.create_corgi(
             "N".into(),
             "Q".into(),
@@ -283,6 +292,7 @@ fn should_panic_when_color_is_too_large() {
 #[should_panic(expected = "Back color exceeds 64 chars")]
 fn should_panic_when_background_color_is_too_large() {
     init_test().run_as(alice(), |contract| {
+        contract.context.attached_deposit = MINT_FEE;
         contract.create_corgi(
             "N".into(),
             "Q".into(),
@@ -312,7 +322,7 @@ fn create_a_few_corgis() {
 fn create_and_delete_corgi() {
     init_test().run_as(alice(), |contract| {
         for i in 1..=20 {
-            let id = contract.create_test_corgi(i as usize).id;
+            let id = contract.create_test_corgi(i as usize).id.clone();
             contract.delete_corgi(id);
         }
     });
@@ -327,7 +337,7 @@ fn delete_should_panic_when_there_are_no_corgis() {
 }
 
 #[test]
-#[should_panic(expected = "Corgi id `<?>` does not belong to account `alice.mock`")]
+#[should_panic(expected = "Corgi id `15T` does not belong to account `alice.mock`")]
 fn delete_should_panic_when_corgi_does_not_exist() {
     init_test().run_as(alice(), |contract| {
         contract.create_test_corgi(42);
@@ -366,7 +376,7 @@ fn prevent_to_delete_someone_else_corgi() {
 #[test]
 fn transfer_a_corgi() {
     init_test().run_as(alice(), |contract| {
-        let id = contract.create_test_corgi(42).id;
+        let id = contract.create_test_corgi(42).id.clone();
         contract.transfer_corgi(charlie(), id);
     });
 }
@@ -391,13 +401,13 @@ fn transfer_a_few_corgis() {
 #[should_panic(expected = "Account `alice.mock` attempted to make a self transfer")]
 fn should_panic_when_self_transfer() {
     init_test().run_as(alice(), |contract| {
-        let id = contract.create_test_corgi(42).id;
+        let id = contract.create_test_corgi(42).id.clone();
         contract.transfer_corgi(alice(), id);
     });
 }
 
 #[test]
-#[should_panic(expected = "Attempt to transfer a nonexistent Corgi id `<?>`")]
+#[should_panic(expected = "Attempt to transfer a nonexistent Corgi id `15T`")]
 fn should_panic_when_transfer_corgi_does_not_exist() {
     init_test().run_as(alice(), |contract| {
         contract.transfer_corgi(charlie(), any_corgi_id());
@@ -405,10 +415,10 @@ fn should_panic_when_transfer_corgi_does_not_exist() {
 }
 
 #[test]
-#[should_panic(expected = "Sender does not own `sVNcd4PqiCm2sM9ncEU5eYtNFsOb8L/glJTF2fEu7jA=`")]
+#[should_panic(expected = "Sender does not own `FKoXLpmDjH4AtzasQaUoq`")]
 fn should_panic_when_sender_is_not_owner() {
     init_test().run_as(alice(), |contract| {
-        let id = contract.create_test_corgi(42).id;
+        let id = contract.create_test_corgi(42).id.clone();
         contract.transfer_corgi(charlie(), id.clone());
         contract.transfer_corgi(charlie(), id.clone());
     });
@@ -418,115 +428,359 @@ fn should_panic_when_sender_is_not_owner() {
 #[should_panic(expected = "Receiver account `invalid.mock.` is not a valid account id")]
 fn should_panic_when_transfer_receiver_is_invalid() {
     init_test().run_as(alice(), |contract| {
-        let id = contract.create_test_corgi(42).id;
+        let id = contract.create_test_corgi(42).id.clone();
         contract.transfer_corgi("invalid.mock.".to_string(), id);
     });
 }
 
 #[test]
-fn nep4_transfer_a_corgi() {
+fn market_starts_empty() {
     init_test().run_as(alice(), |contract| {
-        let id = contract.create_test_corgi(42).id;
-        contract.transfer(charlie(), id);
+        assert_eq!(contract.get_items_for_sale(), vec!());
     });
 }
 
-#[test]
-fn nep4_check_empty_access() {
-    init_test().run_as(ted(), |contract| {
-        assert!(!contract.check_access(alice()));
-    });
-}
+const DURATION: u32 = 60 * 60 * 24;
 
 #[test]
-fn nep4_check_self_access() {
+#[should_panic(expected = "Token `15T` does not exist")]
+fn add_non_existent_item_for_sale_should_panic() {
     init_test().run_as(alice(), |contract| {
-        assert!(contract.check_access(alice()));
+        contract.add_item_for_sale(any_corgi_id(), DURATION);
     });
 }
 
 #[test]
-fn nep4_grant_access() {
-    init_test()
-        .run_as(alice(), |contract| {
-            contract.grant_access(ted());
-        })
-        .run_as(ted(), |contract| {
-            assert!(contract.check_access(alice()));
-            assert!(!contract.check_access(charlie()));
-        })
-        .run_as(alice(), |contract| {
-            contract.revoke_access(ted());
-        })
-        .run_as(ted(), |contract| {
-            assert!(!contract.check_access(alice()));
-        });
-}
-
-#[test]
-#[should_panic(expected = "Account `alice.mock` does not have any escrow")]
-fn neap4_should_panic_when_access_is_empty() {
-    init_test().run_as(alice(), |contract| {
-        contract.revoke_access(ted());
-    });
-}
-
-#[test]
-#[should_panic(expected = "Escrow `ted.mock` does not have access to `alice.mock`")]
-fn neap4_should_panic_when_revoking_invalid_access() {
-    init_test().run_as(alice(), |contract| {
-        contract.grant_access(trent());
-        contract.revoke_access(ted());
-    });
-}
-
-#[test]
-#[should_panic(expected = "The given corgi id `<?>` was not found")]
-fn nep4_transfer_should_panic_when_id_does_not_exist() {
-    init_test().run_as(ted(), |contract| {
-        contract.transfer_from(alice(), bob(), any_corgi_id());
-    });
-}
-
-#[test]
-#[should_panic(expected = "Attempt to transfer token from `alice.mock`")]
-fn nep4_transfer_should_panic_when_not_owner() {
+#[should_panic(expected = "Only token owner can add item for sale")]
+fn add_item_for_sale_from_non_owner_should_panic() {
     init_test()
         .run_as(alice(), |contract| {
             contract.create_test_corgi(42);
-        })
-        .run_as(charlie(), |contract| {
-            let token_id = contract.ids[0].0.clone();
-            contract.transfer_from(bob(), charlie(), token_id);
-        });
-}
-
-#[test]
-#[should_panic(expected = "Attempt to transfer a token with no access")]
-fn nep4_transfer_should_panic_when_not_allowed() {
-    init_test()
-        .run_as(alice(), |contract| {
-            contract.create_test_corgi(42);
-        })
-        .run_as(charlie(), |contract| {
-            let token_id = contract.ids[0].0.clone();
-            contract.transfer_from(alice(), bob(), token_id);
-        });
-}
-
-#[test]
-fn nep4_transfer_from() {
-    init_test()
-        .run_as(alice(), |contract| {
-            contract.create_test_corgi(42);
-            contract.contract.grant_access(ted());
-        })
-        .run_as(ted(), |contract| {
-            let id = contract.ids[0].0.clone();
-            contract.contract.transfer_from(alice(), bob(), id);
         })
         .run_as(bob(), |contract| {
-            let corgis = contract.contract.get_corgis_by_owner(bob());
-            assert_eq!(corgis.len(), 1);
+            let id = contract.ids[0].0.clone();
+            contract.add_item_for_sale(id, DURATION);
+        });
+}
+
+#[test]
+#[should_panic(expected = "Item `FKoXLpmDjH4AtzasQaUoq` already for sale")]
+fn add_item_for_sale_twice_should_panic() {
+    init_test().run_as(alice(), |contract| {
+        let id = contract.create_test_corgi(42).id.clone();
+        contract.add_item_for_sale(id.clone(), DURATION);
+        contract.add_item_for_sale(id.clone(), DURATION);
+    });
+}
+
+#[test]
+#[should_panic(expected = "Item `15T` is not available for sale")]
+fn bid_for_non_existent_item_should_panic() {
+    init_test().run_as(alice(), |contract| {
+        contract.bid_for_item(any_corgi_id());
+    });
+}
+
+#[test]
+#[should_panic(expected = "You cannot bid for your own Corgi `FKoXLpmDjH4AtzasQaUoq`")]
+fn bid_for_my_own_corgi_should_panic() {
+    init_test().run_as(alice(), |contract| {
+        let id = contract.create_test_corgi(42).id.clone();
+        contract.add_item_for_sale(id.clone(), DURATION);
+        contract.bid_for_item(id.clone());
+    });
+}
+
+#[test]
+#[should_panic(expected = "The auction for item `FKoXLpmDjH4AtzasQaUoq` has expired")]
+fn expired_bid_should_panic() {
+    let mut id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(id.clone(), DURATION);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.block_timestamp += 60 * 60 * 24 * 1_000_000_000 + 60;
+            contract.bid_for_item(id.clone());
+        });
+}
+
+#[test]
+#[should_panic(expected = "Your bid Ⓝ `0` is not enough to top current bid Ⓝ `0`")]
+fn zero_bid_should_panic() {
+    let mut id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(id.clone(), DURATION);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 0;
+            contract.bid_for_item(id.clone());
+        });
+}
+
+#[test]
+#[should_panic(expected = "Your bid Ⓝ `1000` is not enough to top current bid Ⓝ `1000`")]
+fn equal_bid_should_panic() {
+    let mut id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(id.clone(), DURATION);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 1000;
+            contract.bid_for_item(id.clone());
+        })
+        .run_as(charlie(), |contract| {
+            contract.context.attached_deposit = 1000;
+            contract.bid_for_item(id.clone());
+        });
+}
+
+#[test]
+#[should_panic(expected = "Your bid Ⓝ `900` is not enough to top current bid Ⓝ `1000`")]
+fn smaller_bid_should_panic() {
+    let mut id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(id.clone(), DURATION);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 1000;
+            contract.bid_for_item(id.clone());
+        })
+        .run_as(charlie(), |contract| {
+            contract.context.attached_deposit = 900;
+            contract.bid_for_item(id.clone());
+        });
+}
+
+#[test]
+#[should_panic(expected = "Your bid Ⓝ `900` is not enough to top current bid Ⓝ `1000`")]
+fn smaller_2nd_bid_should_panic() {
+    let mut id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(id.clone(), DURATION);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 500;
+            contract.bid_for_item(id.clone());
+        })
+        .run_as(charlie(), |contract| {
+            contract.context.attached_deposit = 1000;
+            contract.bid_for_item(id.clone());
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 400;
+            contract.bid_for_item(id.clone());
+        });
+}
+
+#[test]
+#[should_panic(expected = "`15T` not found for sale")]
+fn clearance_for_non_existent_item_should_panic() {
+    init_test().run_as(alice(), |contract| {
+        contract.clearance_for_item(any_corgi_id());
+    });
+}
+
+#[test]
+#[should_panic(expected = "You cannot clear an item if you are not bidding for it")]
+fn clearance_for_non_bidder_should_panic() {
+    let mut token_id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            token_id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(token_id.clone(), DURATION);
+        })
+        .run_as(bob(), |contract| {
+            contract.clearance_for_item(token_id.clone());
+        });
+}
+
+#[test]
+#[should_panic(expected = "You cannot withdraw your bid Ⓝ `100` because is the highest")]
+fn highest_bid_withdraw_should_panic() {
+    let mut token_id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            token_id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(token_id.clone(), DURATION);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 100;
+            contract.bid_for_item(token_id.clone());
+            contract.clearance_for_item(token_id.clone());
+        });
+}
+
+#[test]
+#[should_panic(expected = "Auction for token `FKoXLpmDjH4AtzasQaUoq` has not yet expired")]
+fn clear_ongoing_auction_with_bids_should_panic() {
+    let mut token_id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            token_id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(token_id.clone(), DURATION);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 100;
+            contract.bid_for_item(token_id.clone());
+        })
+        .run_as(alice(), |contract| {
+            contract.clearance_for_item(token_id.clone());
+        });
+}
+
+#[test]
+fn bigger_2nd_bid_tops_bidding() {
+    let mut id = String::new();
+    let mut auction_ends = U64(0);
+    let mut timestamps = HashMap::new();
+
+    init_test()
+        .run_as(alice(), |contract| {
+            id = contract.create_test_corgi(42).id.clone();
+            auction_ends = contract.add_item_for_sale(id.clone(), DURATION);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 400;
+            contract.bid_for_item(id.clone());
+        })
+        .run_as(charlie(), |contract| {
+            contract.context.attached_deposit = 600;
+            contract.bid_for_item(id.clone());
+            timestamps.insert(charlie(), contract.context.block_timestamp);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 500;
+            contract.bid_for_item(id.clone());
+            timestamps.insert(bob(), contract.context.block_timestamp);
+
+            check_items_for_sale(
+                contract,
+                vec![
+                    Bid::new(bob(), 900, timestamps[(&bob())]),
+                    Bid::new(charlie(), 600, timestamps[&charlie()]),
+                ],
+            );
+        });
+}
+
+fn check_items_for_sale(contract: &Model, bids: Vec<Bid>) {
+    assert_eq!(
+        contract.get_items_for_sale()[0]
+            .for_sale
+            .as_ref()
+            .unwrap()
+            .bids,
+        bids
+    );
+}
+
+#[test]
+fn market_auction_item() {
+    let mut token_id = String::new();
+    let mut timestamps = HashMap::new();
+    let mut auction_ends = U64(0);
+
+    init_test()
+        .run_as(alice(), |contract| {
+            token_id = contract.create_test_corgi(42).id.clone();
+            auction_ends = contract.add_item_for_sale(token_id.clone(), DURATION);
+
+            assert_eq!(contract.get_items_for_sale()[0].id, token_id);
+            assert_eq!(
+                contract.get_items_for_sale()[0].for_sale.as_ref().unwrap(),
+                &ForSale {
+                    bids: vec!(),
+                    expires: auction_ends,
+                }
+            );
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 400;
+            contract.bid_for_item(token_id.clone());
+            timestamps.insert(bob(), contract.context.block_timestamp);
+
+            check_items_for_sale(contract, vec![Bid::new(bob(), 400, timestamps[&bob()])]);
+        })
+        .run_as(charlie(), |contract| {
+            contract.context.attached_deposit = 600;
+            contract.bid_for_item(token_id.clone());
+            timestamps.insert(charlie(), contract.context.block_timestamp);
+
+            check_items_for_sale(
+                contract,
+                vec![
+                    Bid::new(charlie(), 600, timestamps[&charlie()]),
+                    Bid::new(bob(), 400, timestamps[(&bob())]),
+                ],
+            );
+
+            contract.context.attached_deposit = 200;
+            contract.bid_for_item(token_id.clone());
+            timestamps.insert(charlie(), contract.context.block_timestamp);
+
+            check_items_for_sale(
+                contract,
+                vec![
+                    Bid::new(charlie(), 800, timestamps[&charlie()]),
+                    Bid::new(bob(), 400, timestamps[(&bob())]),
+                ],
+            );
+        })
+        .run_as(diana(), |contract| {
+            contract.context.attached_deposit = 900;
+            contract.bid_for_item(token_id.clone());
+            timestamps.insert(diana(), contract.context.block_timestamp);
+
+            check_items_for_sale(
+                contract,
+                vec![
+                    Bid::new(diana(), 900, timestamps[&diana()]),
+                    Bid::new(charlie(), 800, timestamps[&charlie()]),
+                    Bid::new(bob(), 400, timestamps[&bob()]),
+                ],
+            );
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 700;
+            contract.bid_for_item(token_id.clone());
+            timestamps.insert(bob(), contract.context.block_timestamp);
+
+            check_items_for_sale(
+                contract,
+                vec![
+                    Bid::new(bob(), 1100, timestamps[&bob()]),
+                    Bid::new(diana(), 900, timestamps[&diana()]),
+                    Bid::new(charlie(), 800, timestamps[&charlie()]),
+                ],
+            );
+        })
+        .run_as(diana(), |contract| {
+            contract.clearance_for_item(token_id.clone());
+
+            check_items_for_sale(
+                contract,
+                vec![
+                    Bid::new(bob(), 1100, timestamps[&bob()]),
+                    Bid::new(charlie(), 800, timestamps[&charlie()]),
+                ],
+            );
+        })
+        .run_as(alice(), |contract| {
+            let token_id = contract.ids[0].0.clone();
+            contract.context.block_timestamp += 60 * 60 * 24 * 1_000_000_000 + 60;
+            contract.clearance_for_item(token_id.clone());
+
+            assert_eq!(contract.get_items_for_sale(), vec!());
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).owner, bob());
         });
 }

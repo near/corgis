@@ -1,6 +1,6 @@
 [package]
 name = "corgis-nft"
-version = "0.0.5"
+version = "0.0.6"
 authors = ["Epam <hello@epam.com>"]
 edition = "2018"
 
@@ -10,7 +10,7 @@ crate-type = ["cdylib", "rlib"]
 [dependencies]
 near-sdk = "2.0.1"
 near-vm-logic = "2.2.0"
-base64 = "0.13.0"
+serde = { version = "1.0", features = ["derive"] }
 
 [profile.release]
 codegen-units = 1

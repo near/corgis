@@ -2,65 +2,61 @@
 
 pub mod dict;
 
+use core::panic;
 use near_sdk::{
     borsh::{self, BorshDeserialize, BorshSerialize},
-    collections::{UnorderedMap, UnorderedSet},
-    env, near_bindgen,
+    bs58,
+    collections::UnorderedMap,
+    env,
+    json_types::{U128, U64},
+    near_bindgen,
     serde::Serialize,
     wee_alloc::WeeAlloc,
-    AccountId,
+    AccountId, Balance, Promise,
 };
-use std::{convert::TryInto, usize};
+use std::{convert::TryInto, mem::size_of, ops::Deref, usize};
 
 use dict::Dict;
 
 #[global_allocator]
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
-/// The token ID type is also defined in the NEP
-/// Cannot be `u64`.
-/// See <https://github.com/near-examples/NFT/issues/117>
-pub type TokenId = String;
+pub const MINT_FEE: u128 = 1_000_000_000_000_000_000_000_000;
 
-pub type CorgiId = TokenId;
+const CORGIS: &[u8] = b"a";
+const CORGIS_BY_OWNER: &[u8] = b"b";
+const CORGIS_BY_OWNER_PREFIX: &str = "B";
+const ITEMS: &[u8] = b"d";
+const ITEMS_PREFIX: &str = "D";
 
-/// This trait provides the baseline of functions as described at:
-/// <https://github.com/nearprotocol/NEPs/blob/nep-4/specs/Standards/Tokens/NonFungibleToken.md>
-pub trait NEP4 {
-    // Grant the access to the given `accountId` for the given `tokenId`.
-    // Requirements:
-    // * The caller of the function (`predecessor_id`) should have access to the token.
-    fn grant_access(&mut self, escrow_account_id: AccountId);
+fn get_collection_key(prefix: &str, mut key: String) -> Vec<u8> {
+    key.insert_str(0, prefix);
+    key.as_bytes().to_vec()
+}
 
-    // Revoke the access to the given `accountId` for the given `tokenId`.
-    // Requirements:
-    // * The caller of the function (`predecessor_id`) should have access to the token.
-    fn revoke_access(&mut self, escrow_account_id: AccountId);
+pub type CorgiKey = [u8; size_of::<u128>()];
 
-    // Transfer the given `tokenId` to the given `accountId`. Account `accountId` becomes the new owner.
-    // Requirements:
-    // * The caller of the function (`predecessor_id`) should have access to the token.
-    fn transfer_from(&mut self, owner_id: AccountId, new_owner_id: AccountId, token_id: TokenId);
+pub type CorgiId = String;
 
-    // Transfer the given `tokenId` to the given `accountId`. Account `accountId` becomes the new owner.
-    // Requirements:
-    // * The caller of the function (`predecessor_id`) should be the owner of the token. Callers who have
-    // escrow access should use transfer_from.
-    fn transfer(&mut self, new_owner_id: AccountId, token_id: TokenId);
+fn encode(key: CorgiKey) -> CorgiId {
+    bs58::encode(key).into_string()
+}
 
-    // Returns `true` or `false` based on caller of the function (`predecessor_id) having access to the token
-    fn check_access(&mut self, account_id: AccountId) -> bool;
-
-    // Get an individual owner by given `tokenId`.
-    fn get_token_owner(&self, token_id: TokenId) -> String;
+fn decode(id: &CorgiId) -> CorgiKey {
+    let mut key: CorgiKey = [0; size_of::<CorgiKey>()];
+    match bs58::decode(id).into(&mut key) {
+        Err(error) => panic!("Could not decode `{}`: {}", id, error),
+        Ok(_size) => (),
+    }
+    key
 }
 
 #[near_bindgen]
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
-    corgis: Dict<CorgiId, Corgi>,
-    corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiId, ()>>,
-    escrows_by_owner: UnorderedMap<AccountId, UnorderedSet<AccountId>>,
+    corgis: Dict<CorgiKey, Corgi>,
+    corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiKey, ()>>,
+    items: UnorderedMap<CorgiKey, (Dict<AccountId, (Balance, u64)>, u64)>,
 }
 
 /// Represents a `Corgi`.
@@ -70,13 +66,6 @@ pub struct Model {
 /// See, for example, [`get_corgis_by_owner`](Model::get_corgis_by_owner).
 /// Every struct that is part of the public interface needs to be serializable
 /// to JSON as well.
-/// The following attributes allows JSON serialization with no need to import
-/// `serde` directly.
-///
-/// ```example
-/// #[derive(Serialize)]
-/// #[serde(crate = "near_sdk::serde")]
-/// ```
 ///
 /// In addition, we use the following attributes
 ///
@@ -87,9 +76,8 @@ pub struct Model {
 /// to indicate that our struct uses both `PartialEq` and `Debug` traits
 /// but only for testing purposes.
 #[derive(BorshDeserialize, BorshSerialize, Serialize, PartialEq, Debug)]
-#[serde(crate = "near_sdk::serde")]
 pub struct Corgi {
-    pub id: String,
+    pub id: CorgiId,
     pub name: String,
     pub quote: String,
     pub color: String,
@@ -101,8 +89,44 @@ pub struct Corgi {
     pub sender: AccountId,
 }
 
+#[derive(Serialize, PartialEq, Debug)]
+pub struct CorgiDTO {
+    #[serde(flatten)]
+    corgi: Corgi,
+
+    pub for_sale: Option<ForSale>,
+}
+
+impl Deref for CorgiDTO {
+    type Target = Corgi;
+    fn deref(&self) -> &Self::Target {
+        &self.corgi
+    }
+}
+
+#[derive(Serialize, PartialEq, Debug)]
+pub struct ForSale {
+    pub bids: Vec<Bid>,
+    pub expires: U64,
+}
+
+#[derive(Serialize, PartialEq, Debug)]
+pub struct Bid {
+    bidder: AccountId,
+    amount: U128,
+    timestamp: U64,
+}
+
+impl Bid {
+    pub fn new(bidder: AccountId, amount: u128, timestamp: u64) -> Self {
+        Self {
+            bidder,
+            amount: U128(amount),
+            timestamp: U64(timestamp),
+        }
+    }
+}
 #[derive(BorshDeserialize, BorshSerialize, Serialize, PartialEq, Debug)]
-#[serde(crate = "near_sdk::serde")]
 #[allow(non_camel_case_types)]
 pub enum Rarity {
     COMMON,
@@ -117,74 +141,38 @@ macro_rules! log {
     }}
 }
 
-impl Default for Model {
-    fn default() -> Self {
-        log!("Default::default() contract v{}", env!("CARGO_PKG_VERSION"));
+impl CorgiDTO {
+    fn new(corgi: Corgi) -> Self {
         Self {
-            corgis: Dict::new("C".as_bytes().to_vec()),
-            corgis_by_owner: UnorderedMap::new("O".as_bytes().to_vec()),
-            escrows_by_owner: UnorderedMap::new(vec![b'c']),
+            corgi,
+            for_sale: None,
+        }
+    }
+
+    fn for_sale(corgi: Corgi, item: (Dict<AccountId, (Balance, u64)>, u64)) -> CorgiDTO {
+        let bids = item
+            .0
+            .into_iter()
+            .map(|(bidder, (amount, timestamp))| Bid::new(bidder, amount, timestamp))
+            .collect::<Vec<Bid>>();
+        Self {
+            corgi,
+            for_sale: Some(ForSale {
+                bids,
+                expires: U64(item.1),
+            }),
         }
     }
 }
 
-#[near_bindgen]
-impl NEP4 for Model {
-    fn grant_access(&mut self, escrow_account_id: AccountId) {
-        let owner = env::predecessor_account_id();
-
-        let mut escrows = self
-            .escrows_by_owner
-            .get(&owner)
-            .unwrap_or_else(|| UnorderedSet::new(vec![b'd']));
-        escrows.insert(&escrow_account_id);
-        self.escrows_by_owner.insert(&owner, &escrows);
-    }
-
-    fn revoke_access(&mut self, escrow_account_id: AccountId) {
-        let owner = env::predecessor_account_id();
-        let mut escrows = match self.escrows_by_owner.get(&owner) {
-            None => panic!("Account `{}` does not have any escrow", owner),
-            Some(escrows) => escrows,
-        };
-        if !escrows.remove(&escrow_account_id) {
-            panic!("Escrow `{}` does not have access to `{}`", escrow_account_id, owner);
+impl Default for Model {
+    fn default() -> Self {
+        log!("Default::default() contract v{}", env!("CARGO_PKG_VERSION"));
+        Self {
+            corgis: Dict::new(CORGIS.to_vec()),
+            corgis_by_owner: UnorderedMap::new(CORGIS_BY_OWNER.to_vec()),
+            items: UnorderedMap::new(ITEMS.to_vec()),
         }
-
-        self.escrows_by_owner.insert(&owner, &escrows);
-    }
-
-    fn transfer_from(&mut self, owner_id: AccountId, new_owner_id: AccountId, token_id: TokenId) {
-        let token_owner = self.get_token_owner(token_id.clone());
-
-        if owner_id != token_owner {
-            panic!("Attempt to transfer token from `{}`", token_owner);
-        }
-
-        if !self.check_access(token_owner) {
-            panic!("Attempt to transfer a token with no access");
-        }
-
-        self.transfer(new_owner_id, token_id);
-    }
-
-    fn transfer(&mut self, new_owner_id: AccountId, token_id: TokenId) {
-        log!("NEP4::transfer({}, {})", new_owner_id, token_id);
-        self.transfer_corgi(new_owner_id, token_id);
-    }
-
-    fn check_access(&mut self, account_id: AccountId) -> bool {
-        let initiator = env::predecessor_account_id();
-        initiator == account_id
-            || self
-                .escrows_by_owner
-                .get(&account_id)
-                .map_or(false, |escrows| escrows.contains(&initiator))
-    }
-
-    fn get_token_owner(&self, token_id: TokenId) -> String {
-        log!("NEP4::get_token_owner({})", token_id);
-        self.get_corgi_by_id(token_id).owner
     }
 }
 
@@ -200,22 +188,30 @@ impl Model {
     ///
     #[init]
     pub fn new() -> Self {
-        log!("::new()");
+        log!("new()");
         Self::default()
+    }
+
+    fn get_for_sale(&self, key: CorgiKey, corgi: Corgi) -> CorgiDTO {
+        match self.items.get(&key) {
+            None => CorgiDTO::new(corgi),
+            Some(item) => CorgiDTO::for_sale(corgi, item),
+        }
     }
 
     /// Creates a `Corgi` under the `predecessor_account_id`.
     ///
-    /// Returns the `id` of the generated `Corgi` encoded using base64.
+    /// Returns the `id` of the generated `Corgi` encoded using base58.
+    #[payable]
     pub fn create_corgi(
         &mut self,
         name: String,
         quote: String,
         color: String,
         background_color: String,
-    ) -> Corgi {
+    ) -> CorgiDTO {
         log!(
-            "::create_corgi({}, {}, {}, {})",
+            "create_corgi({}, {}, {}, {})",
             name,
             quote,
             color,
@@ -223,6 +219,12 @@ impl Model {
         );
 
         let owner = env::predecessor_account_id();
+        let deposit = env::attached_deposit();
+        assert!(
+            deposit == MINT_FEE,
+            "Deposit must be MINT_FEE but was {}",
+            deposit
+        );
 
         let check = |value: &String, max: usize, message: &str| {
             if value.len() > max {
@@ -235,12 +237,11 @@ impl Model {
         check(&background_color, 64, "Back color exceeds 64 chars");
 
         let now = env::block_timestamp();
+        let key = env::random_seed()[..size_of::<CorgiKey>()]
+            .try_into()
+            .unwrap();
         let corgi = Corgi {
-            id: {
-                let seed = env::random_seed();
-                let data = env::sha256(&seed);
-                base64::encode(&data)
-            },
+            id: encode(key),
             name,
             quote,
             color,
@@ -263,18 +264,19 @@ impl Model {
             sender: "".to_string(),
         };
 
-        self.push_corgi(corgi)
+        CorgiDTO::new(self.push_corgi(key, corgi))
     }
 
     /// Gets the `Corgi` by the given `id`.
-    pub fn get_corgi_by_id(&self, id: CorgiId) -> Corgi {
-        log!("::get_corgi_by_id({})", id);
+    pub fn get_corgi_by_id(&self, id: CorgiId) -> CorgiDTO {
+        log!("get_corgi_by_id({})", id);
 
-        match self.corgis.get(&id) {
+        let key = decode(&id);
+        match self.corgis.get(&key) {
             None => panic!("The given corgi id `{}` was not found", id),
             Some(corgi) => {
                 assert!(corgi.id == id, "Corgi ids do not match");
-                corgi
+                self.get_for_sale(key, corgi)
             }
         }
     }
@@ -285,22 +287,22 @@ impl Model {
     /// Note, the parameter is `&self` (without being mutable)
     /// meaning it doesn't modify state.
     /// In the frontend (`/src/index.js`) this is added to the `"viewMethods"` array.
-    pub fn get_corgis_by_owner(&self, owner: AccountId) -> Vec<Corgi> {
-        log!("::get_corgis_by_owner({})", owner);
+    pub fn get_corgis_by_owner(&self, owner: AccountId) -> Vec<CorgiDTO> {
+        log!("get_corgis_by_owner({})", owner);
 
         match self.corgis_by_owner.get(&owner) {
             None => Vec::new(),
             Some(list) => list
                 .into_iter()
-                .map(|(id,_)| {
-                    let maybe_corgi = self.corgis.get(&id);
-                    assert!(maybe_corgi.is_some(), "Could not find Corgi by id `{}`", id);
+                .map(|(key,_)| {
+                    let maybe_corgi = self.corgis.get(&key);
+                    assert!(maybe_corgi.is_some(), "Could not find Corgi by key `{:?}` in heap", key);
 
                     let corgi = maybe_corgi.unwrap();
-                    assert!(corgi.id == id);
-                    assert!(corgi.owner == owner, "The corgi with id `{}` owned by `{}` was found while fetching `{}`'s corgis", id, corgi.owner, owner);
+                    assert!(corgi.id == encode(key));
+                    assert!(corgi.owner == owner, "The corgi with key `{:?}` owned by `{}` was found while fetching `{}`'s corgis", key, corgi.owner, owner);
 
-                    corgi
+                    self.get_for_sale(key, corgi)
                 })
                 .collect(),
         }
@@ -308,28 +310,11 @@ impl Model {
 
     /// Delete the `Corgi` by `id`.
     /// Only the owner of the `Corgi` can delete it.
-    pub fn delete_corgi(&mut self, id: String) {
-        log!("::delete_corgi({})", id);
+    pub fn delete_corgi(&mut self, id: CorgiId) {
+        log!("delete_corgi({})", id);
 
         let owner = env::predecessor_account_id();
-        self.delete_corgi_from(owner, id);
-    }
-
-    fn delete_corgi_from(&mut self, owner: AccountId, id: String) {
-        assert!(self.check_access(owner.clone()), "Owner should have access");
-
-        match self.corgis_by_owner.get(&owner) {
-            None => panic!("Account `{}` does not have corgis to delete from", owner),
-            Some(mut list) => {
-                if !list.remove(&id) {
-                    panic!("Corgi id `{}` does not belong to account `{}`", id, owner);
-                }
-                self.corgis_by_owner.insert(&owner, &list);
-            }
-        }
-
-        let was_removed = self.corgis.remove(&id);
-        assert!(was_removed, "The corgi id `{}` was not found in dict", id);
+        self.delete_corgi_from(&owner, &id);
     }
 
     /// Get all `Corgi`s from all users.
@@ -341,17 +326,17 @@ impl Model {
     /// ```
     ///
     /// Returns a list of all `Corgi`s.
-    pub fn get_global_corgis(&self) -> Vec<Corgi> {
-        log!("::get_global_corgis()");
+    pub fn get_global_corgis(&self) -> Vec<CorgiDTO> {
+        log!("get_global_corgis()");
 
         let page_limit = self.get_corgis_page_limit() as usize;
 
         let mut result = Vec::new();
-        for (_, corgi) in &self.corgis {
+        for (key, corgi) in &self.corgis {
             if result.len() >= page_limit as usize {
                 break;
             }
-            result.push(corgi);
+            result.push(self.get_for_sale(key, corgi));
         }
 
         result
@@ -359,57 +344,207 @@ impl Model {
 
     /// Returns the max amount of `Corgi`s returned by `get_global_corgis`.
     pub fn get_corgis_page_limit(&self) -> u64 {
-        log!("::get_corgis_page_limit()");
+        log!("get_corgis_page_limit()");
 
-        10
+        12
     }
 
     /// Transfer the given corgi to `receiver`.
-    pub fn transfer_corgi(&mut self, receiver: AccountId, id: String) {
-        log!("::transfer_corgi({}, {})", receiver, id);
+    pub fn transfer_corgi(&mut self, receiver: AccountId, id: CorgiId) {
+        log!("transfer_corgi({}, {})", receiver, id);
 
         if !env::is_valid_account_id(receiver.as_bytes()) {
             panic!("Receiver account `{}` is not a valid account id", receiver);
         }
 
-        let owner = env::predecessor_account_id();
+        let sender = env::predecessor_account_id();
 
-        if owner == receiver {
+        if sender == receiver {
             panic!("Account `{}` attempted to make a self transfer", receiver);
         }
 
-        let mut corgi = match self.corgis.get(&id) {
+        let key = decode(&id);
+        let mut corgi = match self.corgis.get(&key) {
             None => panic!("Attempt to transfer a nonexistent Corgi id `{}`", id),
             Some(corgi) => corgi,
         };
 
         assert_eq!(corgi.id, id, "Corgi ids do not match");
 
-        if !self.check_access(corgi.owner.clone()) {
+        if sender != corgi.owner {
             panic!("Sender does not own `{}`", id);
         }
 
-        self.delete_corgi_from(corgi.owner.clone(), id);
+        self.delete_corgi_from(&corgi.owner, &id);
 
         corgi.owner = receiver;
-        corgi.sender = owner;
+        corgi.sender = sender;
         corgi.modified = env::block_timestamp();
 
-        self.push_corgi(corgi);
+        self.push_corgi(key, corgi);
     }
 
-    fn push_corgi(&mut self, corgi: Corgi) -> Corgi {
-        let id = corgi.id.clone();
-        let corgi = self.corgis.push_front(&id, corgi);
+    fn push_corgi(&mut self, key: CorgiKey, corgi: Corgi) -> Corgi {
+        let corgi = self.corgis.push_front(&key, corgi);
 
-        let mut ids = self
-            .corgis_by_owner
-            .get(&corgi.owner)
-            .unwrap_or_else(|| Dict::new(corgi.owner.as_bytes().to_vec()));
-        ids.push_front(&corgi.id, ());
+        let mut ids = self.corgis_by_owner.get(&corgi.owner).unwrap_or_else(|| {
+            Dict::new(get_collection_key(
+                CORGIS_BY_OWNER_PREFIX,
+                corgi.owner.clone(),
+            ))
+        });
+        ids.push_front(&key, ());
 
         self.corgis_by_owner.insert(&corgi.owner, &ids);
 
         corgi
+    }
+
+    fn delete_corgi_from(&mut self, owner: &AccountId, id: &CorgiId) {
+        assert!(env::predecessor_account_id() == *owner);
+
+        match self.corgis_by_owner.get(owner) {
+            None => panic!("Account `{}` does not have corgis to delete from", owner),
+            Some(mut list) => {
+                let key = decode(id);
+                if list.remove(&key).is_none() {
+                    panic!("Corgi id `{}` does not belong to account `{}`", id, owner);
+                }
+                self.corgis_by_owner.insert(&owner, &list);
+
+                let was_removed = self.corgis.remove(&key);
+                assert!(
+                    was_removed.is_some(),
+                    "The corgi id `{}` was not found in dict",
+                    id
+                );
+            }
+        }
+    }
+
+    pub fn get_items_for_sale(&self) -> Vec<CorgiDTO> {
+        log!("get_items_for_sale()");
+
+        let mut result = Vec::new();
+        for (key, item) in self.items.iter() {
+            let corgi = self.corgis.get(&key);
+            assert!(corgi.is_some());
+            let corgi = corgi.unwrap();
+
+            result.push(CorgiDTO::for_sale(corgi, item));
+        }
+        result
+    }
+
+    pub fn add_item_for_sale(&mut self, token_id: CorgiId, duration: u32) -> U64 {
+        log!("add_item_for_sale({}, {})", token_id, duration);
+
+        let key = decode(&token_id);
+        match self.corgis.get(&key) {
+            None => panic!("Token `{}` does not exist", token_id),
+            Some(corgi) => {
+                if corgi.owner != env::predecessor_account_id() {
+                    panic!("Only token owner can add item for sale")
+                }
+
+                match self.items.get(&key) {
+                    None => {
+                        let bids = Dict::new(get_collection_key(ITEMS_PREFIX, token_id));
+                        let expires = env::block_timestamp() + duration as u64 * 1_000_000_000;
+                        self.items.insert(&key, &(bids, expires));
+
+                        U64(expires)
+                    }
+                    Some(_) => {
+                        panic!("Item `{}` already for sale", token_id);
+                    }
+                }
+            }
+        }
+    }
+
+    #[payable]
+    pub fn bid_for_item(&mut self, token_id: CorgiId) {
+        log!("bid_for_item({})", token_id);
+
+        let key = decode(&token_id);
+        match self.items.get(&key) {
+            None => panic!("Item `{}` is not available for sale", token_id),
+            Some((mut bids, auction_ends)) => {
+                let bidder = env::predecessor_account_id();
+
+                if bidder == self.corgis.get(&key).expect("Corgi not found").owner {
+                    panic!("You cannot bid for your own Corgi `{}`", token_id)
+                }
+
+                if env::block_timestamp() > auction_ends {
+                    panic!("The auction for item `{}` has expired", token_id)
+                }
+
+                let price =
+                    env::attached_deposit() + bids.get(&bidder).map(|(p, _)| p).unwrap_or_default();
+
+                let top_price = bids
+                    .into_iter()
+                    .next()
+                    .map(|(_, (p, _))| p)
+                    .unwrap_or_default();
+                if price <= top_price {
+                    panic!(
+                        "Your bid Ⓝ `{}` is not enough to top current bid Ⓝ `{}`",
+                        price, top_price
+                    )
+                }
+
+                bids.remove(&bidder);
+                bids.push_front(&bidder, (price, env::block_timestamp()));
+                self.items.insert(&key, &(bids, auction_ends));
+            }
+        }
+    }
+
+    pub fn clearance_for_item(&mut self, token_id: CorgiId) {
+        log!("clearance_for_item({})", token_id);
+
+        let key = decode(&token_id);
+        match self.items.get(&key) {
+            None => panic!("Item `{}` not found for sale", token_id),
+            Some((mut bids, auction_ends)) => {
+                let corgi = {
+                    let corgi = self.corgis.get(&key);
+                    assert!(corgi.is_some());
+                    corgi.unwrap()
+                };
+                let signer = env::predecessor_account_id();
+                if signer == corgi.owner {
+                    let mut it = bids.into_iter();
+                    if let Some((bidder, (price, _timestamp))) = it.next() {
+                        if env::block_timestamp() <= auction_ends {
+                            panic!("Auction for token `{}` has not yet expired", token_id)
+                        }
+
+                        self.transfer_corgi(bidder, token_id);
+                        Promise::new(signer).transfer(price);
+                        for (bidder, (price, _timestamp)) in it {
+                            Promise::new(bidder).transfer(price);
+                        }
+                    }
+                    self.items.remove(&key);
+                } else {
+                    if let Some((bidder, (price, _timestamp))) = bids.into_iter().next() {
+                        if bidder == signer {
+                            panic!(
+                                "You cannot withdraw your bid Ⓝ `{}` because is the highest",
+                                price
+                            )
+                        }
+                    }
+                    match bids.remove(&signer) {
+                        None => panic!("You cannot clear an item if you are not bidding for it"),
+                        Some((price, _)) => Promise::new(signer).transfer(price),
+                    };
+                }
+            }
+        }
     }
 }

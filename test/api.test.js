@@ -1,24 +1,24 @@
-const { Near, KeyPair, Contract, keyStores: { InMemoryKeyStore } } = require('near-api-js');
+const { Near, KeyPair, Contract, keyStores: { InMemoryKeyStore }, utils } = require('near-api-js');
 const { CustomConsole } = require('@jest/console');
 const getConfig = require('../src/config');
 
-global.console = new CustomConsole(process.stdout, process.stderr, (type, message) => message
-  .split(/\n/)
-  .map(line => `[${type}] ${line}`)
-  .join('\n'));
+global.console = new CustomConsole(process.stdout, process.stderr, (_type, message) => message);
+// .split(/\n/)
+// .map(line => `[${type}] ${line}`)
+// .join('\n'));
 
 const config = getConfig('development');
 
-const NEP4Methods = {
-  viewMethods: ['get_token_owner'],
-  changeMethods: ['grant_access', 'revoke_access', 'transfer_from', 'transfer', 'check_access'],
+const MarketMethods = {
+  viewMethods: ['get_items_for_sale'],
+  changeMethods: ['add_item_for_sale', 'bid_for_item', 'clearance_for_item'],
 };
 
 const contractMethods = {
   // View methods are read only. They don't modify the state, but usually return some value.
-  viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis', 'get_corgis_page_limit', ...NEP4Methods.viewMethods],
+  viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis', 'get_corgis_page_limit', ...MarketMethods.viewMethods],
   // Change methods can modify the state. But you don't receive the returned value when called.
-  changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi', ...NEP4Methods.changeMethods],
+  changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi', ...MarketMethods.changeMethods],
 };
 
 async function initContractWithNewTestAccount() {
@@ -80,7 +80,7 @@ describe('Corgis contract integration tests', () => {
   test('create a corgi', async () => {
     const initial = await initialState(alice);
 
-    const newCorgi = await alice.contract.create_corgi({ name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+    const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
     console.debug('create corgi', newCorgi);
 
     const globalCorgisCount = await alice.contract.get_global_corgis();
@@ -97,7 +97,7 @@ describe('Corgis contract integration tests', () => {
   test('create and delete a corgi', async () => {
     const initial = await initialState(alice);
 
-    const newCorgi = await alice.contract.create_corgi({ name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+    const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
     console.debug('create corgi', newCorgi);
 
     {
@@ -118,7 +118,7 @@ describe('Corgis contract integration tests', () => {
 
     const newCorgis = [];
     for (let i = 0; i < pageLimit + 1; i++) {
-      const newCorgi = await alice.contract.create_corgi({ name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+      const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
       newCorgis.push(newCorgi);
     }
 
@@ -139,7 +139,7 @@ describe('Corgis contract integration tests', () => {
 
     const newCorgis = [];
     for (let i = 0; i < pageLimit + 2; i++) {
-      const newCorgi = await alice.contract.create_corgi({ name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+      const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
       console.debug('create corgi', newCorgi);
       newCorgis.push(newCorgi);
     }
@@ -165,7 +165,7 @@ describe('Corgis contract integration tests', () => {
   });
 
   test('transfer corgi', async () => {
-    const newCorgi = await alice.contract.create_corgi({ name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+    const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
 
     {
       const corgiById = await alice.contract.get_corgi_by_id({ id: newCorgi.id });
@@ -191,33 +191,27 @@ describe('Corgis contract integration tests', () => {
     }
   });
 
-  test('NEP4 transfer/get_token_owner', async () => {
-    const newCorgi = await alice.contract.create_corgi({ name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
-    await alice.contract.transfer({ new_owner_id: bob.accountId, token_id: newCorgi.id });
-    const newOwner = await alice.contract.get_token_owner({ token_id: newCorgi.id });
-    expect(newOwner).toBe(bob.accountId);
-  });
+  test('Marketplace ', async () => {
 
-  test('NEP4 grant/revoke access', async () => {
-    await alice.contract.grant_access({ escrow_account_id: ted.accountId});
+    balance(alice.account, 'alice');
 
-    let hasAccess = await ted.contract.check_access({ account_id: alice.accountId});
-    expect(hasAccess).toBe(true);
+    const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+    await alice.contract.add_item_for_sale({ token_id: newCorgi.id, duration: 15 });
 
-    await alice.contract.revoke_access({ escrow_account_id: ted.accountId});
+    await bid_for_item(bob.contract, { token_id: newCorgi.id }, '20');
+    await bid_for_item(ted.contract, { token_id: newCorgi.id }, '50');
 
-    hasAccess = await ted.contract.check_access({ account_id: alice.accountId});
-    expect(hasAccess).toBe(false);
-  });
+    const items = await alice.contract.get_items_for_sale();
+    console.log(items);
+    console.log(items[0].for_sale);
+    console.log(items[0].for_sale.bids);
 
-  test('NEP4 transfer_from', async () => {
-    const newCorgi = await alice.contract.create_corgi({ name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
-    await alice.contract.grant_access({ escrow_account_id: ted.accountId});
+    await sleep(15);
+    await alice.contract.clearance_for_item({ token_id: newCorgi.id });
 
-    await ted.contract.transfer_from({ owner_id: alice.accountId, new_owner_id: bob.accountId, token_id: newCorgi.id });
-
-    const newOwner = await alice.contract.get_token_owner({ token_id: newCorgi.id });
-    expect(newOwner).toBe(bob.accountId);
+    await balance(alice.account, 'alice');
+    await balance(bob.account, 'bob');
+    await balance(ted.account, 'ted');
   });
 
 });
@@ -226,4 +220,26 @@ async function initialState(user) {
   const globalCorgis = await user.contract.get_global_corgis();
   const corgisByOwner = await user.contract.get_corgis_by_owner({ owner: user.accountId });
   return { globalCorgis, corgisByOwner };
+}
+
+async function create_corgi(contract, args) {
+  const newCorgi = await contract.create_corgi(args, 300000000000000, utils.format.parseNearAmount('1'));
+  return newCorgi;
+}
+
+async function bid_for_item(contract, args, amount) {
+  await contract.bid_for_item(args, 300000000000000, utils.format.parseNearAmount(amount));
+}
+
+function sleep(seconds) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, seconds * 1000);
+  });
+}
+
+async function balance(account, user) {
+  await account.fetchState();
+  const state = await account.state();
+  console.log(user);
+  console.log(state);
 }
