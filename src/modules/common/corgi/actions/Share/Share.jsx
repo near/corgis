@@ -34,7 +34,7 @@ const Share = ({ display = 'grid', flexDirection = 'row' }) => {
           url: `${window.location.origin}${window.location.pathname}#corgi/${id}`,
 
           title: name,
-          image: `${window.location.origin}${window.location.pathname}/#assets/corgi/${id}`,
+          image: `${window.location.origin}${window.location.pathname}#assets/corgi/${id}`,
         }}
       />
     </div>
