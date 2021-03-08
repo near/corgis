@@ -1,9 +1,6 @@
-use std::fmt::Debug;
+use near_sdk::borsh::{self, BorshDeserialize, BorshSerialize};
 
-use near_sdk::{
-    borsh::{self, BorshDeserialize, BorshSerialize},
-    collections::UnorderedMap,
-};
+type HeapMap<K, V> = near_sdk::collections::LookupMap<K, V>;
 
 /// Keeps a mapping from `K` keys to `V` values.
 /// It combines `UnorderedMap` to store elements and implements a linked list
@@ -16,9 +13,9 @@ pub struct Dict<K, V> {
 }
 
 #[derive(BorshDeserialize, BorshSerialize)]
-pub struct Heap<K, V>(UnorderedMap<K, Node<K, V>>);
+pub struct Heap<K, V>(HeapMap<K, Node<K, V>>);
 
-#[derive(BorshDeserialize, BorshSerialize, Debug)]
+#[derive(BorshDeserialize, BorshSerialize)]
 struct Node<K, V> {
     next: K,
     prev: K,
@@ -31,17 +28,21 @@ pub struct DictIntoIterator<'a, K, V> {
 }
 
 impl<
-        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize + Debug,
+        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize,
         V: BorshDeserialize + BorshSerialize,
     > Dict<K, V>
 {
+    /// Creates a new `Dict` with zero elements.
+    /// Use `id` as a unique identifier.
     pub fn new(id: Vec<u8>) -> Self {
         Self {
-            heap: Heap(UnorderedMap::new(id)),
+            heap: Heap(HeapMap::new(id)),
             first: K::default(),
         }
     }
 
+    /// Returns the value corresponding to `key`,
+    /// otherwise returns `None`.
     pub fn get(&self, key: &K) -> Option<V> {
         self.heap.0.get(key).map(|node| node.value)
     }
@@ -54,7 +55,7 @@ impl<
     /// as it is used to signal the end of the linked list.
     /// Moreover, the `Dict` does not accept duplicated keys.
     pub fn push_front(&mut self, key: &K, value: V) -> V {
-        assert!(key != &K::default(), "Attempt to push `default` into heap");
+        assert!(key != &K::default());
 
         if self.first != K::default() {
             let mut node = self.heap.get_node(&self.first);
@@ -76,6 +77,8 @@ impl<
         node.value
     }
 
+    /// Removes `key` from `Dict`.
+    /// Returns the removed element, if the key was previously in the `Dict`.
     pub fn remove(&mut self, key: &K) -> Option<V> {
         match self.heap.0.remove(key) {
             None => None,
@@ -100,19 +103,17 @@ impl<
     }
 }
 
-impl<K: BorshDeserialize + BorshSerialize + Debug, V: BorshDeserialize + BorshSerialize>
-    Heap<K, V>
-{
+impl<K: BorshDeserialize + BorshSerialize, V: BorshDeserialize + BorshSerialize> Heap<K, V> {
     fn get_node(&self, key: &K) -> Node<K, V> {
         let node = self.0.get(&key);
-        assert!(node.is_some(), "Key `{:?}` was not found in heap map", key);
+        assert!(node.is_some());
         node.unwrap()
     }
 }
 
 impl<
         'a,
-        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize + Debug,
+        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize,
         V: BorshDeserialize + BorshSerialize,
     > IntoIterator for &'a Dict<K, V>
 {
@@ -129,7 +130,7 @@ impl<
 }
 
 impl<
-        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize + Debug,
+        K: Default + Clone + PartialEq + BorshDeserialize + BorshSerialize,
         V: BorshDeserialize + BorshSerialize,
     > Iterator for DictIntoIterator<'_, K, V>
 {

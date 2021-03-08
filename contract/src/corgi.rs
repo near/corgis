@@ -5,7 +5,7 @@ use near_sdk::{
     serde::Serialize,
     AccountId, Balance,
 };
-use std::{convert::TryInto, mem::size_of, ops::Deref, usize};
+use std::{convert::TryInto, mem::size_of, usize};
 
 use crate::dict::Dict;
 
@@ -13,12 +13,13 @@ pub type CorgiKey = [u8; size_of::<u128>()];
 
 pub type CorgiId = String;
 
-#[derive(Serialize, PartialEq, Debug)]
+#[derive(Serialize)]
+#[cfg_attr(test, derive(PartialEq, Debug))]
 pub struct CorgiDTO {
     #[serde(flatten)]
     corgi: Corgi,
 
-    pub for_sale: Option<ForSale>,
+    pub(crate) for_sale: Option<ForSale>,
 }
 
 /// Represents a `Corgi`.
@@ -31,7 +32,8 @@ pub struct CorgiDTO {
 ///
 /// In addition, we implement both `PartialEq` and `Debug` traits,
 /// but only for testing purposes.
-#[derive(BorshDeserialize, BorshSerialize, Serialize, PartialEq, Debug)]
+#[derive(BorshDeserialize, BorshSerialize, Serialize)]
+#[cfg_attr(test, derive(PartialEq, Debug))]
 pub struct Corgi {
     pub id: CorgiId,
     pub name: String,
@@ -45,7 +47,8 @@ pub struct Corgi {
     pub sender: AccountId,
 }
 
-#[derive(BorshDeserialize, BorshSerialize, Serialize, PartialEq, Debug)]
+#[derive(BorshDeserialize, BorshSerialize, Serialize)]
+#[cfg_attr(test, derive(PartialEq, Debug))]
 #[allow(non_camel_case_types)]
 pub enum Rarity {
     COMMON,
@@ -54,13 +57,15 @@ pub enum Rarity {
     VERY_RARE,
 }
 
-#[derive(Serialize, PartialEq, Debug)]
+#[derive(Serialize)]
+#[cfg_attr(test, derive(PartialEq, Debug))]
 pub struct ForSale {
     pub bids: Vec<Bid>,
     pub expires: U64,
 }
 
-#[derive(Serialize, PartialEq, Debug)]
+#[derive(Serialize)]
+#[cfg_attr(test, derive(PartialEq, Debug))]
 pub struct Bid {
     bidder: AccountId,
     amount: U128,
@@ -80,7 +85,8 @@ pub fn decode(id: &CorgiId) -> CorgiKey {
     key
 }
 
-impl Deref for CorgiDTO {
+#[cfg(test)]
+impl std::ops::Deref for CorgiDTO {
     type Target = Corgi;
     fn deref(&self) -> &Self::Target {
         &self.corgi

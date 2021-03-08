@@ -1,0 +1,16 @@
+{
+    "viewMethods": [
+        "get_corgi_by_id",
+        "get_corgis_by_owner",
+        "get_global_corgis",
+        "get_items_for_sale"
+    ],
+    "changeMethods": [
+        "create_corgi",
+        "delete_corgi",
+        "transfer_corgi",
+        "add_item_for_sale",
+        "bid_for_item",
+        "clearance_for_item"
+    ]
+}
