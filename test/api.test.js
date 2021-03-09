@@ -188,6 +188,7 @@ describe('Corgis contract integration tests', () => {
 
     await bid_for_item(bob.contract, { token_id: newCorgi.id }, '20');
     await bid_for_item(ted.contract, { token_id: newCorgi.id }, '50');
+    await bid_for_item(bob.contract, { token_id: newCorgi.id }, '40');
 
     const items = await alice.contract.get_items_for_sale();
     console.log(items);
@@ -200,6 +201,9 @@ describe('Corgis contract integration tests', () => {
     await balance(alice.account, 'alice');
     await balance(bob.account, 'bob');
     await balance(ted.account, 'ted');
+
+    const corgiById = await alice.contract.get_corgi_by_id({ id: newCorgi.id });
+    expect(corgiById.owner).toBe(bob.accountId);
   });
 
 });

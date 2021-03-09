@@ -52,7 +52,7 @@ let last = 0;
 for (const entry of trace) {
     const actions = formatActions(entry.transaction);
     const gas = entry.transaction ? calculateGas(entry).tokensBurnt : '';
-    console.log(`${actions}: ${formatBalance(entry.contract)} ${formatBalance(entry.user)} ${gas}`)
+    console.log(`${actions}: ${formatBalance(entry.contract)} ${formatBalance(entry.alice)} ${gas}`)
 
     const stateStaked = parseNEAR(entry.contract.stateStaked);
     switch (actions) {

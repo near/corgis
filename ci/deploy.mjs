@@ -60,7 +60,9 @@ console.log(`> Public key ${chalk.bold(seedPhraseKeyPair.publicKey)}`);
 const account = await (async () => {
     try {
         console.log(chalk.gray('..Fetch state for account', config.contractName));
-        return await near.account(config.contractName);
+        const acc = await near.account(config.contractName);
+        await acc.state();
+        return acc;
     } catch (e) {
         if (!e.message.includes('does not exist while viewing')) {
             console.error(e.message);
