@@ -1,6 +1,6 @@
 # Corgis contract
 
-## Interacing with Corgis contract
+## Interacting with Corgis contract
 
 The Corgis contract is located in the `contract` folder.
 It is written in Rust.
@@ -136,6 +136,13 @@ near view $CONTRACT_NAME get_global_corgis
 ```
 
 For the response body, see `get_corgis_by_owner`.
+
+## Contract Profiler
+
+The following chart shows the storage cost for a sample workload.
+Explore the script [../test/measure.mjs](../test/measure.mjs) to check out the workload used.
+
+![Storage Cost](../test/storage-cost.png)
 
 ## Development & Tooling
 

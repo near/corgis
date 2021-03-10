@@ -55,6 +55,7 @@
         "bn.js": "^5.2.0",
         "bs58": "^4.0.1",
         "chalk": "^4.1.0",
+        "chart.js": "^2.9.4",
         "eslint": "^7.19.0",
         "eslint-config-airbnb": "^18.2.1",
         "eslint-config-prettier": "^7.2.0",

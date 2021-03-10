@@ -68,7 +68,7 @@ describe('Corgis contract integration tests', () => {
   test('create a corgi', async () => {
     const initial = await initialState(alice);
 
-    const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+    const newCorgi = await create_corgi(alice.contract, { name: 'dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' });
     console.debug('create corgi', newCorgi);
 
     const globalCorgisCount = await alice.contract.get_global_corgis();
@@ -85,7 +85,7 @@ describe('Corgis contract integration tests', () => {
   test('create and delete a corgi', async () => {
     const initial = await initialState(alice);
 
-    const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+    const newCorgi = await create_corgi(alice.contract, { name: 'dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' });
     console.debug('create corgi', newCorgi);
 
     {
@@ -106,7 +106,7 @@ describe('Corgis contract integration tests', () => {
 
     const newCorgis = [];
     for (let i = 0; i < PAGE_LIMIT + 1; i++) {
-      const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+      const newCorgi = await create_corgi(alice.contract, { name: 'dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' });
       newCorgis.push(newCorgi);
     }
 
@@ -127,7 +127,7 @@ describe('Corgis contract integration tests', () => {
 
     const newCorgis = [];
     for (let i = 0; i < PAGE_LIMIT + 2; i++) {
-      const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+      const newCorgi = await create_corgi(alice.contract, { name: 'dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' });
       console.debug('create corgi', newCorgi);
       newCorgis.push(newCorgi);
     }
@@ -153,7 +153,7 @@ describe('Corgis contract integration tests', () => {
   });
 
   test('transfer corgi', async () => {
-    const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+    const newCorgi = await create_corgi(alice.contract, { name: 'dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' });
 
     {
       const corgiById = await alice.contract.get_corgi_by_id({ id: newCorgi.id });
@@ -179,21 +179,18 @@ describe('Corgis contract integration tests', () => {
     }
   });
 
-  test('Marketplace ', async () => {
+  test('trade a corgi', async () => {
 
     balance(alice.account, 'alice');
 
-    const newCorgi = await create_corgi(alice.contract, { name: 'hola', quote: 'asd', color: 'red', background_color: 'yellow' });
+    const newCorgi = await create_corgi(alice.contract, { name: 'dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' });
     await alice.contract.add_item_for_sale({ token_id: newCorgi.id, duration: 15 });
 
     await bid_for_item(bob.contract, { token_id: newCorgi.id }, '20');
     await bid_for_item(ted.contract, { token_id: newCorgi.id }, '50');
     await bid_for_item(bob.contract, { token_id: newCorgi.id }, '40');
 
-    const items = await alice.contract.get_items_for_sale();
-    console.log(items);
-    console.log(items[0].for_sale);
-    console.log(items[0].for_sale.bids);
+    await alice.contract.get_items_for_sale();
 
     await sleep(15);
     await alice.contract.clearance_for_item({ token_id: newCorgi.id }, GAS);
