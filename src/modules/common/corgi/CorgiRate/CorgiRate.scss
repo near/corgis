@@ -20,15 +20,44 @@
     @include margin-between(0.5rem, column);
   }
 
-  &--row {
-    max-width: inherit;
+  // &--row {
+  //   max-width: inherit;
+
+  //   .corgi-rate__list {
+  //     flex-direction: row;
+  //   }
+
+  //   .corgi-rate__item {
+  //     @include margin-between(0.5rem, row);
+  //   }
+  // }
+}
+
+@media all and (max-width: 1100px) {
+  .corgi-rate--row {
+    max-width: 100%;
 
     .corgi-rate__list {
       flex-direction: row;
     }
 
     .corgi-rate__item {
-      @include margin-between(0.5rem, row);
+      @include margin-between(1rem, row);
+    }
+  }
+}
+
+@media all and (max-width: 800px) {
+  .corgi-rate,
+  .corgi-rate--row {
+    max-width: 15rem;
+
+    .corgi-rate__list {
+      flex-direction: column;
+    }
+
+    .corgi-rate__item {
+      @include margin-between(1rem, column);
     }
   }
 }

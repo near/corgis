@@ -9,7 +9,7 @@
   z-index: 1;
 
   &__title {
-    @include dis-flex(space-between, center);
+    @include flex-center;
 
     width: max-content;
 
@@ -86,10 +86,10 @@
   }
 }
 
-@media all and (max-width: 500px) {
-  .dropdown__title {
-    @include flex-center;
-
-    padding: $padding-dropdown-item-semi-tight;
+@media all and (max-width: 670px) {
+  .dropdown--stretchable {
+    .dropdown__title {
+      width: 100%;
+    }
   }
 }

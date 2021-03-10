@@ -7,8 +7,7 @@ import { faRandom } from '@fortawesome/free-solid-svg-icons';
 
 import { CharacterContext, ContractContext } from '~contexts';
 
-import { Button, Colorpicker, Input } from '~modules/common';
-// import { Donation } from '~modules/minting/components';
+import { Button, Colorpicker, Donation, Input } from '~modules/common';
 
 import { genRandomColor, genRandomName } from '~helpers/generators';
 
@@ -17,10 +16,11 @@ import { CORGI_VALIDATION_MESSAGES } from '~constants/validation/corgi';
 import { validateCorgiName } from '~validators';
 
 const MintingForm = () => {
-  const { createCorgi } = useContext(ContractContext);
+  const { mintFee, createCorgi } = useContext(ContractContext);
   const { name, quote, color, backgroundColor, setName, setColor, setBackgroundColor } = useContext(CharacterContext);
 
   const [errorMessage, setErrorMessage] = useState('');
+  const [donationNears, setDonationNears] = useState(mintFee);
 
   const clearError = () => {
     setErrorMessage('');
@@ -54,10 +54,14 @@ const MintingForm = () => {
     const validationMessage = validateCorgiName(name);
 
     if (validationMessage === CORGI_VALIDATION_MESSAGES.SUCCESS) {
-      createCorgi(name, color, backgroundColor, quote);
+      createCorgi({ name, color, background_color: backgroundColor, quote }, donationNears);
     } else {
       setErrorMessage(validationMessage);
     }
+  };
+
+  const handleNears = (amount) => {
+    setDonationNears(amount);
   };
 
   useEffect(() => {
@@ -101,10 +105,17 @@ const MintingForm = () => {
       </div>
 
       <div className='minting-form__area'>
-        {/* // Feature not yet approved  
         <div className='minting-form__donation'>
-          <Donation />
-        </div> */}
+          <Donation
+            label='Donate'
+            afterword='for food'
+            handleNears={handleNears}
+            value={donationNears}
+            min={mintFee}
+            // disabled due to fixed fee
+            disabled
+          />
+        </div>
 
         <Button description='Mint Corgi' />
       </div>

@@ -19,9 +19,7 @@ const UserPage = () => {
 
   const [isAccountExist, setIsAccountExist] = useState(true);
 
-  const {
-    params: { id },
-  } = useRouteMatch();
+  const { params: { id } } = useRouteMatch();
 
   const prevId = usePrevious(id);
 
@@ -35,12 +33,10 @@ const UserPage = () => {
 
     if (user && id === user.accountId) {
       setCorgis(corgis);
+    } else if (await checkAccountLegit(id, nearContent.connection)) {
+      setCorgis(await getCorgis(id));
     } else {
-      if (await checkAccountLegit(id, nearContent.connection)) {
-        setCorgis(await getCorgis(id));
-      } else {
-        setIsAccountExist(false);
-      }
+      setIsAccountExist(false);
     }
 
     setIsAccountLoading(false);

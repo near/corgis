@@ -5,40 +5,68 @@
   @include dis-flex(space-between, center);
 
   padding: 0.5rem 0;
+  padding-left: 1rem;
 
   font-size: 1em;
 
   &__item {
-    margin: 0 0.5rem;
-
-    &:first-child {
-      margin-left: 0;
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
-  }
-
-  &__link {
-    @include fill-parent;
-
-    padding: $padding-dropdown-item;
+    @include margin-between(0.5rem, row);
   }
 }
 
-@media all and (max-width: 500px) {
+@media all and (max-width: 930px) {
   .nav {
     flex-wrap: wrap;
+    justify-content: stretch;
 
-    width: 100%;
+    padding-left: 0;
 
     &__item {
-      margin: 0.5rem 0.25rem;
+      @include margin-between(0.25rem, row);
+
+      flex-grow: 1;
     }
 
-    &__login {
-      margin: 0 auto;
+    &__item--minting {
+      flex-grow: 0;
+    }
+
+    &--unauth {
+      flex-wrap: nowrap;
+    }
+  }
+}
+
+@media all and (max-width: 670px) {
+  .nav {
+    width: 100%;
+
+    &__item--marketplace {
+      margin-right: 0;
+    }
+
+    &__item--dropdown {
+      width: 100%;
+
+      margin: 0.5rem 0 0;
+    }
+
+    &--unauth {
+      width: max-content;
+    }
+  }
+}
+
+@media all and (max-width: 416px) {
+  .nav {
+    &__item--marketplace {
+      width: 100%;
+
+      margin: 0.5rem 0 0;
+    }
+
+    &__item--corgis {
+      margin-right: 0;
     }
   }
 }

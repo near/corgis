@@ -14,4 +14,8 @@
   &__input {
     flex-grow: 1;
   }
+
+  &__near-icon {
+    @include flex-center;
+  }
 }

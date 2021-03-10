@@ -1,6 +1,7 @@
 import React, { useReducer, useCallback, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import { contractReducer, initialContractState } from './reducer';
 import {
   ACTION_START,
   ACTION_ERROR,
@@ -16,14 +17,15 @@ import {
   CLEAR_STATE,
 } from './types';
 
-import { contractReducer, initialContractState } from './reducer';
+import { NearContext } from '~contexts/';
+
+import { parseNears } from '~helpers/nears';
+
+import { BOATLOAD_OF_GAS } from '~constants/corgi';
 
 import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
-import BOATLOAD_OF_GAS from '~constants/corgi';
-import { NearContext } from '~contexts/';
-
-export const ContractContext = React.createContext();
+export const ContractContext = React.createContext(initialContractState);
 
 const ContractContextProviderPropTypes = {
   Contract: PropTypes.shape({
@@ -34,18 +36,17 @@ const ContractContextProviderPropTypes = {
     create_corgi: PropTypes.func.isRequired,
     delete_corgi: PropTypes.func.isRequired,
   }).isRequired,
+  mintFee: PropTypes.string.isRequired,
   children: ReactChildrenTypeRequired,
 };
 
-export const ContractContextProvider = ({ Contract, children }) => {
+export const ContractContextProvider = ({ Contract, mintFee, children }) => {
   const [contractState, dispatchContract] = useReducer(contractReducer, initialContractState);
 
   const { user } = useContext(NearContext);
 
   const getCorgi = useCallback(
-    (id) => {
-      return Contract.get_corgi_by_id({ id }).then((corgi) => corgi);
-    },
+    (id) => Contract.get_corgi_by_id({ id }).then((corgi) => corgi),
     [Contract],
   );
 
@@ -60,9 +61,7 @@ export const ContractContextProvider = ({ Contract, children }) => {
   );
 
   const getCorgis = useCallback(
-    (owner) => {
-      return Contract.get_corgis_by_owner({ owner }).then((corgis) => corgis);
-    },
+    (owner) => Contract.get_corgis_by_owner({ owner }).then((corgis) => corgis),
     [Contract],
   );
 
@@ -83,9 +82,9 @@ export const ContractContextProvider = ({ Contract, children }) => {
   }, [Contract]);
 
   const createCorgi = useCallback(
-    (name, color, background_color, quote) => {
+    (corgi) => {
       dispatchContract({ type: CREATE_CORGI_START });
-      Contract.create_corgi({ name, color, background_color, quote }, BOATLOAD_OF_GAS)
+      Contract.create_corgi(corgi, BOATLOAD_OF_GAS, parseNears(`${mintFee}`))
         .then(() => {
           dispatchContract({ type: CREATE_CORGI_SUCCESS });
         })
@@ -117,20 +116,23 @@ export const ContractContextProvider = ({ Contract, children }) => {
   const clearState = () => dispatchContract({ type: CLEAR_STATE });
 
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      clearState();
-      clearTimeout(timeoutId);
-    }, 100);
+    if (contractState.deleted || contractState.created || contractState.trasfered) {
+      const timeoutId = setTimeout(() => {
+        clearState();
+        clearTimeout(timeoutId);
+      }, 100);
 
-    return () => {
-      clearTimeout(timeoutId);
-    };
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
   }, [contractState.deleted, contractState.created, contractState.trasfered]);
 
   const value = {
     loading: contractState.loading,
     error: contractState.error,
     corgis: contractState.corgis,
+    corgi: contractState.corgi,
     globalCorgis: contractState.globalCorgis,
     creating: contractState.creating,
     created: contractState.created,
@@ -138,17 +140,16 @@ export const ContractContextProvider = ({ Contract, children }) => {
     transfered: contractState.transfered,
     deleting: contractState.deleting,
     deleted: contractState.deleted,
-    corgi: contractState.corgi,
-    info: contractState.info,
-    clearState,
+    mintFee,
     getCorgi,
     getActiveCorgi,
     getCorgis,
     getCorgisByCurrentUser,
+    getGlobalCorgis,
     createCorgi,
     deleteCorgi,
     transferCorgi,
-    getGlobalCorgis,
+    clearState,
   };
 
   return <ContractContext.Provider value={value}>{children}</ContractContext.Provider>;

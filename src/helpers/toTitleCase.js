@@ -7,8 +7,8 @@
 export default function toTitleCase(str) {
   return typeof str === 'string' && str.length
     ? str
-        .split(' ')
-        .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
-        .join(' ')
+      .split(' ')
+      .map((word) => word[0].toUpperCase() + word.slice(1).toLowerCase())
+      .join(' ')
     : str;
 }

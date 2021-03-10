@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import './Input.scss';
 
+import { v4 as uuidv4 } from 'uuid';
 import classNames from 'classnames';
 
 import { usePrevious } from '~hooks/';
@@ -10,22 +11,34 @@ import { usePrevious } from '~hooks/';
 const InputPropTypes = {
   autoFocus: PropTypes.bool,
   error: PropTypes.string,
+  label: PropTypes.string,
+  min: PropTypes.number,
+  max: PropTypes.number,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
+  step: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   required: PropTypes.bool,
   type: PropTypes.oneOf(['text', 'password', 'email', 'number', 'tel', 'url']),
   value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  disabled: PropTypes.bool,
 };
 
 const Input = ({
   autoFocus = false,
   error = '',
+  label = '',
+  min = '',
+  max = '',
   onChange = () => {},
   placeholder = '',
+  step = 'any',
   type = 'text',
   value = '',
   required = false,
+  disabled = false,
 }) => {
+  const inputId = `input-${uuidv4()}`;
+
   const inputRef = useRef(null);
 
   const prevValue = usePrevious(value);
@@ -107,14 +120,25 @@ const Input = ({
 
   return (
     <div className='input' className={classNames('input', { 'input--show-error': isErrorShown && errorMessage })}>
+      {label && label.length && (
+        <label className='input__label' htmlFor={inputId}>
+          {label}
+        </label>
+      )}
+
       <input
         className='input__field'
+        id={inputId}
         ref={inputRef}
         type={type}
         value={value}
         onChange={(event) => onChange(event)}
+        min={min}
+        max={max}
+        step={step || 'any'}
         placeholder={placeholder}
         required={required}
+        disabled={disabled}
       />
       <p className='input__error'>{errorMessage}</p>
     </div>

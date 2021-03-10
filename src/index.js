@@ -3,11 +3,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import * as nearAPI from 'near-api-js';
+
+import fs from 'fs';
+
 import getConfig from './config';
 
-import { ContractContextProvider, NearContextProvider } from '~contexts';
+import { ContractContextProvider, MarketplaceContextProvider, NearContextProvider } from '~contexts';
+
+import { formatToNears } from '~helpers/nears';
+
+import { CorgiMethods, MarketplaceMethods } from '~constants/contractMethods';
 
 import App from './App';
+
+const corgiConfig = JSON.parse(fs.readFileSync('contract/config.json'));
+const MINT_FEE = formatToNears(corgiConfig.mint_fee.replace(/_/g, ''));
 
 // Initializing contract
 async function InitContract() {
@@ -34,12 +44,13 @@ async function InitContract() {
   // Initializing our contract APIs by contract name and configuration.
   const contract = new nearAPI.Contract(walletConnection.account(), nearConfig.contractName, {
     // View methods are read only. They don't modify the state, but usually return some value.
-    viewMethods: ['get_corgi_by_id', 'get_corgis_by_owner', 'get_global_corgis'],
+    viewMethods: [...CorgiMethods.viewMethods, ...MarketplaceMethods.viewMethods],
     // Change methods can modify the state. But you don't receive the returned value when called.
-    changeMethods: ['transfer_corgi', 'create_corgi', 'delete_corgi'],
+    changeMethods: [...CorgiMethods.changeMethods, ...MarketplaceMethods.changeMethods],
     // Sender is the account ID to initialize transactions.
     sender: walletConnection.getAccountId(),
   });
+
   return {
     contract,
     currentUser,
@@ -53,8 +64,10 @@ window.nearInitPromise = InitContract()
   .then(({ contract, currentUser, nearConfig, walletConnection, near }) => {
     const app = (
       <NearContextProvider currentUser={currentUser} nearConfig={nearConfig} wallet={walletConnection} near={near}>
-        <ContractContextProvider Contract={contract}>
-          <App />
+        <ContractContextProvider Contract={contract} mintFee={MINT_FEE}>
+          <MarketplaceContextProvider Contract={contract}>
+            <App />
+          </MarketplaceContextProvider>
         </ContractContextProvider>
       </NearContextProvider>
     );

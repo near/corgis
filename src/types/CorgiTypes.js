@@ -13,6 +13,7 @@ export const CorgiType = {
   sender: PropTypes.string,
   created: PropTypes.number,
   modified: PropTypes.number,
+  for_sale: PropTypes.any,
 };
 
 export const CorgiTypeShape = PropTypes.shape(CorgiType);

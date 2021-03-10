@@ -16,12 +16,12 @@ const orange = '#FBB040';
 
 const CorgiRatePropTypes = {
   rate: CorgiType.rate,
-  row: PropTypes.bool,
+  responsiveRow: PropTypes.bool,
   hideTitle: PropTypes.bool,
 };
 
-const CorgiRate = ({ rate, row = false, hideTitle = false }) => (
-  <div className={classNames('corgi-rate', { 'corgi-rate--row': row })}>
+const CorgiRate = ({ rate, responsiveRow = false, hideTitle = false }) => (
+  <div className={classNames('corgi-rate', { 'corgi-rate--row': responsiveRow })}>
     {!hideTitle && <h3 className='corgi-rate__title'>This Corgi is:</h3>}
 
     <ul className='corgi-rate__list'>

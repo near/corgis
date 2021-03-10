@@ -1,0 +1,16 @@
+@import 'classes';
+@import 'mixins';
+@import 'variables';
+
+.history {
+  width: 100%;
+  min-width: max-content;
+
+  &__title {
+    @extend .page-title;
+  }
+
+  &__list {
+    @include dis-flex-column(flex-start, stretch);
+  }
+}

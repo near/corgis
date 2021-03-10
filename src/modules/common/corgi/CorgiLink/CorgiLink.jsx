@@ -6,9 +6,7 @@ import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
 
 const CorgiLinkPropTypes = { id: CorgiType.id.isRequired, children: ReactChildrenTypeRequired };
 
-const CorgiLink = ({ id, children }) => {
-  return <Link to={`/corgi/${id}`}>{children}</Link>;
-};
+const CorgiLink = ({ id, children }) => <Link to={`/corgi/${id}`}>{children}</Link>;
 
 CorgiLink.propTypes = CorgiLinkPropTypes;
 

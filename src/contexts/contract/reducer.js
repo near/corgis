@@ -115,6 +115,7 @@ export const contractReducer = (currentState = initialContractState, action) => 
     case CLEAR_STATE:
       return {
         ...currentState,
+        corgi: null,
         error: null,
         deleting: false,
         deleted: false,

@@ -17,11 +17,23 @@ const DropdownPropTypes = {
   listStyles: StylesType,
   hideTitleBorder: PropTypes.bool,
   hideArrow: PropTypes.bool,
+  stretchable: PropTypes.bool,
   children: ReactChildrenType,
 };
 
 const Dropdown = React.forwardRef(
-  ({ title = '', isTight = false, listStyles = {}, hideTitleBorder = false, hideArrow = false, children }, ref) => {
+  (
+    {
+      title = '',
+      isTight = false,
+      listStyles = {},
+      hideTitleBorder = false,
+      hideArrow = false,
+      stretchable = false,
+      children,
+    },
+    ref,
+  ) => {
     const [isOpened, setIsOpened] = useState(false);
 
     useImperativeHandle(ref, () => ({
@@ -47,6 +59,7 @@ const Dropdown = React.forwardRef(
         className={classNames('dropdown', {
           'dropdown--opened': isOpened,
           'dropdown--tight': isTight,
+          'dropdown--stretchable': stretchable,
         })}
         ref={dropdownRef}
       >

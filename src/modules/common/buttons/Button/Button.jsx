@@ -15,7 +15,7 @@ const ButtonPropTypes = {
   disabled: PropTypes.bool,
   isSquare: PropTypes.bool,
   badge: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  reducible: PropTypes.bool,
+  stretchable: PropTypes.bool,
   children: ReactChildrenType,
 };
 
@@ -26,7 +26,7 @@ const Button = ({
   warning = false,
   disabled = false,
   isSquare = false,
-  reducible = false,
+  stretchable = false,
   badge,
   children,
 }) => (
@@ -34,7 +34,7 @@ const Button = ({
     className={classNames('button', {
       'button--disabled': disabled,
       'button--square': isSquare,
-      'button--reducible': reducible,
+      'button--stretchable': stretchable,
       'button--danger': danger,
       'button--warning': warning,
     })}

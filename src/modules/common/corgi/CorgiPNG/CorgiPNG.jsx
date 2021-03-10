@@ -10,9 +10,7 @@ import { SAUSAGE } from '~constants/corgi';
 const CorgiPNG = () => {
   const { getCorgi } = useContext(ContractContext);
 
-  const {
-    params: { id },
-  } = useRouteMatch();
+  const { params: { id } } = useRouteMatch();
 
   const [corgi, setCorgi] = useState(null);
   const [сorgiPng, setCorgiPng] = useState('');

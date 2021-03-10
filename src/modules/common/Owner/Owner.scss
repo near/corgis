@@ -1,0 +1,21 @@
+@import 'variables';
+
+.owner {
+  max-width: 100%;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  &__name {
+    color: $color-main;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &--highlight {
+      color: darken($color-main, 25%);
+    }
+  }
+}

@@ -3,14 +3,11 @@ import PropTypes from 'prop-types';
 
 import { ContractContext, CorgiActionsContext } from '~contexts';
 
-import { BasicSpinner, Button, PopupWrapper } from '~modules/common';
-import { Confirmation } from '~modules/common/corgi';
+import { Confirmation, BasicSpinner, Button, PopupWrapper } from '~modules/common';
 
 import { ACTION_MESSAGES } from '~constants/corgi';
 
-const {
-  DELETE: { POPUP_TITLE, POPUP_TITLE_ACTION_CONFIRMED, BUTTON_DESCRIPTION },
-} = ACTION_MESSAGES;
+const { DELETE: { POPUP_TITLE, POPUP_TITLE_ACTION_CONFIRMED, BUTTON_DESCRIPTION } } = ACTION_MESSAGES;
 
 const DeletePopupPropTypes = { asButton: PropTypes.bool };
 

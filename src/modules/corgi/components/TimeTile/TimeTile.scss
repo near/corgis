@@ -1,0 +1,18 @@
+@import 'mixins';
+@import 'variables';
+
+.time-tile {
+  // @include basicSquare(4rem);
+  @include dis-flex-column(center, center);
+
+  height: 4rem;
+
+  padding: 0 1.25rem;
+
+  &__number {
+    font-size: 1.25em;
+    font-weight: 500;
+
+    margin-bottom: 0.15rem;
+  }
+}

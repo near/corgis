@@ -16,6 +16,8 @@
   letter-spacing: 0;
   white-space: nowrap;
 
+  box-sizing: border-box;
+
   cursor: pointer;
 
   transition: $transition-basic-ease-out;
@@ -48,8 +50,8 @@
   }
 }
 
-@media all and (max-width: 500px) {
-  .button--reducible {
-    padding: $padding-dropdown-item-semi-tight;
+@media all and (max-width: 670px) {
+  .button--stretchable {
+    width: 100%;
   }
 }

@@ -2,9 +2,9 @@ import React from 'react';
 
 import './Activity.scss';
 
-import humanizeTime from '~helpers/humanizeTime';
+import { humanizeTime } from '~helpers/time';
 
-import { Owner } from '~modules/common/corgi';
+import { Owner } from '~modules/common';
 
 import { CorgiType } from '~types/CorgiTypes';
 
@@ -19,11 +19,11 @@ const Activity = ({ created, modified, owner, sender }) => (
   <p className='activity'>
     {created === modified ? (
       <>
-        Minted {humanizeTime(created)} ago by <Owner owner={owner} />
+        Minted {humanizeTime(created)} ago by <Owner name={owner} />
       </>
     ) : (
       <>
-        Gifted {humanizeTime(modified)} ago to <Owner owner={owner} /> by <Owner owner={sender} />
+        Gifted {humanizeTime(modified)} ago to <Owner name={owner} /> by <Owner name={sender} />
       </>
     )}
   </p>

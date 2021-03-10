@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -8,7 +8,7 @@ const GuardedRoutePropTypes = {
   children: ReactChildrenType,
   auth: PropTypes.oneOfType([PropTypes.bool.isRequired, PropTypes.instanceOf(null)]),
   isLoading: PropTypes.bool,
-  rest: function (props, propName, componentName) {},
+  rest: (props, propName, componentName) => {},
 };
 
 const GuardedRoute = ({ children, auth, isLoading = false, ...rest }) => {

@@ -3,9 +3,13 @@ import { Popup, PopupWrapper } from './popups';
 import { BasicSpinner, CorgiSpinner } from './spinners';
 
 import Colorpicker from './Colorpicker';
+import Confirmation from './Confirmation';
+import Donation from './Donation';
 import Dropdown from './Dropdown';
 import ExternalLink from './ExternalLink';
 import Input from './Input';
+import NearIcon from './NearIcon';
+import Owner from './Owner';
 
 import {
   CorgiCard,
@@ -23,7 +27,6 @@ import {
   CorgiRate,
   SwitchCorgiPhoto,
   Egg,
-  Owner,
   RarityString,
   Quote,
   CorgiActions,
@@ -34,14 +37,17 @@ export {
   CheckMarkButton,
   MintingLink,
   Colorpicker,
+  Confirmation,
+  Donation,
   Dropdown,
   Egg,
-  Owner,
   RarityString,
   Quote,
   CorgiActions,
   ExternalLink,
   Input,
+  NearIcon,
+  Owner,
   Popup,
   PopupWrapper,
   BasicSpinner,

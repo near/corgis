@@ -2,11 +2,10 @@ import React, { useContext } from 'react';
 
 import './MintingScreen.scss';
 
+import tinycolor from 'tinycolor2';
 import { CharacterContext } from '~contexts';
 
 import { Egg } from '~modules/common';
-
-import tinycolor from 'tinycolor2';
 
 const MintingScreen = () => {
   const { color, backgroundColor } = useContext(CharacterContext);

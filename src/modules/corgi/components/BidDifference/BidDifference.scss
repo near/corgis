@@ -1,0 +1,17 @@
+@import 'mixins';
+
+.difference {
+  @include dis-flex(flex-start, center);
+  flex-wrap: wrap;
+
+  &__near-icon {
+    @include basicSquare(1rem);
+    display: inline-block;
+
+    position: relative;
+
+    margin-left: 0.15rem;
+
+    transform: translateY(0.125em);
+  }
+}

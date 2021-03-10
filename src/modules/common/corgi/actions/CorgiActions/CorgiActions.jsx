@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { ContractContext, CorgiActionsContextProvider, NearContext } from '~contexts';
@@ -14,17 +14,11 @@ const CorgiActions = ({ corgi, isDropdown = false }) => {
   const { user } = useContext(NearContext);
   const { deleted, transfered } = useContext(ContractContext);
 
-  const { owner } = corgi;
+  const { owner, for_sale } = corgi;
 
-  const [showOnlyShare, setShowOnlyShare] = useState(false);
+  const showOnlyShare = !user || user.accountId !== owner || for_sale;
 
   const dropdownRef = useRef();
-
-  useEffect(() => {
-    if (!user || user.accountId !== owner) {
-      setShowOnlyShare(true);
-    }
-  }, [user, owner]);
 
   useEffect(() => {
     if ((deleted || transfered) && dropdownRef && dropdownRef.current) {

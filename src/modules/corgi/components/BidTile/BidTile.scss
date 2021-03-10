@@ -1,0 +1,57 @@
+@import 'mixins';
+
+.bid {
+  @include dis-flex(space-between, center);
+
+  max-width: 100%;
+
+  margin: 0;
+
+  box-sizing: border-box;
+
+  &__info {
+    @include flex-center;
+
+    padding: 0.25rem;
+
+    white-space: nowrap;
+
+    &--near {
+      width: 20%;
+    }
+
+    &--bidder {
+      justify-content: flex-start;
+
+      width: 65%;
+    }
+
+    &--time {
+      width: 15%;
+    }
+  }
+
+  &__near-icon {
+    @include flex-center;
+
+    margin-left: 0.5rem;
+  }
+}
+
+@media all and (max-width: 800px) {
+  .bid__info--near {
+    padding-right: 2rem;
+  }
+}
+
+@media all and (max-width: 650px) {
+  .bid__info--near {
+    padding-right: 1rem;
+  }
+}
+
+@media all and (max-width: 500px) {
+  .bid__info--near {
+    padding-right: 0.5rem;
+  }
+}

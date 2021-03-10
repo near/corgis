@@ -31,9 +31,7 @@ export const characterReducer = (currentState = initialCharacterState, action) =
       };
 
     case SET_CHARACTER:
-      return {
-        ...action.payload.character,
-      };
+      return { ...currentState, ...action.payload.character };
 
     case CLEAR_STATE:
       return initialCharacterState;

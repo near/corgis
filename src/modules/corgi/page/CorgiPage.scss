@@ -1,3 +1,4 @@
+@import 'classes';
 @import 'mixins';
 
 .corgi-page {
@@ -6,17 +7,18 @@
   width: 100%;
   max-width: 100%;
 
-  padding: 0 1rem;
-
   & > * {
-    @include margin-between(2rem, row);
+    @include margin-between(1rem, row);
   }
 
   &__card {
     max-width: 30rem;
   }
 
-  &__content {
+  // &__content {
+  // }
+
+  &__additional {
     @include dis-flex-column(space-between, stretch);
 
     & > * {
@@ -29,6 +31,89 @@
 
     & > * {
       @include margin-between(1rem, column);
+    }
+  }
+
+  &__error {
+    @extend .page-title;
+  }
+
+  &--sale {
+    justify-content: space-between;
+
+    .corgi-page__content {
+      @include dis-flex(space-between, stretch);
+  
+      flex: 1 1 auto;
+  
+      & > * {
+        @include margin-between(1rem, row);
+        width: 50%;
+        max-width: 50%;
+      }
+    }
+  }
+}
+
+@media all and (max-width: 1100px) {
+  .corgi-page--sale {
+    flex-direction: column;
+
+    .corgi-page__content {
+      width: 100%;
+
+      margin-right: 0;
+
+      & > * {
+        width: 50%;
+        max-width: 50%;
+      }
+    }
+
+    .corgi-page__additional {
+      margin-left: 0;
+      margin-top: 1rem;
+    }
+
+    .corgi-page__actions {
+      @include dis-flex(flex-start, center);
+
+      & > * {
+        @include margin-between(0.75rem, row);
+
+        width: max-content;
+      }
+    }
+  }
+}
+
+@media all and (max-width: 800px) {
+  .corgi-page,
+  .corgi-page--sale {
+    .corgi-page__content {
+      flex-direction: column;
+      justify-content: flex-start;
+
+      & > * {
+        @include margin-between(0.5rem, column);
+
+        width: 100%;
+        max-width: 100%;
+      }
+    }
+
+    .corgi-page__additional {
+      @include dis-flex(space-evenly, flex-start);
+    }
+
+    .corgi-page__actions {
+      @include dis-flex-column(space-between, stretch);
+
+      & > * {
+        @include margin-between(0.75rem, column);
+
+        width: 100%;
+      }
     }
   }
 }
@@ -44,13 +129,6 @@
 
     &__card {
       max-width: 100%;
-    }
-
-    &__content {
-      flex-direction: row;
-      justify-content: space-evenly;
-
-      margin: 0;
     }
   }
 }

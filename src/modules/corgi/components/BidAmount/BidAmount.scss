@@ -1,0 +1,13 @@
+@import 'mixins';
+
+.bid-amount {
+  @include dis-flex(flex-end, center);
+
+  width: 100%;
+
+  &__icon {
+    @include flex-center;
+
+    margin-left: 0.25rem;
+  }
+}

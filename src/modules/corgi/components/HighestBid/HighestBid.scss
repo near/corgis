@@ -1,0 +1,27 @@
+@import 'classes';
+@import 'mixins';
+
+.highest-bid {
+  &__title {
+    @extend .page-title;
+
+    margin-bottom: 0.15rem;
+  }
+
+  &__info {
+    @include dis-flex(flex-start, center);
+    flex-wrap: wrap;
+
+    padding-left: 1.25rem;
+  }
+
+  &__amount {
+    display: inline-block;
+
+    width: max-content;
+  }
+
+  &__separator {
+    margin: 0 0.5rem;
+  }
+}

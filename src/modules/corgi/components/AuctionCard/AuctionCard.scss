@@ -1,0 +1,47 @@
+@import 'mixins';
+@import 'variables';
+
+.auction-card {
+  @extend .card;
+
+  max-width: 30rem;
+
+  padding: 1rem;
+
+  & > * {
+    @include margin-between(0.5rem, column);
+  }
+
+  &__bid-field {
+    @include dis-flex(space-between, center);
+
+    & > * {
+      @include margin-between(0.5rem, row);
+
+      width: 50%;
+    }
+  }
+
+  &__submit > * {
+    width: 100%;
+  }
+
+  &__existed-bid {
+    @include dis-flex(flex-start, center);
+    flex-wrap: wrap;
+  }
+
+  &__near-icon {
+    @include basicSquare(1rem);
+    @include flex-center;
+    display: inline-flex;
+
+    margin-left: 0.25rem;
+  }
+}
+
+@media all and (max-width: 800px) {
+  .auction-card {
+    max-width: 100%;
+  }
+}

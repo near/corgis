@@ -9,11 +9,10 @@ import * as nearAPI from 'near-api-js';
  */
 export default async function checkAccountLegit(id, connection) {
   try {
-    if (!!(await new nearAPI.Account(connection, id).state())) {
+    if (await new nearAPI.Account(connection, id).state()) {
       return true;
-    } else {
-      return false;
     }
+    return false;
   } catch (error) {
     console.error(error);
   }

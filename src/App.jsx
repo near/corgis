@@ -4,31 +4,34 @@ import React, { useContext, useEffect } from 'react';
 
 import './App.scss';
 
-import { ContractContext, NearContext } from '~contexts';
+import { ContractContext, MarketplaceContext, NearContext } from '~contexts';
 
 import Routes from '~router/Routes';
 
+import { Footer } from '~modules/footer';
+
 const App = () => {
   const { user } = useContext(NearContext);
-  const { created, deleted, transfered, getCorgisByCurrentUser, clearState } = useContext(ContractContext);
+  const { created, deleted, transfered, getCorgisByCurrentUser } = useContext(ContractContext);
+  const { cleared, getCorgisForSale } = useContext(MarketplaceContext);
 
   useEffect(() => {
-    if (created || deleted || transfered) {
-      clearState();
-    }
-  }, [created, deleted, transfered]);
-
-  useEffect(() => {
-    if (user && !created && !deleted && !transfered) {
+    if (user && ((!created && !deleted && !transfered) || cleared)) {
       getCorgisByCurrentUser();
     }
-  }, [user, created, deleted, transfered]);
+  }, [user, created, deleted, transfered, cleared]);
+
+  useEffect(() => {
+    getCorgisForSale();
+  }, []);
 
   return (
     <div className='App'>
       <div className='page'>
         <Routes />
       </div>
+
+      <Footer />
     </div>
   );
 };

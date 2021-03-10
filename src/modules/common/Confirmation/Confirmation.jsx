@@ -10,10 +10,10 @@ const ConfirmationPropTypes = { onConfirm: PropTypes.func, onReject: PropTypes.f
 const Confirmation = ({ onConfirm = () => console.log('confirmed'), onReject = () => console.log('rejected') }) => (
   <div className='confirmation'>
     <div className='confirmation__button'>
-      <Button description='Yes' action={() => onConfirm()} />
+      <Button description='Yes' action={(event) => onConfirm(event)} />
     </div>
     <div className='confirmation__button'>
-      <Button description='No' action={() => onReject()} />
+      <Button description='No' action={(event) => onReject(event)} />
     </div>
   </div>
 );

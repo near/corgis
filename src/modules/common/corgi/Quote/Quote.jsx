@@ -8,9 +8,7 @@ import { getQuoteById } from '~helpers/quotes';
 
 import { CorgiType } from '~types/CorgiTypes';
 
-const QuotePropTypes = {
-  id: CorgiType.quote,
-};
+const QuotePropTypes = { id: CorgiType.quote };
 
 const Quote = ({ id = '' }) => {
   const [text, setText] = useState('');

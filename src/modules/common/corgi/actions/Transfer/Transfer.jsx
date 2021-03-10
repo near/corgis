@@ -27,10 +27,9 @@ const Transfer = () => {
 
     if (await checkAccountLegit(newReceiver, nearContent.connection)) {
       return true;
-    } else {
-      setErrorMessage(USER_VALIDATION_MESSAGES.NOT_EXIST);
-      return false;
     }
+    setErrorMessage(USER_VALIDATION_MESSAGES.NOT_EXIST);
+    return false;
   };
 
   const clearError = () => {
