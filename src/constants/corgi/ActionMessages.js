@@ -4,7 +4,7 @@ const ACTION_MESSAGES = {
     BUTTON_DESCRIPTION: 'Gift',
   },
   TRADE: {
-    POPUP_TITLE: 'Trade',
+    POPUP_TITLE: 'Add Corgi for sale?',
     BUTTON_DESCRIPTION: 'Trade',
   },
   SHARE: {
@@ -15,6 +15,10 @@ const ACTION_MESSAGES = {
     POPUP_TITLE: 'Are you sure?',
     POPUP_TITLE_ACTION_CONFIRMED: 'Deleting...',
     BUTTON_DESCRIPTION: 'Delete',
+  },
+  WITHDRAW: {
+    POPUP_TITLE: 'Withdraw Corgi?',
+    BUTTON_DESCRIPTION: 'Withdraw',
   },
 };
 

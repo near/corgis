@@ -45,7 +45,7 @@ const Donation = ({
   };
 
   useEffect(() => {
-    if (min ? nears < min : nears <= mintFee) {
+    if (min ? nears < min : nears < mintFee) {
       setErrorMessage(error || CORGI_VALIDATION_MESSAGES.NEARS);
     }
   }, [nears]);

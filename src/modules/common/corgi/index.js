@@ -12,6 +12,7 @@ import {
   GiftPopup,
   SharePopup,
   TradePopup,
+  WithdrawPopup,
 } from './actions';
 
 import CorgiCard from './CorgiCard';
@@ -56,4 +57,5 @@ export {
   GiftPopup,
   SharePopup,
   TradePopup,
+  WithdrawPopup,
 };

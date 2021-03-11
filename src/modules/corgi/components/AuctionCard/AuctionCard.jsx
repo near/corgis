@@ -27,7 +27,7 @@ const AuctionCard = ({ corgi }) => {
 
   const [highestBid, setHighestBid] = useState(null);
 
-  const [minBid, setMinBid] = useState(mintFee);
+  const [minBid, setMinBid] = useState(0);
   const [bidNears, setBidNears] = useState(mintFee);
 
   const [isErrorShown, setIsErrorShown] = useState(false);
@@ -113,7 +113,7 @@ const AuctionCard = ({ corgi }) => {
                   value={bidNears}
                   min={minBid}
                   showError={isErrorShown}
-                  error={CORGI_VALIDATION_MESSAGES.BID}
+                  error={highestBid ? CORGI_VALIDATION_MESSAGES.BID : CORGI_VALIDATION_MESSAGES.NEARS}
                 />
               </div>
 

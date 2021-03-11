@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { ContractContext, CorgiActionsContextProvider, NearContext } from '~contexts';
 
 import { Dropdown } from '~modules/common';
-import { DeletePopup, GiftPopup, SharePopup, TradePopup } from '~modules/common/corgi';
+import { DeletePopup, GiftPopup, SharePopup, TradePopup, WithdrawPopup } from '~modules/common/corgi';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
 
@@ -17,6 +17,7 @@ const CorgiActions = ({ corgi, isDropdown = false }) => {
   const { owner, for_sale } = corgi;
 
   const showOnlyShare = !user || user.accountId !== owner || for_sale;
+  const showWithdraw = user && user.accountId === owner && for_sale && !for_sale.bids.length;
 
   const dropdownRef = useRef();
 
@@ -41,11 +42,13 @@ const CorgiActions = ({ corgi, isDropdown = false }) => {
           hideArrow
           isTight
         >
+          <SharePopup />
+
+          {showWithdraw ? <WithdrawPopup /> : <></>}
+
           {!showOnlyShare && <GiftPopup />}
 
           {!showOnlyShare && <TradePopup />}
-
-          <SharePopup />
 
           {!showOnlyShare && <span divider='true'></span>}
 
@@ -53,13 +56,19 @@ const CorgiActions = ({ corgi, isDropdown = false }) => {
         </Dropdown>
       ) : (
         <>
-          {!showOnlyShare && <GiftPopup asButton />}
-
-          {!showOnlyShare && <TradePopup asButton />}
-
           <SharePopup asButton />
 
-          {!showOnlyShare && <DeletePopup asButton />}
+          {showWithdraw && <WithdrawPopup asButton />}
+
+          {!showOnlyShare && (
+            <>
+              <GiftPopup asButton />
+
+              <TradePopup asButton />
+
+              <DeletePopup asButton />
+            </>
+          )}
         </>
       )}
     </CorgiActionsContextProvider>

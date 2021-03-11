@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 
 import './HomePage.scss';
 
@@ -9,21 +9,11 @@ import { CorgisShowCase } from '~modules/common';
 
 const HomePage = () => {
   const { user, signIn } = useContext(NearContext);
-  const { created, deleted, transfered, getGlobalCorgis, globalCorgis } = useContext(ContractContext);
+  const { globalCorgis } = useContext(ContractContext);
 
   const requestSignIn = () => {
     signIn();
   };
-
-  useEffect(() => {
-    getGlobalCorgis();
-  }, []);
-
-  useEffect(() => {
-    if (created || deleted || transfered) {
-      getGlobalCorgis();
-    }
-  }, [created, deleted, transfered]);
 
   return (
     <div className='home'>
