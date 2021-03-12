@@ -109,7 +109,7 @@ impl<T> MockedContext<T> {
             context.clone(),
             VMConfig {
                 limit_config: VMLimitConfig {
-                    max_number_logs: 200,
+                    max_number_logs: 1000,
                     ..Default::default()
                 },
                 ..Default::default()
@@ -721,8 +721,8 @@ fn clearance_for_non_bidder_should_panic() {
 }
 
 #[test]
-#[should_panic(expected = "Your bid is the highest and cannot be cleared")]
-fn highest_bid_withdraw_should_panic() {
+#[should_panic(expected = "Token still in auction")]
+fn highest_bid_withdraw_should_panic_while_in_auction() {
     let mut token_id = String::new();
     init_test()
         .run_as(alice(), |contract| {
@@ -733,6 +733,26 @@ fn highest_bid_withdraw_should_panic() {
             contract.context.attached_deposit = 100;
             contract.bid_for_item(token_id.clone());
             contract.clearance_for_item(token_id.clone());
+        });
+}
+
+#[test]
+fn highest_bid_can_end_auction_after_expired() {
+    let mut token_id = String::new();
+    init_test()
+        .run_as(alice(), |contract| {
+            token_id = contract.create_test_corgi(42).id.clone();
+            contract.add_item_for_sale(token_id.clone(), DURATION);
+        })
+        .run_as(bob(), |contract| {
+            contract.context.attached_deposit = 100;
+            contract.bid_for_item(token_id.clone());
+
+            contract.context.block_timestamp += 60 * 60 * 24 * 1_000_000_000 + 60;
+            contract.clearance_for_item(token_id.clone());
+            assert_eq!(contract.get_items_for_sale(), vec!());
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).owner, bob());
+            assert_eq!(contract.get_corgi_by_id(token_id.clone()).for_sale, None);
         });
 }
 

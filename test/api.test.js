@@ -179,7 +179,7 @@ describe('Corgis contract integration tests', () => {
     }
   });
 
-  test('trade a corgi', async () => {
+  test('trade a corgi, cleared by owner', async () => {
 
     balance(alice.account, 'alice');
 
@@ -194,6 +194,30 @@ describe('Corgis contract integration tests', () => {
 
     await sleep(15);
     await alice.contract.clearance_for_item({ token_id: newCorgi.id }, GAS);
+
+    await balance(alice.account, 'alice');
+    await balance(bob.account, 'bob');
+    await balance(ted.account, 'ted');
+
+    const corgiById = await alice.contract.get_corgi_by_id({ id: newCorgi.id });
+    expect(corgiById.owner).toBe(bob.accountId);
+  });
+
+  test('trade a corgi, cleared by highest bidder', async () => {
+
+    balance(alice.account, 'alice');
+
+    const newCorgi = await create_corgi(alice.contract, { name: 'dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' });
+    await alice.contract.add_item_for_sale({ token_id: newCorgi.id, duration: 15 });
+
+    await bid_for_item(bob.contract, { token_id: newCorgi.id }, '20');
+    await bid_for_item(ted.contract, { token_id: newCorgi.id }, '50');
+    await bid_for_item(bob.contract, { token_id: newCorgi.id }, '40');
+
+    await alice.contract.get_items_for_sale();
+
+    await sleep(15);
+    await bob.contract.clearance_for_item({ token_id: newCorgi.id }, GAS);
 
     await balance(alice.account, 'alice');
     await balance(bob.account, 'bob');

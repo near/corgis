@@ -20,6 +20,8 @@ fn get_file(file_name: &str) -> File {
     File::create(&dest_path).expect("Could not create file")
 }
 
+/// Reads the configuration for the contract located in `config.json`.
+/// This allows us to share configuration with the client of the contract.
 fn main() -> Result<()> {
     println!("cargo:rerun-if-changed=config.json");
 
