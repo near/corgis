@@ -24,9 +24,11 @@ use std::{convert::TryInto, mem::size_of, usize};
 static ALLOC: WeeAlloc = WeeAlloc::INIT;
 
 /// Fee to pay (in yocto Ⓝ) to allow the user to store Corgis on-chain.
+/// This value can be set by modifiying the `mint_fee` field in `config.json`.
 const MINT_FEE: u128 = include!(concat!(env!("OUT_DIR"), "/mint_fee.val"));
 
 /// Indicates how many Corgi are returned at most in the `get_global_corgis` method.
+/// This value can be set by modifiying the `page_limit` field in `config.json`.
 const PAGE_LIMIT: u32 = include!(concat!(env!("OUT_DIR"), "/page_limit.val"));
 
 /// Keys used to identify our structures within the NEAR blockchain.
@@ -41,10 +43,18 @@ const AUCTIONS_PREFIX: &str = "D";
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct Model {
     /// A mapping from `CorgiKey` to `Corgi` to have quick access to corgis.
+    /// `Dict` is used to keep corgis sorted by creation timestamp.
     corgis: Dict<CorgiKey, Corgi>,
     /// Represents which account holds which `Corgi`.
+    /// Each account can own several corgis.
+    /// The inner `Dict` acts as a set, since it is mapped to `()`.
     corgis_by_owner: UnorderedMap<AccountId, Dict<CorgiKey, ()>>,
     /// Internal structure to store auctions for a given corgi.
+    /// It is a mapping from `CorgiKey` to a tuple.
+    /// The first component of the tuple is a `Dict`, which represents the bids for that corgi.
+    /// Each entry in this `Dict` maps the bidder (`AccountId`) to the bid price and bidding timestamp.
+    /// The seconds component of the tuple represents the expiration of the auction,
+    /// as a timestamp in nanoseconds.
     auctions: UnorderedMap<CorgiKey, (Dict<AccountId, (Balance, u64)>, u64)>,
 }
 
@@ -63,7 +73,10 @@ impl Default for Model {
 #[near_envlog(skip_args, only_pub)]
 impl Model {
     /// Creates a `Corgi` under the `predecessor_account_id`.
-    /// Returns the `id` of the generated `Corgi` encoded using base58.
+    /// Returns the newly generated `Corgi`
+    /// The corgi `id` is encoded using base58.
+    /// This method is `payable` because the caller needs to cover the cost to mint the corgi.
+    /// The corresponding `attached_deposit` must be `MINT_FEE`.
     #[payable]
     pub fn create_corgi(
         &mut self,
@@ -113,12 +126,14 @@ impl Model {
     }
 
     /// Gets `Corgi` by the given `id`.
+    /// Panics if `id` is not found.
     pub fn get_corgi_by_id(&self, id: CorgiId) -> CorgiDTO {
         let (key, corgi) = self.get_corgi(&id);
         self.get_for_sale(key, corgi)
     }
 
-    /// Gets the `Corgi`s owned by the `owner` account id.
+    /// Gets all `Corgi`s owned by the `owner` account id.
+    /// Empty `vec` if `owner` does not hold any `Corgi`.
     pub fn get_corgis_by_owner(&self, owner: AccountId) -> Vec<CorgiDTO> {
         match self.corgis_by_owner.get(&owner) {
             None => Vec::new(),
@@ -138,13 +153,15 @@ impl Model {
         }
     }
 
-    /// Delete the `Corgi` by `id`. Only the owner of the `Corgi` can delete it.
+    /// Delete the `Corgi` by its `id`.
+    /// Only the `owner` of the `Corgi` can delete it.
     pub fn delete_corgi(&mut self, id: CorgiId) {
         let owner = env::predecessor_account_id();
         self.delete_corgi_from(id, owner);
     }
 
-    /// Deletes the given corgi with `id` and owned by `owner`.
+    /// Internal method to delete the corgi with `id` owned by `owner`.
+    /// Panics if `owner` does not own the corgi with `id`.
     fn delete_corgi_from(&mut self, id: CorgiId, owner: AccountId) {
         match self.corgis_by_owner.get(&owner) {
             None => env::panic("You do not have corgis to delete from".as_bytes()),
@@ -165,6 +182,7 @@ impl Model {
     }
 
     /// Returns a list of all `Corgi`s that have been created.
+    /// Number of `Corgi`s returned is limited by `PAGE_LIMIT`.
     pub fn get_global_corgis(&self) -> Vec<CorgiDTO> {
         let mut result = Vec::new();
         for (key, corgi) in &self.corgis {
@@ -178,6 +196,7 @@ impl Model {
     }
 
     /// Transfer the Corgi with the given `id` to `receiver`.
+    /// Only the `owner` of the corgi can make such a transfer.
     pub fn transfer_corgi(&mut self, receiver: AccountId, id: CorgiId) {
         if !env::is_valid_account_id(receiver.as_bytes()) {
             env::panic("Invalid receiver account id".as_bytes());
@@ -215,7 +234,7 @@ impl Model {
     }
 
     /// Puts the given `Corgi` for sale.
-    /// `duration` indicates for how long the auction should last, in seconds.
+    /// The `duration` indicates for how long the auction should last, in seconds.
     pub fn add_item_for_sale(&mut self, token_id: CorgiId, duration: u32) -> U64 {
         let (key, corgi) = self.get_corgi(&token_id);
         if corgi.owner != env::predecessor_account_id() {
