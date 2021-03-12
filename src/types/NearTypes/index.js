@@ -1,6 +1,6 @@
 import { NearConfigType, NearConfigTypeShape } from './NearConfigType';
 import { NearType, NearTypeShape } from './NearType';
-import { UserTypes, UserTypeShape } from './UserTypes';
+import { UserType, UserTypeShape } from './UserTypes';
 import { WalletType, WalletTypeShape } from './WalletType';
 
 export {
@@ -8,7 +8,7 @@ export {
   NearConfigTypeShape,
   NearType,
   NearTypeShape,
-  UserTypes,
+  UserType,
   UserTypeShape,
   WalletType,
   WalletTypeShape,

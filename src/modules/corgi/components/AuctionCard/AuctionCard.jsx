@@ -8,7 +8,7 @@ import { MarketplaceContext, NearContext } from '~contexts';
 
 import { BasicSpinner, Button } from '~modules/common';
 import { AuctionTimer, HighestBid } from '~modules/common/corgi';
-import { BidDifference, BidHistory, BidInput } from '~modules/corgi/components';
+import { BidDifference, BidHistory, BidInput, ClearanceButton } from '~modules/corgi/components';
 
 import { useHighestBid, useIsAuctionExpired } from '~hooks';
 
@@ -124,13 +124,13 @@ const AuctionCard = ({ corgi }) => {
       )}
 
       {user && !clearing ? (
-        <>
-          {user.accountId === owner && isAuctionExpired && <Button description='Finish auction' action={onClearance} />}
-
-          {existedBid && !(highestBid && user.accountId === highestBid.bidder) && (
-            <Button description='Claim my bid back' action={onClearance} />
-          )}
-        </>
+        <ClearanceButton
+          isAuctionExpired={isAuctionExpired}
+          isOwner={user.accountId === owner}
+          isHighestBidder={!!highestBid && user.accountId === highestBid.bidder}
+          isUserBidded={!!existedBid}
+          onClearance={onClearance}
+        />
       ) : (
         user && highestBid && <BasicSpinner />
       )}
