@@ -2,34 +2,32 @@
 @import 'variables';
 
 .footer {
-  @include basic(6.5rem, 100%);
-
+  @include basic($footer-height, $footer-width);
   @include bootstrap-row;
-
   @include dis-flex(space-between, center);
   flex-wrap: wrap;
 
   max-width: 100%;
 
-  margin: 1rem 0 0;
-  padding: $padding-page;
+  padding: $footer-padding;
+  margin: $footer-margin;
 
   background-color: $color-gray-light;
 
-  font-family: Inter, 'Poppins', sans-serif;
-  font-size: 0.75rem;
-  font-weight: 300;
+  font-family: $footer-font-family;
+  font-size: $footer-font-size;
+  font-weight: $footer-font-weight;
 
   &__watermark {
     @include bootstrap-col(sm, 5);
 
-    padding: 0;
+    padding: $footer-item-padding;
   }
 
   &__description {
     @include bootstrap-col(sm, 3);
 
-    padding: 0 1rem;
+    padding: $footer-description-padding;
 
     color: $text-color-dark;
   }
@@ -38,7 +36,7 @@
     @include bootstrap-col(sm, 4);
     @include dis-flex(flex-end, center);
 
-    padding: 0;
+    padding: $footer-item-padding;
   }
 }
 
@@ -47,7 +45,7 @@
     &__watermark {
       @include bootstrap-col-auto;
 
-      padding: 0;
+      padding: $footer-item-padding;
     }
 
     &__description {

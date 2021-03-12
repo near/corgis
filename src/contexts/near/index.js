@@ -1,10 +1,11 @@
-import React, { useReducer, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
+/* global localStorage:true */
+import React, { useReducer, useEffect } from 'react';
 
 import { initialNearState, nearReducer } from './reducer';
 import { CLEAR_STATE, LOADING_ERROR, LOADING_START, LOADING_SUCCESS, SET_USER } from './types';
 
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenTypes';
+import { NearConfigTypeShape, NearTypeShape, UserTypeShape, WalletTypeShape } from '~types/NearTypes';
 
 export const NearContext = React.createContext({
   ...initialNearState,
@@ -15,16 +16,10 @@ export const NearContext = React.createContext({
 });
 
 const NearContextProviderPropTypes = {
-  currentUser: PropTypes.shape({
-    accountId: PropTypes.string.isRequired,
-    balance: PropTypes.string.isRequired,
-  }),
-  nearConfig: PropTypes.shape({ contractName: PropTypes.string.isRequired }).isRequired,
-  wallet: PropTypes.shape({
-    requestSignIn: PropTypes.func.isRequired,
-    signOut: PropTypes.func.isRequired,
-  }).isRequired,
-  near: PropTypes.shape({ connection: PropTypes.object.isRequired }).isRequired,
+  nearConfig: NearConfigTypeShape.isRequired,
+  near: NearTypeShape.isRequired,
+  wallet: WalletTypeShape.isRequired,
+  currentUser: UserTypeShape,
   children: ReactChildrenTypeRequired,
 };
 

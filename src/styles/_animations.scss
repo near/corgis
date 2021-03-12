@@ -69,7 +69,7 @@
     transform: translateY(0);
   }
   100% {
-    transform: translateY(-10px);
+    transform: translateY(-7px);
   }
 }
 
@@ -101,4 +101,23 @@
   animation-timing-function: linear;
 
   transform-origin: bottom left;
+}
+
+// Spin
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@mixin animateSpin {
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+  animation-name: spin;
+  animation-timing-function: linear;
 }

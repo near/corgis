@@ -7,10 +7,11 @@ import corgiFull from '~assets/images/corgi-full.png';
 
 import { Button, MintingLink } from '~modules/common';
 
+import { UserTypeShape } from '~types/NearTypes';
+
 const PosterPropTypes = {
   requestSignIn: PropTypes.func.isRequired,
-  // TODO: user type
-  user: PropTypes.shape({ accountId: PropTypes.string.isRequired }),
+  user: UserTypeShape,
 };
 
 const Poster = ({ requestSignIn, user }) => (

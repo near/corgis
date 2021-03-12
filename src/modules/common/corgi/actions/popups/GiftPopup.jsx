@@ -6,8 +6,6 @@ import { Transfer } from '~modules/common/corgi';
 
 import { ACTION_MESSAGES } from '~constants/corgi';
 
-import { CorgiType } from '~types/CorgiTypes';
-
 const { GIFT: { POPUP_TITLE, BUTTON_DESCRIPTION } } = ACTION_MESSAGES;
 
 const GiftPopupPropTypes = { asButton: PropTypes.bool };

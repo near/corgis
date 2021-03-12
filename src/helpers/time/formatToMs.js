@@ -4,7 +4,9 @@ export default function formatToMs(timestamp) {
       let timestampStr = timestamp.toString();
       if (timestampStr.length > 13) {
         return timestampStr.slice(0, 13);
-      } if (timestampStr.length < 13) {
+      }
+      if (timestampStr.length < 13) {
+        /* eslint-disable-next-line no-plusplus */
         for (let i = timestampStr.length; i < 13; i++) {
           timestampStr += '0';
         }

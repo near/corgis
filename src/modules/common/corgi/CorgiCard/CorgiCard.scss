@@ -9,16 +9,16 @@
     @extend .card-header;
     @include dis-flex(space-between, center);
 
-    background-color: transparent;
+    background-color: $corgi-card-header-background-color;
   }
 
   &__image {
     @include flex-center;
 
-    height: 10rem;
-    max-height: 10rem;
+    height: $corgi-card-image-height;
+    max-height: $corgi-card-image-height;
 
-    padding: 1rem;
+    padding: $corgi-card-image-padding;
   }
 
   &__body {
@@ -28,8 +28,8 @@
   &__name {
     @extend .card-title;
 
-    font-size: 1.25rem;
-    font-weight: 500;
+    font-size: $corgi-card-font-size;
+    font-weight: $corgi-card-font-weight;
 
     &:hover {
       text-decoration: underline;
@@ -37,15 +37,20 @@
   }
 
   &__footer {
-    padding: 0.5rem 1rem;
+    padding: $corgi-card-footer-padding;
+  }
+
+  &__hr {
+    border: 0;
+    border-bottom: $border-basic rgba(#000000, 0.125);
   }
 
   &--big {
     height: 100%;
 
     .corgi-card__image {
-      height: 20rem;
-      max-height: 20rem;
+      height: $corgi-card-image-big-height;
+      max-height: $corgi-card-image-big-height;
     }
   }
 }

@@ -3,16 +3,6 @@
 @import 'mixins';
 @import 'variables';
 
-button {
-  all: unset;
-  outline: none;
-}
-
-input {
-  all: unset;
-  padding: 5px;
-}
-
 a {
   color: #000000;
 
@@ -21,6 +11,11 @@ a {
   &:hover {
     color: #000000;
   }
+}
+
+input {
+  all: unset;
+  padding: 4px;
 }
 
 .App {
@@ -32,5 +27,5 @@ a {
 }
 
 .page {
-  padding: $padding-page;
+  padding: $page-padding;
 }

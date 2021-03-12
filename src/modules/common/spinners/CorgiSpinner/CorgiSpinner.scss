@@ -1,43 +1,32 @@
+@import 'animations';
+@import 'mixins';
+@import 'variables';
+
 .spinner-wrapper {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  @include flex-center;
 
-  width: 100%;
-  max-width: 100%;
+  width: $corgi-spinner-wrapper-width;
+  max-width: $corgi-spinner-wrapper-max-width;
 
-  padding: 3rem 0;
-
-  margin: 50px auto;
+  padding: $corgi-spinner-padding;
+  margin: $corgi-spinner-margin;
 
   overflow: hidden;
 }
 
 .spinner {
-  width: 6rem;
-  height: 6rem;
+  @include basicRound($corgi-spinner-size);
+  @include clear-mar-pad;
 
   position: relative;
 
-  margin: 0;
-  padding: 0;
-
-  border-radius: 50%;
-
-  -webkit-animation: load3 1.4s infinite linear;
-  animation: load3 1.4s infinite linear;
+  @include animateSpin;
 
   z-index: 0;
 
   &__gradient {
-    position: absolute;
-    top: -25%;
-    left: -25%;
-
-    width: 150%;
-    height: 150%;
-
-    border-radius: inherit;
+    @include basicRound($corgi-spinner-gradient-size);
+    @include absolute-top-left(-25%, -25%);
 
     background: #fbb040;
     background: linear-gradient(to left top, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
@@ -50,62 +39,30 @@
 
     // Use ::after to trim unnecessary part of gradient
     &::after {
+      @include basicSquare($corgi-spinner-gradient-after-size);
+      @include absolute-top-left(0%, 50%);
+
       content: '';
 
-      position: absolute;
-
-      top: 0%;
-      left: 50%;
-
-      width: 50%;
-      height: 50%;
-
-      background-color: white;
+      background-color: $color-white;
     }
   }
 
   &__background {
-    width: 100%;
-    height: 100%;
+    @include fill-parent;
 
     border-radius: inherit;
 
-    background-color: white;
+    background-color: $color-white;
   }
 
   &__corgi {
-    position: absolute;
+    @include basicSquare($corgi-spinner-image-size);
     // pixel perfect positioning to remove gaps
-    top: -29%;
-    left: 50%;
+    @include absolute-top-left(-29%, 50%);
 
-    width: 75%;
-    height: 75%;
-
-    margin: 0;
+    margin: $corgi-spinner-image-margin;
 
     transform: translateX(-50%);
-  }
-}
-
-@-webkit-keyframes load3 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes load3 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
   }
 }

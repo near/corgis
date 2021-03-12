@@ -4,7 +4,6 @@ import { BasicSpinner, CorgiSpinner } from './spinners';
 
 import Colorpicker from './Colorpicker';
 import Confirmation from './Confirmation';
-import Donation from './Donation';
 import Dropdown from './Dropdown';
 import ExternalLink from './ExternalLink';
 import Input from './Input';
@@ -38,7 +37,6 @@ export {
   MintingLink,
   Colorpicker,
   Confirmation,
-  Donation,
   Dropdown,
   Egg,
   RarityString,

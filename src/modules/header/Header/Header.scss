@@ -1,11 +1,12 @@
 @import 'mixins';
+@import 'variables';
 
 .header {
   @include dis-flex(space-between, center);
 
   width: 100%;
 
-  padding: 1rem 0;
+  padding: $header-padding;
 }
 
 @media all and (max-width: 930px) {

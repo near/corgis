@@ -1,3 +1,5 @@
+/* eslint-disable no-param-reassign */
+
 /**
  * Returns a random integer between min (inclusive) and max (inclusive).
  * The value is no lower than min and no greater than max.

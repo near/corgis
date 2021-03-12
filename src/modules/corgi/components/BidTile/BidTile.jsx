@@ -5,7 +5,7 @@ import './BidTile.scss';
 import { NearContext } from '~contexts';
 
 import { Owner } from '~modules/common';
-import { BidAmount } from '~modules/corgi/components';
+import { BidAmount } from '~modules/common/corgi';
 
 import { humanizeTime } from '~helpers/time';
 
@@ -27,7 +27,7 @@ const BidTile = ({ bid: { amount, bidder, timestamp } }) => {
   return (
     <div className='bid'>
       <span className='bid__info bid__info--near'>
-        <BidAmount amount={amount} />
+        <BidAmount amount={amount} trim />
       </span>
 
       <span className='bid__info bid__info--bidder'>

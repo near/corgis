@@ -23,7 +23,7 @@ import { parseNears } from '~helpers/nears';
 
 import { BOATLOAD_OF_GAS } from '~constants/corgi';
 
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenTypes';
 
 export const ContractContext = React.createContext(initialContractState);
 
@@ -45,10 +45,7 @@ export const ContractContextProvider = ({ Contract, mintFee, children }) => {
 
   const { user } = useContext(NearContext);
 
-  const getCorgi = useCallback(
-    (id) => Contract.get_corgi_by_id({ id }).then((corgi) => corgi),
-    [Contract],
-  );
+  const getCorgi = useCallback((id) => Contract.get_corgi_by_id({ id }).then((corgi) => corgi), [Contract]);
 
   const getActiveCorgi = useCallback(
     (id) => {
@@ -60,10 +57,9 @@ export const ContractContextProvider = ({ Contract, mintFee, children }) => {
     [Contract],
   );
 
-  const getCorgis = useCallback(
-    (owner) => Contract.get_corgis_by_owner({ owner }).then((corgis) => corgis),
-    [Contract],
-  );
+  const getCorgis = useCallback((owner) => Contract.get_corgis_by_owner({ owner }).then((corgis) => corgis), [
+    Contract,
+  ]);
 
   const getCorgisByCurrentUser = useCallback(() => {
     if (user) {
@@ -116,16 +112,20 @@ export const ContractContextProvider = ({ Contract, mintFee, children }) => {
   const clearState = () => dispatchContract({ type: CLEAR_STATE });
 
   useEffect(() => {
+    let timeoutId;
+
     if (contractState.deleted || contractState.created || contractState.trasfered) {
-      const timeoutId = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         clearState();
         clearTimeout(timeoutId);
       }, 100);
-
-      return () => {
-        clearTimeout(timeoutId);
-      };
     }
+
+    return () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
   }, [contractState.deleted, contractState.created, contractState.trasfered]);
 
   const value = {

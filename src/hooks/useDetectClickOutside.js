@@ -1,3 +1,4 @@
+/* global document:true */
 import { useEffect, useCallback } from 'react';
 
 export default function useDetectClickOutside(ref, action) {

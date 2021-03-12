@@ -5,16 +5,35 @@ import './CorgiCard.scss';
 
 import classNames from 'classnames';
 
-import { Activity, CorgiActions, CorgiLink, CorgiSVG, Quote, RarityString } from '~modules/common/corgi';
+import {
+  Activity,
+  AuctionTimer,
+  CorgiActions,
+  CorgiLink,
+  CorgiSVG,
+  HighestBid,
+  Quote,
+  RarityString,
+} from '~modules/common/corgi';
+
+import { useHighestBid, useIsAuctionExpired } from '~hooks';
 
 import { SAUSAGE } from '~constants/corgi';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
 
-const CorgiCardPropTypes = { corgi: CorgiTypeShape.isRequired, hideActions: PropTypes.bool, big: PropTypes.bool };
+const CorgiCardPropTypes = {
+  corgi: CorgiTypeShape.isRequired,
+  hideActions: PropTypes.bool,
+  big: PropTypes.bool,
+  showAuctionInfo: PropTypes.bool,
+};
 
-const CorgiCard = ({ corgi, hideActions = false, big = false }) => {
-  const { id, background_color, color, quote, name, rate, owner, sender, created, modified } = corgi;
+const CorgiCard = ({ corgi, hideActions = false, big = false, showAuctionInfo = false }) => {
+  const { id, background_color, color, quote, name, rate, owner, sender, created, modified, for_sale } = corgi;
+
+  const highestBid = useHighestBid(for_sale);
+  const isAuctionExpired = useIsAuctionExpired(for_sale && for_sale.expires);
 
   return (
     <div className={classNames('corgi-card', { 'corgi-card--big': big })}>
@@ -38,7 +57,15 @@ const CorgiCard = ({ corgi, hideActions = false, big = false }) => {
       </div>
 
       <div className='corgi-card__footer'>
-        <Activity created={created} modified={modified} owner={owner} sender={sender} />
+        {showAuctionInfo && for_sale ? (
+          <>
+            {highestBid && <HighestBid bid={highestBid} isExpired={isAuctionExpired} />}
+            <hr className='corgi-card__hr' />
+            <AuctionTimer expires={for_sale.expires} />
+          </>
+        ) : (
+          <Activity created={created} modified={modified} owner={owner} sender={sender} />
+        )}
       </div>
     </div>
   );

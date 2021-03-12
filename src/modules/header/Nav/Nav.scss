@@ -4,13 +4,12 @@
 .nav {
   @include dis-flex(space-between, center);
 
-  padding: 0.5rem 0;
-  padding-left: 1rem;
+  padding: $nav-padding;
 
-  font-size: 1em;
+  font-size: $nav-font-size;
 
   &__item {
-    @include margin-between(0.5rem, row);
+    @include margin-between($nav-items-gap, row);
   }
 }
 
@@ -22,7 +21,7 @@
     padding-left: 0;
 
     &__item {
-      @include margin-between(0.25rem, row);
+      @include margin-between($nav-items-gap-small, row);
 
       flex-grow: 1;
     }

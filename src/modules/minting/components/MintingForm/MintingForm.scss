@@ -5,7 +5,7 @@
   @include dis-flex-column(space-between, stretch);
   @include fill-parent;
 
-  padding: 0.5rem;
+  padding: $minting-form-padding;
 
   border-radius: $border-radius-big;
 
@@ -13,39 +13,39 @@
 
   &__area {
     @include dis-flex-column(flex-start, stretch);
-    @include margin-between(1rem, column);
+    @include margin-between($minting-form-items-gap, column);
   }
 
   &__header {
     @include dis-flex(flex-start, center);
 
-    margin-bottom: 0.75rem;
+    margin-bottom: $minting-form-header-margin-bottom;
   }
 
   &__title {
-    font-weight: 600;
-    font-size: 1.5em;
+    font-size: $minting-form-title-font-size;
+    font-weight: $minting-form-title-font-weight;
   }
 
   &__icon {
-    margin-left: 0.5rem;
-    padding: 0.25rem;
+    padding: $minting-form-icon-padding;
+    margin-left: $minting-form-icon-margin-left;
 
     border-radius: 50%;
 
     background-color: $color-black;
     color: $color-white;
 
-    font-size: 1rem;
+    font-size: $minting-form-icon-font-size;
 
     cursor: pointer;
+
+    &:hover {
+      background-color: lighten($color-black, 15%);
+    }
   }
 
   &__colorpicker {
-    @include margin-between(0.5rem, column);
-  }
-
-  &__donation {
-    margin-bottom: 0.75rem;
+    @include margin-between($minting-form-colorpickers-gap, column);
   }
 }

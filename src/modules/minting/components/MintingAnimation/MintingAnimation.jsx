@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 import React, { useContext, useState } from 'react';
 
 import './MintingAnimation.scss';
@@ -29,29 +30,39 @@ const MintingAnimation = () => {
     <div className='minting-animation' style={{ backgroundColor }}>
       <div className='minting-animation__box'>
         <div
-          className={classNames('minting-animation__corgi minting-animation__corgi--0', { 'minting-animation__corgi--show': animationCounter === 0 })}
+          className={classNames('minting-animation__corgi', 'minting-animation__corgi--0', {
+            'minting-animation__corgi--show': animationCounter === 0,
+          })}
         >
           <CorgiAnimOne color={color} />
         </div>
         <div
-          className={classNames('minting-animation__corgi minting-animation__corgi--1', { 'minting-animation__corgi--show': animationCounter === 1 })}
+          className={classNames('minting-animation__corgi', 'minting-animation__corgi--1', {
+            'minting-animation__corgi--show': animationCounter === 1,
+          })}
         >
           <CorgiAnimTwo color={color} />
         </div>
         <div
-          className={classNames('minting-animation__corgi minting-animation__corgi--2', { 'minting-animation__corgi--show': animationCounter === 2 })}
+          className={classNames('minting-animation__corgi', 'minting-animation__corgi--2', {
+            'minting-animation__corgi--show': animationCounter === 2,
+          })}
         >
           <CorgiAnimThree color={color} />
         </div>
         <div
-          className={classNames('minting-animation__corgi minting-animation__corgi--3', { 'minting-animation__corgi--show': animationCounter >= 3 })}
+          className={classNames('minting-animation__corgi', 'minting-animation__corgi--3', {
+            'minting-animation__corgi--show': animationCounter >= 3,
+          })}
         >
           <CorgiAnimFour color={color} />
         </div>
       </div>
 
       <div
-        className={classNames('minting-animation__shadow', { 'minting-animation__shadow--animate': animationCounter <= 3 })}
+        className={classNames('minting-animation__shadow', {
+          'minting-animation__shadow--animate': animationCounter <= 3,
+        })}
       >
         <img src={shadow} alt='' />
       </div>

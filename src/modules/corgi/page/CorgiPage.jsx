@@ -12,7 +12,7 @@ import { AuctionCard } from '~modules/corgi/components';
 
 const CorgiPage = () => {
   const { user } = useContext(NearContext);
-  const { corgi, error, loading, getActiveCorgi, deleted, transfered, clearState } = useContext(ContractContext);
+  const { corgi, error, loading, getActiveCorgi, deleted, transfered } = useContext(ContractContext);
   const { added, bidded, cleared } = useContext(MarketplaceContext);
 
   const { params: { id } } = useRouteMatch();

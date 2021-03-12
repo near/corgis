@@ -5,7 +5,7 @@
   @include basicRound($minting-link-size);
 
   &__icon {
-    @include basicSquare(100%);
+    @include fill-parent;
   }
 
   &--big {

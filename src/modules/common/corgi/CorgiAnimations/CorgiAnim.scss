@@ -1,7 +1,8 @@
 @import 'mixins';
+@import 'variables';
 
 .corgi-anim {
-  @include basicSquare(10rem);
+  @include basicSquare($corgi-anim-size);
 
   position: relative;
 

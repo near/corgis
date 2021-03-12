@@ -2,12 +2,13 @@ import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { ReactChildrenType } from '~types/ReactChildrenType';
+import { ReactChildrenType } from '~types/ReactChildrenTypes';
 
 const GuardedRoutePropTypes = {
   children: ReactChildrenType,
   auth: PropTypes.oneOfType([PropTypes.bool.isRequired, PropTypes.instanceOf(null)]),
   isLoading: PropTypes.bool,
+  /* eslint-disable-next-line no-unused-vars */
   rest: (props, propName, componentName) => {},
 };
 

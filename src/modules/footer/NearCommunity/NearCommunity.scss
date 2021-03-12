@@ -4,20 +4,20 @@
 .community {
   @include dis-flex-column;
 
-  font-size: 1.125rem;
+  font-size: $community-font-size;
 
-  line-height: 1.15em;
+  line-height: $community-line-height;
 
   &__title,
   &__link {
-    font-size: inherit;
-    font-weight: 600;
+    font-size: $community-font-size;
+    font-weight: $community-font-weight;
 
     white-space: nowrap;
   }
 
   &__title {
-    margin: 0;
+    margin: $community-margin;
 
     color: $text-color-gray;
   }

@@ -18,6 +18,7 @@ const shortHumanizer = humanizeDuration.humanizer({
   },
 });
 
+/* eslint-disable max-len */
 /**
  * @typedef {Set<'y' | 'mo' | 'w' | 'd' | 'h' | 'm' | 's' | 'ms'>} UnitsArray
  *
@@ -30,6 +31,7 @@ const shortHumanizer = humanizeDuration.humanizer({
  * @property {UnitsArray} [units] - Use true to round the smallest unit displayed. The default is true.
  * @property {boolean} [short] - Use abbreviation if true. The default is false.
  */
+/* eslint-enable max-len */
 
 /**
  * There are no nanoseconds in JavaScript, so the max timestamp length is 13.

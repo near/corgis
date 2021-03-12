@@ -4,7 +4,7 @@
 .minting-description {
   @include fill-parent;
 
-  padding: 1rem;
+  padding: $minting-form-padding;
 
   border-radius: $border-radius-big;
 
@@ -15,13 +15,13 @@
 
     height: 100%;
 
-    padding-left: 1rem;
+    padding-left: $minting-description-list-padding-left;
 
     list-style-type: disc;
   }
 
   &__item {
-    @include margin-between(0.75rem, column);
+    @include margin-between($minting-description-items-gap, column);
   }
 
   &__text {

@@ -16,6 +16,7 @@
         "start": "yarn build:contract && yarn deploy:contract && parcel src/index.html",
         "test": "yarn test:contract && yarn build:contract && jest test --runInBand",
         "lint": "eslint --ext js,jsx src",
+        "lint:file": "eslint",
         "lint:fix": "yarn lint -- --fix",
         "lint:fix:dry": "yarn lint -- --fix-dry-run"
     },

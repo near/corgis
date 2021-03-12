@@ -13,7 +13,7 @@
   &__description {
     @include dis-flex-column;
 
-    padding-left: 1rem;
+    padding-left: $watermark-padding-left;
 
     white-space: nowrap;
   }
@@ -37,11 +37,11 @@
   }
 
   &__divider {
-    height: 1.25em;
+    height: $watermark-divider-height;
 
-    margin: 0 0.25rem;
+    margin: $watermark-divider-margin;
 
-    border-left: 1px solid $color-gray;
+    border-left: $border-basic-gray;
   }
 }
 

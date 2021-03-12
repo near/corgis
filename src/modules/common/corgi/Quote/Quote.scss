@@ -1,4 +1,5 @@
 @import 'bootstrap';
+@import 'variables';
 
 .quote {
   width: 100%;
@@ -6,7 +7,7 @@
   &__text {
     @extend .blockquote;
 
-    font-size: 1rem;
+    font-size: $quote-font-size;
   }
 
   &__author {

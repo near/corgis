@@ -4,16 +4,16 @@
 .button {
   @include flex-center;
 
-  padding: $padding-button;
+  padding: $button-padding;
 
   border-radius: $border-radius-basic;
 
   background-color: $button-background-color;
   color: $button-text-color;
 
-  font-weight: 600;
+  font-weight: $button-font-weight;
 
-  letter-spacing: 0;
+  letter-spacing: $button-letter-spacing;
   white-space: nowrap;
 
   box-sizing: border-box;
@@ -46,7 +46,7 @@
   }
 
   &--square {
-    padding: $padding-button-square;
+    padding: $button-padding-square;
   }
 }
 

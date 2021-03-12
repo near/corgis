@@ -2,8 +2,7 @@ import React from 'react';
 
 import './Footer.scss';
 
-import NearCommunity from '~modules/footer/NearCommunity';
-import NearWatermark from '~modules/footer/NearWatermark';
+import { NearCommunity, NearWatermark } from '~modules/footer';
 
 const Footer = () => (
   <footer className='footer'>

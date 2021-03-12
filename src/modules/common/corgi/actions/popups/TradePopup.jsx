@@ -1,4 +1,5 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useRef } from 'react';
+import { Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { CorgiActionsContext, MarketplaceContext } from '~contexts';
@@ -27,11 +28,9 @@ const TradePopup = ({ asButton = false }) => {
     }
   };
 
-  useEffect(() => {
-    if (added && popupRef && popupRef.current) {
-      popupRef.current.hidePopup();
-    }
-  }, [added]);
+  if (added) {
+    return <Redirect to={`/corgi/${id}`} />;
+  }
 
   return (
     <PopupWrapper

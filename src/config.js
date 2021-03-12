@@ -1,4 +1,4 @@
-/* eslint-disable comma-dangle */
+/* eslint-disable comma-dangle, prefer-destructuring */
 const CONTRACT_NAME = process.env.CONTRACT_NAME;
 
 function getConfig(env) {

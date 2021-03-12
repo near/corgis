@@ -36,6 +36,8 @@ $button-background-color-disabled: $color-gray;
 $dropdown-item-background-color: $color-white;
 $dropdown-item-background-color-hover: $color-gray-light;
 
+$corgi-card-header-background-color: transparent;
+
 // component sizes
 
 $minting-link-size: 2.5rem;
@@ -43,20 +45,168 @@ $minting-link-size-big: 4rem;
 
 $colorpicker-size: 3rem;
 
+$dropdown-arrow-wrapper-size: 24px;
+
+$input-error-width: max-content;
+$input-error-max-width: 25rem;
+
+$popup-width: max-content;
+$popup-max-width: 17.5rem;
+
+$corgi-spinner-wrapper-width: 100%;
+$corgi-spinner-wrapper-max-width: 100%;
+
+$corgi-spinner-size: 6rem;
+$corgi-spinner-gradient-size: 150%;
+$corgi-spinner-gradient-after-size: 50%;
+$corgi-spinner-image-size: 75%;
+
+$egg-shadow-width: 147px;
+
+$corgi-rate-max-width: 15rem;
+
+$corgi-card-image-height: 10rem;
+$corgi-card-image-big-height: $corgi-card-image-height * 2;
+
+$corgi-page-card-max-width: 30rem;
+
+$corgi-anim-size: 10rem;
+
+$auction-card-max-width: 30rem;
+
+$near-icon-size: 1rem;
+
+$bid-tile-info-near-width: 20%;
+$bid-tile-info-bidder-width: 65%;
+$bid-tile-info-time-width: 15%;
+
+$time-tile-height: 4rem;
+
+$footer-height: 6.5rem;
+$footer-width: 100%;
+
+$watermark-divider-height: 1.25em;
+
+$minting-animation-height: 30rem;
+$minting-animation-width: 100%;
+
 // margins and paddings
 
-$padding-page: 0 5%;
+$page-padding: 0 5%;
 
-$padding-button-square: 0.25rem;
-$padding-button: $padding-button-square 1.5rem;
+$button-padding-square: 0.25rem;
+$button-padding: $button-padding-square 1.5rem;
 
-$padding-infotile: $padding-button;
+$colorpicker-title-margin: 0 0 0 1rem;
 
-$padding-dropdown-item-tight: 0.25rem;
-$padding-dropdown-item-semi-tight: $padding-dropdown-item-tight $padding-dropdown-item-tight * 3;
-$padding-dropdown-item: $padding-dropdown-item-tight 1.5rem;
+$input-error-padding: 0.5rem;
+$input-error-margin: 0;
+
+$corgi-spinner-padding: 3rem 0;
+$corgi-spinner-margin: 3.5rem auto;
+$corgi-spinner-image-margin: 0;
+
+$egg-svg-margin: 0;
+$egg-svg-with-shadow-margin-bottom: 10px;
+
+$showcase-title-margin-bottom: 0.5rem;
+
+$corgi-rate-margin-bottom: 0.5rem;
+
+$corgi-card-image-padding: 1rem;
+$corgi-card-footer-padding: 0.5rem 1rem;
+
+$highest-bid-title-margin-bottom: 0.15rem;
+$highest-bid-info-padding-left: 1.25rem;
+$highest-bid-separator-margin: 0 0.5rem;
+
+$bid-amount-popup-padding: 0.25rem;
+$bid-amount-icon-margin-left: 0.25rem;
+
+$auction-timer-title-margin-bottom: 0.15rem;
+
+$transfer-input-margin: 0 0.25rem 0 0;
+$transfer-submit-margin: 0 0 0 0.25rem;
+
+$dropdown-item-tight-padding: 0.25rem;
+$dropdown-item-padding: $dropdown-item-tight-padding 1.5rem;
+
+$auction-card-padding: 1rem;
+
+$bid-history-empty-padding-left: 1.25rem;
+$bid-history-empty-margin: 0;
+
+$near-icon-auction-card-margin-left: 0.25rem;
+
+$near-icon-bid-difference-margin-left: 0.15rem;
+
+$bid-tile-margin: 0;
+
+$bid-tile-info-padding: 0.25rem;
+
+$bid-tile-near-icon-margin-left: 0.5rem;
+
+$time-tile-padding: 0 1.25rem;
+$time-tile-margin-bottom: 0.15rem;
+
+$footer-padding: $page-padding;
+$footer-margin: 1rem 0 0;
+
+$footer-item-padding: 0;
+
+$footer-description-padding: 0 1rem;
+
+$community-margin: 0;
+
+$watermark-padding-left: 1rem;
+
+$watermark-divider-margin: 0 0.25rem;
+
+$nav-padding: 0.5rem 0 0.5rem 1rem;
+
+$header-padding: 1rem 0;
+
+$poster-padding: 0 1rem;
+$poster-margin: 0;
+
+$poster-description-padding: 1rem;
+
+$poster-text-padding: 0;
+$poster-text-margin: 1rem 0;
+
+$minting-form-padding: 1rem;
+$minting-form-header-margin-bottom: 0.75rem;
+
+$minting-form-icon-margin-left: 0.5rem;
+$minting-form-icon-padding: 0.25rem;
+
+$minting-description-list-padding-left: 1rem;
+
+$minting-screen-padding: 4rem 0;
 
 // gaps
+
+$confirmation-buttons-gap: 0.5rem;
+
+$auction-timer-tiles-gap: 0.25rem;
+
+$corgi-rate-items-gap: 0.5rem;
+$corgi-rate-items-gap-big: $corgi-rate-items-gap * 2;
+
+$auction-card-items-gap: 0.5rem;
+$auction-card-bid-field-items-gap: 0.5rem;
+
+$bid-input-items-gap: 0.25rem;
+
+$corgi-page-items-gap: 1rem;
+
+$nav-items-gap: 0.5rem;
+$nav-items-gap-small: $nav-items-gap / 2;
+
+$minting-description-items-gap: 0.75rem;
+
+$minting-form-items-gap: 1rem;
+$minting-form-colorpickers-gap: 0.5rem;
 
 // borders
 
@@ -74,7 +224,52 @@ $border-radius-dropdown-list: 0 0 $border-radius-basic $border-radius-basic;
 
 // shadows
 
+$input-field-box-shadow: inset 0 0 0.25rem 1px $color-red;
+
 // fonts
+
+$rarity-font-size: 0.85em;
+$rarity-font-weight: 500;
+
+$quote-font-size: 1rem;
+
+$showcase-title-font-size: 1.2rem;
+$showcase-title-font-weight: 500;
+
+$corgi-rate-font-weight: 500;
+
+$corgi-card-font-size: 1.25em;
+$corgi-card-font-weight: 500;
+
+$button-font-weight: 600;
+$button-letter-spacing: 0;
+
+$colorpicker-title-font-weight: 600;
+
+$bid-history-empty-font-size: 1rem;
+$bid-history-empty-font-weight: 500;
+
+$time-tile-font-size: 1.25em;
+$time-tile-font-weight: 500;
+
+$footer-font-family: Inter, 'Poppins', sans-serif;
+$footer-font-size: 0.75rem;
+$footer-font-weight: 300;
+
+$community-font-size: 1.125rem;
+$community-line-height: 1.15em;
+$community-font-weight: 600;
+
+$nav-font-size: 1em;
+
+$poster-text-font-size: 2em;
+$poster-text-font-weight: 500;
+$poster-text-font-size-small: 1em;
+$poster-text-font-weight-small: 300;
+
+$minting-form-icon-font-size: 1rem;
+$minting-form-title-font-size: 1.5em;
+$minting-form-title-font-weight: 600;
 
 // transition
 

@@ -5,7 +5,7 @@ import { getRandomQuoteId } from '~helpers/quotes';
 import { characterReducer, initialCharacterState } from './reducer';
 import { SET_CHARACTER, SET_NAME, SET_COLOR, SET_BACKGROUND_COLOR, SET_QUOTE, CLEAR_STATE } from './types';
 
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenTypes';
 import genRandomCharacter from '~helpers/generators/genRandomCharacter';
 
 export const CharacterContext = React.createContext(initialCharacterState);

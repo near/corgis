@@ -1,4 +1,4 @@
-import React, { useEffect, useImperativeHandle, useRef } from 'react';
+import React, { useImperativeHandle, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import './CorgiSVG.scss';
@@ -52,6 +52,8 @@ const CorgiSVG = React.forwardRef(({ color, sausage }, ref) => {
         await convertSvg.saveSvgAsPng(svgRef.current, name, config);
         return convertSvg.svgAsPngUri(svgRef.current, config).then((uri) => uri);
       }
+
+      return '';
     },
   }));
 
@@ -411,6 +413,7 @@ const CorgiSVG = React.forwardRef(({ color, sausage }, ref) => {
   );
 });
 
+CorgiSVG.displayName = 'CorgiSVG';
 CorgiSVG.propTypes = CorgiSVGPropTypes;
 
 export default CorgiSVG;

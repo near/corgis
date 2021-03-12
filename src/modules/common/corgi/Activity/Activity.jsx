@@ -23,7 +23,7 @@ const Activity = ({ created, modified, owner, sender }) => (
       </>
     ) : (
       <>
-        Gifted {humanizeTime(modified)} ago to <Owner name={owner} /> by <Owner name={sender} />
+        Transferred {humanizeTime(modified)} ago to <Owner name={owner} /> by <Owner name={sender} />
       </>
     )}
   </p>

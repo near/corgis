@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 
 import './Owner.scss';
 
-import { CorgiType } from '~types/CorgiTypes';
 import classNames from 'classnames';
+
+import { CorgiType } from '~types/CorgiTypes';
 
 const OwnerPropTypes = { name: CorgiType.owner, highlight: PropTypes.bool };
 

@@ -1,0 +1,46 @@
+@import 'mixins';
+@import 'variables';
+
+.bid-amount {
+  @include dis-flex(flex-end, center);
+
+  width: 100%;
+
+  &__info {
+    position: relative;
+  }
+
+  &__popup {
+    @include dis-flex(flex-start, center);
+    @include absolute-bottom-left(100%, -$bid-amount-popup-padding);
+
+    padding: $bid-amount-popup-padding;
+
+    border: $border-basic-gray;
+    border-radius: $border-radius-basic;
+
+    background-color: $color-white;
+
+    visibility: hidden;
+    opacity: 0;
+
+    transition: opacity 0.1s 0s, visibility 0s 0.2s;
+  }
+
+  &__icon {
+    @include flex-center;
+
+    margin-left: $bid-amount-icon-margin-left;
+  }
+
+  &__info:hover {
+    .bid-amount__popup {
+      visibility: visible;
+      opacity: 1;
+
+      transition: opacity 0.1s 0s, visibility 0s 0s;
+    }
+  }
+}
+
+// 0\.\d*?([^0])\.\.\.

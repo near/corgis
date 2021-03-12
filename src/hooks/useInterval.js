@@ -1,28 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
-export default function useInterval(callback = () => {}, interval = 1000, delay = 0) {
+export default function useInterval(callback = () => {}, interval = 1000) {
   const callbackRef = useRef();
-
-  // const [startInterval, setStartInterval] = useState(false);
 
   useEffect(() => {
     callbackRef.current = callback;
   });
 
-  // useEffect(() => {
-  //   if (!startInterval) {
-  //     const id = setTimeout(() => {
-  //       setStartInterval(true);
-  //     }, delay);
-
-  //     return () => {
-  //       clearTimeout(id);
-  //     };
-  //   }
-  // }, [startInterval, delay]);
-
   useEffect(() => {
-    // if (startInterval) {
     function onTick() {
       callbackRef.current();
     }
@@ -32,7 +17,5 @@ export default function useInterval(callback = () => {}, interval = 1000, delay 
     return () => {
       clearInterval(id);
     };
-    // }
-    // }, [startInterval, interval]);
   }, [interval]);
 }

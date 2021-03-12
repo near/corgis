@@ -4,9 +4,7 @@ import { CorgiCommon, CorgiUncommon, CorgiRare, CorgiVeryRare, SwitchCorgiPhoto 
 
 import {
   CorgiActions,
-  Confirmation,
   Share,
-  Trade,
   Transfer,
   DeletePopup,
   GiftPopup,
@@ -14,6 +12,8 @@ import {
   TradePopup,
   WithdrawPopup,
 } from './actions';
+
+import { AuctionTimer, BidAmount, HighestBid } from './auction';
 
 import CorgiCard from './CorgiCard';
 import CorgiLink from './CorgiLink';
@@ -49,13 +49,14 @@ export {
   RarityString,
   Quote,
   CorgiActions,
-  Confirmation,
   Share,
-  Trade,
   Transfer,
   DeletePopup,
   GiftPopup,
   SharePopup,
   TradePopup,
   WithdrawPopup,
+  AuctionTimer,
+  BidAmount,
+  HighestBid,
 };

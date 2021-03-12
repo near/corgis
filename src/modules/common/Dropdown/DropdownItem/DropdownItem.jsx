@@ -10,7 +10,9 @@ const DropdownItemPropTypes = {
   isDivider: PropTypes.bool,
 };
 
-const DropdownItem = ({ children, isDivider = false }) => <li className={classNames('dropdown-item', { 'dropdown-item--divider': isDivider })}>{children}</li>;
+const DropdownItem = ({ children, isDivider = false }) => (
+  <li className={classNames('dropdown-item', { 'dropdown-item--divider': isDivider })}>{children}</li>
+);
 
 DropdownItem.propTypes = DropdownItemPropTypes;
 

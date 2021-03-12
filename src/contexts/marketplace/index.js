@@ -1,8 +1,6 @@
 import React, { useReducer, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-import * as nearAPI from 'near-api-js';
-
 import { marketplaceReducer, initialMarketplaceState } from './reducer';
 import {
   ACTION_ERROR,
@@ -17,10 +15,11 @@ import {
   CLEAR_STATE,
 } from './types';
 
+import { parseNears } from '~helpers/nears';
+
 import { AUCTION_DURATION, BOATLOAD_OF_GAS } from '~constants/corgi';
 
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
-import { parseNears } from '~helpers/nears';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenTypes';
 
 export const MarketplaceContext = React.createContext(initialMarketplaceState);
 

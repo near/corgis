@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { CorgiType } from '~types/CorgiTypes';
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenTypes';
 
 const CorgiLinkPropTypes = { id: CorgiType.id.isRequired, children: ReactChildrenTypeRequired };
 

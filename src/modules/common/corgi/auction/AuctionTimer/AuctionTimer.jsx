@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 
-import useInterval from '~hooks/useInterval';
+import './AuctionTimer.scss';
 
 import { TimeTile } from '~modules/corgi/components';
 
-import { formatToMs, humanizeTime } from '~helpers/time';
+import { useInterval, useIsAuctionExpired } from '~hooks';
 
-import './AuctionTimer.scss';
+import { humanizeTime } from '~helpers/time';
 
 const auctionTimerOptions = {
   largest: 3,
@@ -15,6 +16,8 @@ const auctionTimerOptions = {
   short: true,
 };
 
+const AuctionTimerPropTypes = { expires: PropTypes.string };
+
 const AuctionTimer = ({ expires }) => {
   const [timeLeft, setTimeLeft] = useState(humanizeTime(expires, auctionTimerOptions));
 
@@ -22,7 +25,7 @@ const AuctionTimer = ({ expires }) => {
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
-  const [isAuctionExpired, setIsAuctionExpired] = useState(false);
+  const isAuctionExpired = useIsAuctionExpired(expires);
 
   const calculateTime = () => {
     if (!isAuctionExpired) {
@@ -35,23 +38,20 @@ const AuctionTimer = ({ expires }) => {
     let min = 0;
     let sec = 0;
 
+    /* eslint-disable-next-line no-plusplus */
     for (let i = 0; i < timeArr.length; i++) {
       if (timeArr[i].includes('h')) {
-        hr = parseInt(timeArr[i]);
+        hr = parseInt(timeArr[i], 10);
       } else if (timeArr[i].includes('m')) {
-        min = parseInt(timeArr[i]);
+        min = parseInt(timeArr[i], 10);
       } else if (timeArr[i].includes('s')) {
-        sec = parseInt(timeArr[i]);
+        sec = parseInt(timeArr[i], 10);
       }
     }
 
     setHours(hr);
     setMinutes(min);
     setSeconds(sec);
-
-    if (hr === 0 && min === 0 && sec === 0) {
-      setIsAuctionExpired(true);
-    }
   };
 
   useInterval(calculateTime, 1000);
@@ -63,12 +63,6 @@ const AuctionTimer = ({ expires }) => {
   }, [timeLeft]);
 
   useEffect(() => {
-    if (!isAuctionExpired && hours === 0 && minutes === 0 && seconds === 0) {
-      setIsAuctionExpired(true);
-    }
-  }, [isAuctionExpired, hours, minutes, seconds]);
-
-  useEffect(() => {
     if (isAuctionExpired) {
       setHours(0);
       setMinutes(0);
@@ -76,25 +70,25 @@ const AuctionTimer = ({ expires }) => {
     }
   }, [isAuctionExpired]);
 
-  useEffect(() => {
-    if (expires && Date.now() > formatToMs(expires)) {
-      setIsAuctionExpired(true);
-    }
-  }, []);
-
   return (
     <div className='auction-timer'>
-      <h3 className='auction-timer__title'>Auction ends in</h3>
+      {!isAuctionExpired ? (
+        <>
+          <h3 className='auction-timer__title'>Auction ends in</h3>
 
-      <div className='auction-timer__time'>
-        <TimeTile time={hours} label='hr' />
-        <TimeTile time={minutes} label='min' />
-        <TimeTile time={seconds} label='sec' />
-      </div>
+          <div className='auction-timer__time'>
+            <TimeTile time={hours} label='hr' />
+            <TimeTile time={minutes} label='min' />
+            <TimeTile time={seconds} label='sec' />
+          </div>
+        </>
+      ) : (
+        <h3 className='auction-timer__title'>Auction ended</h3>
+      )}
     </div>
   );
 };
 
-// AuctionTimer.propTypes = AuctionTimerPropTypes;
+AuctionTimer.propTypes = AuctionTimerPropTypes;
 
 export default AuctionTimer;

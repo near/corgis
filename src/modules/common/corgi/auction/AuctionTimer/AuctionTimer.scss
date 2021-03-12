@@ -1,18 +1,19 @@
 @import 'classes';
 @import 'mixins';
+@import 'variables';
 
 .auction-timer {
   &__title {
     @extend .page-title;
 
-    margin-bottom: 0.15rem;
+    margin-bottom: $auction-timer-title-margin-bottom;
   }
 
   &__time {
     @include dis-flex(flex-start, center);
 
     & > * {
-      @include margin-between(0.25rem);
+      @include margin-between($auction-timer-tiles-gap);
     }
   }
 }

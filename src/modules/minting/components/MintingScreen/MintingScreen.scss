@@ -5,7 +5,7 @@
   @include flex-center;
   @include fill-parent;
 
-  padding: 4rem 0;
+  padding: $minting-screen-padding;
 
   border-radius: $border-radius-big;
 }

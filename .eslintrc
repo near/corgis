@@ -20,12 +20,7 @@
       }
     }
   },
-  "extends": [
-    "eslint:recommended",
-    "airbnb-base",
-    "prettier/react",
-    "plugin:react/recommended"
-  ],
+  "extends": ["eslint:recommended", "airbnb-base", "prettier/react", "plugin:react/recommended"],
   "plugins": [
     "eslint-plugin-import",
     "eslint-plugin-jsx",
@@ -54,9 +49,11 @@
         "SwitchCase": 1
       }
     ],
+    "camelcase": "off",
     "jsx-quotes": ["error", "prefer-single"],
     "linebreak-style": ["warn", "windows"],
     "max-len": ["error", { "code": 120, "ignorePattern": "d=[\"']([\\s\\S]*?)[\"']" }],
+    "no-console": ["error", { "allow": ["warn", "error"] }],
     "object-curly-newline": ["error", { "multiline": true }],
     "quotes": ["error", "single"]
   }

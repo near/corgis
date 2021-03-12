@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { CorgiTypeShape } from '~types/CorgiTypes';
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenTypes';
 
 export const CorgiActionsContext = React.createContext();
 

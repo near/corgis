@@ -13,7 +13,7 @@
 
     width: max-content;
 
-    padding: $padding-dropdown-item;
+    padding: $dropdown-item-padding;
 
     border: $border-basic-gray;
     border-radius: $border-radius-basic;
@@ -34,7 +34,7 @@
   }
 
   &__arrow-wrapper {
-    @include basicSquare(24px);
+    @include basicSquare($dropdown-arrow-wrapper-size);
 
     transform: scale(0.5);
     transform-origin: right;
@@ -81,7 +81,7 @@
 
   &--tight {
     .dropdown__title {
-      padding: $padding-dropdown-item-tight;
+      padding: $dropdown-item-tight-padding;
     }
   }
 }

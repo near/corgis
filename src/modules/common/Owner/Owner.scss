@@ -3,6 +3,8 @@
 .owner {
   max-width: 100%;
 
+  color: $color-main;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -17,5 +19,9 @@
     &--highlight {
       color: darken($color-main, 25%);
     }
+  }
+
+  &:hover {
+    color: $color-main;
   }
 }

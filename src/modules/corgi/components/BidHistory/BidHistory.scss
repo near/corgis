@@ -4,7 +4,7 @@
 
 .history {
   width: 100%;
-  min-width: max-content;
+  max-width: 100%;
 
   &__title {
     @extend .page-title;
@@ -12,5 +12,13 @@
 
   &__list {
     @include dis-flex-column(flex-start, stretch);
+  }
+
+  &__empty {
+    padding-left: $bid-history-empty-padding-left;
+    margin: $bid-history-empty-margin;
+
+    font-size: $bid-history-empty-font-size;
+    font-weight: $bid-history-empty-font-weight;
   }
 }

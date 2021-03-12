@@ -31,8 +31,8 @@ const Colorpicker = ({ title, color, pickColor }) => {
     setIsOpened(true);
   };
 
-  const handleColor = (color) => {
-    pickColor(color.hex);
+  const handleColor = (newColor) => {
+    pickColor(newColor.hex);
   };
 
   useDetectClickOutside(buttonRef, () => setIsOpened(false));

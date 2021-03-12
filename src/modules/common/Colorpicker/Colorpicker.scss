@@ -38,9 +38,8 @@
   }
 
   &__title {
-    margin: 0;
-    margin-left: 1rem;
+    margin: $colorpicker-title-margin;
 
-    font-weight: 600;
+    font-weight: $colorpicker-title-font-weight;
   }
 }

@@ -2,17 +2,16 @@
 @import 'variables';
 
 .time-tile {
-  // @include basicSquare(4rem);
   @include dis-flex-column(center, center);
 
-  height: 4rem;
+  height: $time-tile-height;
 
-  padding: 0 1.25rem;
+  padding: $time-tile-padding;
 
   &__number {
-    font-size: 1.25em;
-    font-weight: 500;
+    font-size: $time-tile-font-size;
+    font-weight: $time-tile-font-weight;
 
-    margin-bottom: 0.15rem;
+    margin-bottom: $time-tile-margin-bottom;
   }
 }

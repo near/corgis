@@ -15,7 +15,7 @@ const MarketplacePage = () => {
 
   return (
     <div className='marketplace'>
-      <CorgisShowCase corgis={corgisForSale} title='For Sale' />
+      <CorgisShowCase corgis={corgisForSale} title='For Sale' showAuctionInfo />
     </div>
   );
 };

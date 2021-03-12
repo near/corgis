@@ -1,40 +1,42 @@
 @import 'mixins';
+@import 'variables';
 
 .bid {
   @include dis-flex(space-between, center);
 
   max-width: 100%;
 
-  margin: 0;
+  margin: $bid-tile-margin;
 
   box-sizing: border-box;
 
   &__info {
     @include flex-center;
 
-    padding: 0.25rem;
+    padding: $bid-tile-info-padding;
 
     white-space: nowrap;
 
     &--near {
-      width: 20%;
+      width: $bid-tile-info-near-width;
+      min-width: max-content;
     }
 
     &--bidder {
       justify-content: flex-start;
 
-      width: 65%;
+      width: $bid-tile-info-bidder-width;
     }
 
     &--time {
-      width: 15%;
+      width: $bid-tile-info-time-width;
     }
   }
 
   &__near-icon {
     @include flex-center;
 
-    margin-left: 0.5rem;
+    margin-left: $bid-tile-near-icon-margin-left;
   }
 }
 

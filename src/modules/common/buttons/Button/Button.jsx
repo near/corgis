@@ -5,7 +5,7 @@ import './Button.scss';
 
 import classNames from 'classnames';
 
-import { ReactChildrenType } from '~types/ReactChildrenType';
+import { ReactChildrenType } from '~types/ReactChildrenTypes';
 
 const ButtonPropTypes = {
   action: PropTypes.func,

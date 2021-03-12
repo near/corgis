@@ -1,15 +1,15 @@
 @import 'mixins';
-@import 'classes';
+@import 'variables';
 
 .corgi-rate {
   position: relative;
 
-  max-width: 15rem;
+  max-width: $corgi-rate-max-width;
 
   &__title {
-    margin-bottom: 0.5rem;
+    margin-bottom: $corgi-rate-margin-bottom;
 
-    font-weight: 500;
+    font-weight: $corgi-rate-font-weight;
   }
 
   &__list {
@@ -17,20 +17,8 @@
   }
 
   &__item {
-    @include margin-between(0.5rem, column);
+    @include margin-between($corgi-rate-items-gap, column);
   }
-
-  // &--row {
-  //   max-width: inherit;
-
-  //   .corgi-rate__list {
-  //     flex-direction: row;
-  //   }
-
-  //   .corgi-rate__item {
-  //     @include margin-between(0.5rem, row);
-  //   }
-  // }
 }
 
 @media all and (max-width: 1100px) {
@@ -42,7 +30,7 @@
     }
 
     .corgi-rate__item {
-      @include margin-between(1rem, row);
+      @include margin-between($corgi-rate-items-gap-big, row);
     }
   }
 }
@@ -57,7 +45,7 @@
     }
 
     .corgi-rate__item {
-      @include margin-between(1rem, column);
+      @include margin-between($corgi-rate-items-gap-big, column);
     }
   }
 }

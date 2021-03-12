@@ -15,7 +15,7 @@ const SharePropTypes = {
 };
 
 const Share = ({ display = 'grid', flexDirection = 'row' }) => {
-  const { id, name, color, background_color, rate } = useContext(CorgiActionsContext);
+  const { id, name } = useContext(CorgiActionsContext);
 
   return (
     <div className={classNames('share', `share--${display}`, display === 'flex' && `share--${flexDirection}`)}>

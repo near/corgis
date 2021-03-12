@@ -12,13 +12,17 @@ const BidHistory = ({ bids }) => (
   <div className='history'>
     <h3 className='history__title'>Bid history</h3>
 
-    <ul className='history__list'>
-      {bids.map((bid) => (
-        <li className='history__item' key={bid.timestamp}>
-          <BidTile bid={bid} />
-        </li>
-      ))}
-    </ul>
+    {bids && bids.length ? (
+      <ul className='history__list'>
+        {bids.map((bid) => (
+          <li className='history__item' key={bid.timestamp}>
+            <BidTile bid={bid} />
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <h4 className='history__empty'>So far no bids have been made.</h4>
+    )}
   </div>
 );
 

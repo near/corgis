@@ -1,3 +1,4 @@
+@import 'mixins';
 @import 'variables';
 
 .input {
@@ -25,15 +26,13 @@
   }
 
   &__error {
-    position: absolute;
-    top: 100%;
-    left: 0;
+    @include absolute-top-left(100%, 0);
 
-    width: max-content;
-    max-width: 25rem;
+    width: $input-error-width;
+    max-width: $input-error-max-width;
 
-    padding: 0.5rem;
-    margin: 0;
+    padding: $input-error-padding;
+    margin: $input-error-margin;
 
     border: $border-basic-gray;
     border-radius: $border-radius-basic;
@@ -55,7 +54,7 @@
 
   &--show-error {
     .input__field {
-      box-shadow: inset 0 0 0.25rem 1px $color-red;
+      box-shadow: $input-field-box-shadow;
 
       transition: box-shadow $transition-basic-ease-out;
     }

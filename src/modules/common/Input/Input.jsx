@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import './Input.scss';
 
-import { v4 as uuidv4 } from 'uuid';
 import classNames from 'classnames';
+import { v4 as uuid } from 'uuid';
 
 import { usePrevious } from '~hooks/';
 
@@ -37,7 +37,7 @@ const Input = ({
   required = false,
   disabled = false,
 }) => {
-  const inputId = `input-${uuidv4()}`;
+  const inputId = `input-${uuid()}`;
 
   const inputRef = useRef(null);
 
@@ -107,19 +107,24 @@ const Input = ({
   }, [timeoutId, isErrorShown, errorMessage, setTimeoutId, setErrorMessage]);
 
   useLayoutEffect(() => {
-    if (autoFocus && inputRef && inputRef.current) {
-      const focusTimeoutId = setTimeout(() => {
-        inputRef.current.focus();
-      }, 10);
+    let focusTimeoutId;
 
-      return () => {
+    if (autoFocus && inputRef && inputRef.current) {
+      focusTimeoutId = setTimeout(() => {
+        inputRef.current.focus();
         clearTimeout(focusTimeoutId);
-      };
+      }, 10);
     }
+
+    return () => {
+      if (focusTimeoutId) {
+        clearTimeout(focusTimeoutId);
+      }
+    };
   }, [inputRef]);
 
   return (
-    <div className='input' className={classNames('input', { 'input--show-error': isErrorShown && errorMessage })}>
+    <div className={classNames('input', { 'input--show-error': isErrorShown && errorMessage })}>
       {label && label.length && (
         <label className='input__label' htmlFor={inputId}>
           {label}

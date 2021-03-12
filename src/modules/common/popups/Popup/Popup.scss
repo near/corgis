@@ -5,10 +5,9 @@
 .popup {
   @extend .popover;
 
-  width: max-content;
-  max-width: 17.5rem;
+  width: $popup-width;
+  max-width: $popup-max-width;
 
-  // display: none;
   visibility: hidden;
 
   opacity: 0;

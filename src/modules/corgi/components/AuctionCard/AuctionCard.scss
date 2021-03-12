@@ -4,19 +4,19 @@
 .auction-card {
   @extend .card;
 
-  max-width: 30rem;
+  max-width: $auction-card-max-width;
 
-  padding: 1rem;
+  padding: $auction-card-padding;
 
   & > * {
-    @include margin-between(0.5rem, column);
+    @include margin-between($auction-card-items-gap, column);
   }
 
   &__bid-field {
     @include dis-flex(space-between, center);
 
     & > * {
-      @include margin-between(0.5rem, row);
+      @include margin-between($auction-card-bid-field-items-gap, row);
 
       width: 50%;
     }
@@ -32,11 +32,11 @@
   }
 
   &__near-icon {
-    @include basicSquare(1rem);
+    @include basicSquare($near-icon-size);
     @include flex-center;
     display: inline-flex;
 
-    margin-left: 0.25rem;
+    margin-left: $near-icon-auction-card-margin-left;
   }
 }
 

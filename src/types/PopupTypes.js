@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { ReactChildrenTypeRequired } from '~types/ReactChildrenType';
+import { ReactChildrenTypeRequired } from '~types/ReactChildrenTypes';
 
 export const PopupType = {
   title: PropTypes.string,
