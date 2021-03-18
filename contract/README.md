@@ -82,7 +82,7 @@ otherwise will contain information about bidders.
   color: 'green',
   background_color: 'blue',
   rate: 'COMMON',
-  owner: '$ACCOUNT_NAME'
+  owner: '$ACCOUNT_NAME',
   created: 1616001893385302300,
   modified: 1616001893385302300,
   sender: '',
@@ -174,6 +174,32 @@ near view $CONTRACT_NAME get_items_for_sale
 ```
 
 The response returns an array of corgis, as returned by `create_corgi` method.
+In addition, each corgi is augmented with the auction information.
+This is indicated in the `for_sale` field.
+It contains the list of bidders and the expiration timestamp,
+expressed in nanoseconds.
+
+```js
+{
+  // Rest of Corgi's fields
+  for_sale: {
+    bids: [
+      {
+        bidder: 'test-1616001731174.testnet',
+        amount: '50000000000000000000000000',
+        timestamp: '1616001924398792533'
+      },
+      {
+        bidder: 'test-1616001726275.testnet',
+        amount: '20000000000000000000000000',
+        timestamp: '1616001919499740335'
+      }
+    ],
+    expires: '1616001930836106961'
+  }
+}
+```
+
 
 ### `bid_for_item`
 
