@@ -15,9 +15,9 @@ const BidAmount = ({ amount, trim = false }) => {
   const nears = formatToNears(amount);
 
   // match float number as string to trim zeros in center
-  const matched = nears.match(/0\.\d*?([^0])/);
+  const matched = nears.match(/(\d*)0\.\d*?([^0])/);
 
-  const trimmed = matched && matched[0] && matched[0].length <= 6 ? `${matched[0]}` : '0.0';
+  const trimmed = matched && matched[0] && (matched[0].length <= 6 ? `${matched[0]}` : `${matched[0].split('.')[0]}.0`);
 
   return (
     <span className='bid-amount'>

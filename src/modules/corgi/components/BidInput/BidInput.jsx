@@ -24,10 +24,14 @@ const BidInput = ({ label = 'My Bid', min = 0, value = 0, handleNears = () => {}
     const num = event.target.value;
 
     // 1 Ⓝ = 1*10^24 yoctoⓃ
-    // maxLength is 26 chars because of dot and zero before dot
-    if (event.target.value.indexOf('e') === -1 && num.toString().length <= 26) {
+    // maxLength is 24 chars after dot
+    const isValidLength = num.indexOf('.') !== -1 ? num.split('.')[1].length <= 24 : 24;
+
+    if (num.indexOf('e') === -1 && isValidLength) {
+      if (num && num.length) {
+        handleNears(num);
+      }
       setNears(num);
-      handleNears(num);
     }
   };
 
