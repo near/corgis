@@ -15,15 +15,18 @@ const ActivityPropTypes = {
   sender: CorgiType.sender,
 };
 
+const activityTimeOptions = { largest: 2, units: ['d', 'h', 'm', 's'] };
+
 const Activity = ({ created, modified, owner, sender }) => (
   <p className='activity'>
     {created === modified ? (
       <>
-        Minted {humanizeTime(created)} ago by <Owner name={owner} />
+        Minted {humanizeTime(created, activityTimeOptions)} ago by <Owner name={owner} />
       </>
     ) : (
       <>
-        Transferred {humanizeTime(modified)} ago to <Owner name={owner} /> by <Owner name={sender} />
+        Transferred {humanizeTime(modified, activityTimeOptions)} ago
+        to <Owner name={owner} /> by <Owner name={sender} />
       </>
     )}
   </p>
