@@ -15,7 +15,7 @@ const ActivityPropTypes = {
   sender: CorgiType.sender,
 };
 
-const activityTimeOptions = { largest: 2, units: ['d', 'h'] };
+const activityTimeOptions = { largest: 2, units: ['d', 'h', 'm', 's'] };
 
 const Activity = ({ created, modified, owner, sender }) => (
   <p className='activity'>
