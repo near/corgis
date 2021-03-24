@@ -19,6 +19,7 @@ const auctionTimerOptions = {
   largest: 1,
   round: true,
   short: true,
+  units: ['d', 'h', 'm', 's'],
 };
 
 const BidTile = ({ bid: { amount, bidder, timestamp } }) => {

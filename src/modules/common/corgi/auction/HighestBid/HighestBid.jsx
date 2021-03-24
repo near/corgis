@@ -12,6 +12,8 @@ import { BidTypeShape } from '~types/BidTypes';
 
 const HighestBidPropTypes = { bid: BidTypeShape.isRequired, isExpired: PropTypes.bool };
 
+const highestBidTimerOptions = { units: ['d', 'h', 'm', 's'] };
+
 const HighestBid = ({ bid, isExpired = false }) => {
   const { amount, bidder, timestamp } = bid;
 
@@ -26,7 +28,7 @@ const HighestBid = ({ bid, isExpired = false }) => {
               <BidAmount amount={amount} />
             </div>
             <span className='highest-bid__separator'>—</span>
-            {humanizeTime(timestamp)} ago by&nbsp;
+            {humanizeTime(timestamp, highestBidTimerOptions)} ago by&nbsp;
             <Owner name={bidder} />
           </span>
         </>
