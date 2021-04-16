@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "baseUrl": ".",
+    "paths": {
+      "~assets/*": ["./assets/*"],
+      "~constants/*": ["./constants/*"],
+      "~contexts/*": ["./contexts/*"],
+      "~helpers/*": ["./helpers/*"],
+      "~hooks/*": ["./hooks/*"],
+      "~modules/*": ["./modules/*"],
+      "~router/*": ["./router/*"],
+      "~types/*": ["./types/*"],
+      "~validators/*": ["./validators/*"]
+    }
+  },
+  "exclude": ["dist", "node_modules", "**/node_modules/*"]
+}

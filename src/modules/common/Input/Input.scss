@@ -1,0 +1,68 @@
+@import 'mixins';
+@import 'variables';
+
+.input {
+  position: relative;
+
+  width: 100%;
+
+  z-index: 10;
+
+  &__field {
+    width: 100%;
+
+    border: $border-basic-black;
+    border-radius: $border-radius-basic;
+
+    background-color: #ffffff;
+
+    transition: box-shadow $transition-basic-ease-out;
+
+    box-sizing: border-box;
+
+    cursor: text;
+
+    z-index: 1;
+  }
+
+  &__error {
+    @include absolute-top-left(100%, 0);
+
+    width: $input-error-width;
+    max-width: $input-error-max-width;
+
+    padding: $input-error-padding;
+    margin: $input-error-margin;
+
+    border: $border-basic-gray;
+    border-radius: $border-radius-basic;
+
+    background-color: $color-white;
+    color: $color-red;
+
+    opacity: 0;
+
+    word-break: keep-all;
+
+    transition: $transition-basic-ease-out;
+
+    transform: translateY(-0.5rem) scale(0);
+    transform-origin: 0 0;
+
+    z-index: -1;
+  }
+
+  &--show-error {
+    .input__field {
+      box-shadow: $input-field-box-shadow;
+
+      transition: box-shadow $transition-basic-ease-out;
+    }
+
+    .input__error {
+      opacity: 1;
+
+      transform: translateY(0) scale(1);
+    }
+  }
+}

@@ -1,0 +1,16 @@
+@import 'bootstrap';
+@import 'variables';
+
+.quote {
+  width: 100%;
+
+  &__text {
+    @extend .blockquote;
+
+    font-size: $quote-font-size;
+  }
+
+  &__author {
+    @extend .blockquote-footer;
+  }
+}

@@ -1,0 +1,51 @@
+@import 'mixins';
+@import 'variables';
+
+.corgi-rate {
+  position: relative;
+
+  max-width: $corgi-rate-max-width;
+
+  &__title {
+    margin-bottom: $corgi-rate-margin-bottom;
+
+    font-weight: $corgi-rate-font-weight;
+  }
+
+  &__list {
+    @include dis-flex-column(flex-start, stretch);
+  }
+
+  &__item {
+    @include margin-between($corgi-rate-items-gap, column);
+  }
+}
+
+@media all and (max-width: 1100px) {
+  .corgi-rate--row {
+    max-width: 100%;
+
+    .corgi-rate__list {
+      flex-direction: row;
+    }
+
+    .corgi-rate__item {
+      @include margin-between($corgi-rate-items-gap-big, row);
+    }
+  }
+}
+
+@media all and (max-width: 800px) {
+  .corgi-rate,
+  .corgi-rate--row {
+    max-width: 15rem;
+
+    .corgi-rate__list {
+      flex-direction: column;
+    }
+
+    .corgi-rate__item {
+      @include margin-between($corgi-rate-items-gap-big, column);
+    }
+  }
+}

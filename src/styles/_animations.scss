@@ -1,0 +1,123 @@
+// Bounce corgi
+@keyframes bounce-corgi {
+  0% {
+    transform: scale(1, 1) translateY(0);
+  }
+  10% {
+    transform: scale(1.1, 0.9) translateY(0);
+  }
+  30% {
+    transform: scale(0.9, 1.1) translateY(-100px);
+  }
+  50% {
+    transform: scale(1.05, 0.95) translateY(0);
+  }
+  57% {
+    transform: scale(1, 1) translateY(-7px);
+  }
+  64% {
+    transform: scale(1, 1) translateY(0);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+
+@mixin animateBounceCorgi {
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-name: bounce-corgi;
+  animation-timing-function: cubic-bezier(0.28, 0.84, 0.42, 1);
+
+  transform-origin: bottom;
+}
+
+// Stretch shadow
+@keyframes stretch-shadow {
+  0% {
+    transform: scale(1, 1) translateY(0);
+  }
+  10% {
+    transform: scale(1.1, 0.9) translateY(0);
+  }
+  30% {
+    transform: scale(0.9, 1.1) translateY(0);
+  }
+  50% {
+    transform: scale(1.05, 0.95) translateY(0);
+  }
+  57% {
+    transform: scale(1, 1) translateY(0);
+  }
+  64% {
+    transform: scale(1, 1) translateY(0);
+  }
+  100% {
+    transform: scale(1, 1) translateY(0);
+  }
+}
+
+@mixin animateStretchShadow {
+  animation-duration: 2s;
+  animation-iteration-count: infinite;
+  animation-name: stretch-shadow;
+}
+
+// Swing tongue
+@keyframes swing-tongue {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-7px);
+  }
+}
+
+@mixin animateSwingTongue {
+  animation-direction: alternate;
+  animation-duration: 0.2s;
+  animation-iteration-count: infinite;
+  animation-name: swing-tongue;
+  animation-timing-function: ease-out;
+
+  transform-origin: top;
+}
+
+// Shake tail
+@keyframes shake-tail {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(-2deg);
+  }
+}
+
+@mixin animateShakeTail {
+  animation-direction: alternate;
+  animation-duration: 0.5s;
+  animation-iteration-count: infinite;
+  animation-name: shake-tail;
+  animation-timing-function: linear;
+
+  transform-origin: bottom left;
+}
+
+// Spin
+@keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+@mixin animateSpin {
+  animation-duration: 1.4s;
+  animation-iteration-count: infinite;
+  animation-name: spin;
+  animation-timing-function: linear;
+}

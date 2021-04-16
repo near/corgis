@@ -1,0 +1,60 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "globals": {
+    "window": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    },
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".jsx"]
+      }
+    }
+  },
+  "extends": ["eslint:recommended", "airbnb-base", "prettier/react", "plugin:react/recommended"],
+  "plugins": [
+    "eslint-plugin-import",
+    "eslint-plugin-jsx",
+    "eslint-plugin-prettier",
+    "eslint-plugin-react",
+    "eslint-plugin-react-hooks"
+  ],
+  "rules": {
+    "import/no-named-as-default": 0,
+    "import/prefer-default-export": "off",
+    "import/no-unresolved": 0,
+    "import/extensions": [
+      "error",
+      "never",
+      {
+        "js": "never",
+        "jsx": "never",
+        "png": "always",
+        "svg": "always"
+      }
+    ],
+    "indent": [
+      "error",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "camelcase": "off",
+    "jsx-quotes": ["error", "prefer-single"],
+    "linebreak-style": ["warn", "windows"],
+    "max-len": ["error", { "code": 120, "ignorePattern": "d=[\"']([\\s\\S]*?)[\"']" }],
+    "no-console": ["error", { "allow": ["warn", "error"] }],
+    "object-curly-newline": ["error", { "multiline": true }],
+    "quotes": ["error", "single"]
+  }
+}

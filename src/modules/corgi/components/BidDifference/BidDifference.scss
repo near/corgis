@@ -1,0 +1,18 @@
+@import 'mixins';
+@import 'variables';
+
+.difference {
+  @include dis-flex(flex-start, center);
+  flex-wrap: wrap;
+
+  &__near-icon {
+    @include basicSquare($near-icon-size);
+    display: inline-block;
+
+    position: relative;
+
+    margin-left: $near-icon-bid-difference-margin-left;
+
+    transform: translateY(0.125em);
+  }
+}

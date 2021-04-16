@@ -1,0 +1,32 @@
+@import 'classes';
+@import 'mixins';
+@import 'variables';
+
+.highest-bid {
+  &__title {
+    @extend .page-title;
+
+    @include dis-flex(flex-start, center);
+
+    max-width: 100%;
+
+    margin-bottom: $highest-bid-title-margin-bottom;
+  }
+
+  &__info {
+    @include dis-flex(flex-start, center);
+    flex-wrap: wrap;
+
+    padding-left: $highest-bid-info-padding-left;
+  }
+
+  &__amount {
+    display: inline-block;
+
+    width: max-content;
+  }
+
+  &__separator {
+    margin: $highest-bid-separator-margin;
+  }
+}

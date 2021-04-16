@@ -1,0 +1,10 @@
+@import 'mixins';
+@import 'variables';
+
+.confirmation {
+  @include dis-flex(space-between, center);
+
+  &__button {
+    @include margin-between($confirmation-buttons-gap, row);
+  }
+}

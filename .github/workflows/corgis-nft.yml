@@ -1,0 +1,96 @@
+name: Corgis NFT
+
+on:
+  # We want to trigger the build & test pipelines in every branch.
+  push:
+    # But do no run the pipeline when only `md` files are modified.
+    paths-ignore:
+      - '**.md'
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+  FORCE_COLOR: 1
+
+jobs:
+
+  build-contract:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          contract/target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      
+    - run: rustup target add wasm32-unknown-unknown
+    - run: yarn build:contract
+    - run: cd contract && cargo metadata --no-deps --format-version 1 > target/wasm32-unknown-unknown/release/metadata.json
+
+    - uses: actions/upload-artifact@v2
+      with:
+        name: corgis_nft
+        path: |
+          contract/target/wasm32-unknown-unknown/release/corgis_nft.wasm
+          contract/target/wasm32-unknown-unknown/release/metadata.json
+
+  test-contract:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          contract/target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        
+    - run: yarn test:contract
+
+  api-test-contract:
+    needs: build-contract
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+    - uses: actions/download-artifact@v2
+      with:
+        name: corgis_nft
+        path: contract/target/wasm32-unknown-unknown/release
+
+    - name: Disable near-cli event tracking consent question (which blocks the CI pipeline)
+      run: "mkdir ~/.near-config && echo '{\"trackingEnabled\": false, \"trackingAccountID\": false}' > ~/.near-config/settings.json"
+    - run: yarn install --frozen-lockfile
+    - run: yarn dev-deploy:contract
+    - run: yarn api-test:contract
+
+  deploy:
+    needs: api-test-contract
+    if: ${{ github.ref == 'refs/heads/master' }}
+    runs-on: ubuntu-latest
+    env:
+      MASTER_ACCOUNT: corgis-nft.testnet
+    steps:
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: '**/node_modules'
+        key: ${{ runner.os }}-node-modules-${{ hashFiles('**/yarn.lock') }}
+    - uses: actions/download-artifact@v2
+      with:
+        name: corgis_nft
+        path: contract/target/wasm32-unknown-unknown/release
+
+    - run: yarn install --frozen-lockfile
+    - run: SEED_PHRASE="${{ secrets.SEED_PHRASE }}" node ci/deploy.mjs
+    - run: CONTRACT_NAME=`cat version`.$MASTER_ACCOUNT yarn build:web
+    - run: git remote set-url origin https://git:${{ secrets.GITHUB_TOKEN }}@github.com/${GITHUB_REPOSITORY}.git
+    - run: yarn gh-pages-clean
+    - run: yarn deploy:web --user "Github Workflow Bot <noemail@epam.github.io>"

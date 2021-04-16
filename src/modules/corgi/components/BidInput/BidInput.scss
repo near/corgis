@@ -1,0 +1,22 @@
+@import 'mixins';
+@import 'variables';
+
+.bid-input {
+  @include dis-flex(space-between, center);
+
+  & > * {
+    @include margin-between($bid-input-items-gap, row);
+  }
+
+  &__text {
+    white-space: nowrap;
+  }
+
+  &__field {
+    flex-grow: 1;
+  }
+
+  &__near-icon {
+    @include flex-center;
+  }
+}

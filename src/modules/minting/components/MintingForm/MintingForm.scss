@@ -1,0 +1,51 @@
+@import 'mixins';
+@import 'variables';
+
+.minting-form {
+  @include dis-flex-column(space-between, stretch);
+  @include fill-parent;
+
+  padding: $minting-form-padding;
+
+  border-radius: $border-radius-big;
+
+  background-color: $color-gray-light;
+
+  &__area {
+    @include dis-flex-column(flex-start, stretch);
+    @include margin-between($minting-form-items-gap, column);
+  }
+
+  &__header {
+    @include dis-flex(flex-start, center);
+
+    margin-bottom: $minting-form-header-margin-bottom;
+  }
+
+  &__title {
+    font-size: $minting-form-title-font-size;
+    font-weight: $minting-form-title-font-weight;
+  }
+
+  &__icon {
+    padding: $minting-form-icon-padding;
+    margin-left: $minting-form-icon-margin-left;
+
+    border-radius: 50%;
+
+    background-color: $color-black;
+    color: $color-white;
+
+    font-size: $minting-form-icon-font-size;
+
+    cursor: pointer;
+
+    &:hover {
+      background-color: lighten($color-black, 15%);
+    }
+  }
+
+  &__colorpicker {
+    @include margin-between($minting-form-colorpickers-gap, column);
+  }
+}

@@ -1,0 +1,31 @@
+@import 'reset';
+@import 'fonts';
+@import 'mixins';
+@import 'variables';
+
+a {
+  color: #000000;
+
+  text-decoration: none;
+
+  &:hover {
+    color: #000000;
+  }
+}
+
+input {
+  all: unset;
+  padding: 4px;
+}
+
+.App {
+  @include dis-flex-column(space-between, stretch);
+
+  font-family: 'Poppins', sans-serif;
+
+  min-height: 100vh;
+}
+
+.page {
+  padding: $page-padding;
+}

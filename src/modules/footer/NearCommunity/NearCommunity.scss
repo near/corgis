@@ -1,0 +1,32 @@
+@import 'mixins';
+@import 'variables';
+
+.community {
+  @include dis-flex-column;
+
+  font-size: $community-font-size;
+
+  line-height: $community-line-height;
+
+  &__title,
+  &__link {
+    font-size: $community-font-size;
+    font-weight: $community-font-weight;
+
+    white-space: nowrap;
+  }
+
+  &__title {
+    margin: $community-margin;
+
+    color: $text-color-gray;
+  }
+
+  &__link {
+    color: $text-color-blue;
+
+    &:hover {
+      color: $text-color-blue;
+    }
+  }
+}

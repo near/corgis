@@ -1,0 +1,14 @@
+@import 'mixins';
+@import 'variables';
+
+.transfer {
+  @include dis-flex(space-between, center);
+
+  &__input {
+    margin: $transfer-input-margin;
+  }
+
+  &__submit {
+    margin: $transfer-submit-margin;
+  }
+}

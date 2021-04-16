@@ -1,0 +1,26 @@
+@import 'mixins';
+@import 'variables';
+
+.link {
+  @include flex-center;
+
+  width: 100%;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  color: black;
+
+  &--underline {
+    text-decoration: underline;
+  }
+
+  &--underline-on-hover:hover {
+    text-decoration: underline;
+  }
+
+  &--disabled {
+    color: gray;
+  }
+}

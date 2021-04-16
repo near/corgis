@@ -1,0 +1,59 @@
+@import 'mixins';
+@import 'variables';
+
+.poster {
+  @include bootstrap-row();
+
+  width: 100%;
+
+  margin: $poster-margin;
+  padding: $poster-padding;
+
+  border-radius: $border-radius-big;
+
+  background-color: rgba($color-main, 0.5);
+
+  text-align: center;
+
+  &__description {
+    @include bootstrap-col(lg, 4);
+    @include dis-flex-column(space-evenly, center);
+
+    padding: $poster-description-padding;
+
+    box-sizing: border-box;
+  }
+
+  &__text {
+    margin: $poster-text-margin;
+    padding: $poster-text-padding;
+
+    color: $text-color-dark;
+
+    font-size: $poster-text-font-size;
+    font-weight: $poster-text-font-weight;
+
+    letter-spacing: 1px;
+
+    &--small {
+      font-size: $poster-text-font-size-small;
+      font-weight: $poster-text-font-weight-small;
+    }
+  }
+
+  &__image {
+    @include bootstrap-col(lg, 8);
+  }
+
+  &__corgi {
+    width: 100%;
+
+    transform: translateY(-3%);
+  }
+
+  &__action {
+    @include flex-center;
+
+    height: $minting-link-size-big;
+  }
+}

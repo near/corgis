@@ -1,0 +1,62 @@
+import React, { useContext } from 'react';
+import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+
+import { CharacterContextProvider, NearContext } from '~contexts';
+
+import GuardedRoute from '~router/GuardedRoute';
+
+import { CorgiPNG } from '~modules/common/corgi';
+
+import { Header } from '~modules/header';
+
+import { CorgiPage, HomePage, MintingPage, UserPage, MarketplacePage } from '~modules/pages';
+
+const Routes = () => {
+  const { user, isLoading } = useContext(NearContext);
+
+  const isAuthenticated = !!user;
+
+  return (
+    <Router hashType='noslash'>
+      <Switch>
+        <Route exact path='/assets/corgi/:id+'>
+          <CorgiPNG />
+        </Route>
+
+        <Route>
+          <Header />
+
+          <Switch>
+            <Route exact path='/'>
+              <HomePage />
+            </Route>
+
+            <Route exact path='/corgi/:id+'>
+              <CorgiPage />
+            </Route>
+
+            <Route exact path='/user/:id'>
+              <UserPage />
+            </Route>
+
+            <GuardedRoute auth={isAuthenticated} isLoading={isLoading} exact path='/minting'>
+              <CharacterContextProvider>
+                <MintingPage />
+              </CharacterContextProvider>
+            </GuardedRoute>
+
+            <Route exact path='/marketplace'>
+              <MarketplacePage />
+            </Route>
+
+            <Route>
+              <h1>Not found This page. Please go back to continue or you can contact us about the issue.</h1>
+            </Route>
+          </Switch>
+        </Route>
+      </Switch>
+    </Router>
+  );
+};
+
+export default Routes;

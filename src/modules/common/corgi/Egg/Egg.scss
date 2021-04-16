@@ -1,0 +1,25 @@
+@import 'mixins';
+@import 'variables';
+
+.egg {
+  @include flex-center;
+  flex-direction: column;
+
+  position: relative;
+
+  z-index: 10;
+
+  &__svg {
+    margin: $egg-svg-margin;
+  }
+
+  &__shadow {
+    width: $egg-shadow-width;
+  }
+
+  &--shadow {
+    .egg__svg {
+      margin-bottom: $egg-svg-with-shadow-margin-bottom;
+    }
+  }
+}

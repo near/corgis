@@ -1,0 +1,63 @@
+@import 'animations';
+@import 'mixins';
+@import 'variables';
+
+.minting-animation {
+  @include basic($minting-animation-height, $minting-animation-width);
+  @include flex-center;
+  flex-direction: column;
+
+  border-radius: $border-radius-big;
+
+  &__box {
+    @include basic(10rem, 0);
+    position: relative;
+
+    @include animateBounceCorgi;
+  }
+
+  &__corgi {
+    @include absolute-top-left(0%, 50%);
+
+    opacity: 0;
+
+    transition: opacity 0.25s 0.25s, z-index 0.5s;
+
+    z-index: 0;
+
+    &--0 {
+      transform: translate(-50%, 30%);
+    }
+
+    &--1 {
+      transform: translate(-28.5%, 22.5%);
+    }
+
+    &--2 {
+      transform: translate(-40%, 15%);
+    }
+
+    &--3 {
+      transform: translate(-40%, 23%);
+
+      transition: opacity 0.5s, z-index 0.25s 0.25s;
+    }
+
+    &--show {
+      opacity: 1;
+
+      transition: opacity 0.5s, z-index 0.5s;
+
+      z-index: 10;
+    }
+  }
+
+  &__shadow {
+    @include flex-center;
+    @include animateStretchShadow;
+
+    margin-top: 7rem;
+
+    filter: $minting-animation-shadow-filter;
+  }
+}

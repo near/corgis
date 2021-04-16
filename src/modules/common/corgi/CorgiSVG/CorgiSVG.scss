@@ -1,0 +1,13 @@
+@import 'animations';
+
+.corgi {
+  height: 100%;
+
+  &__tail {
+    @include animateShakeTail;
+  }
+
+  &__tongue {
+    @include animateSwingTongue;
+  }
+}

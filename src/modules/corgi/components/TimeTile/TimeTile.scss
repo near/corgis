@@ -1,0 +1,17 @@
+@import 'mixins';
+@import 'variables';
+
+.time-tile {
+  @include dis-flex-column(center, center);
+
+  height: $time-tile-height;
+
+  padding: $time-tile-padding;
+
+  &__number {
+    font-size: $time-tile-font-size;
+    font-weight: $time-tile-font-weight;
+
+    margin-bottom: $time-tile-margin-bottom;
+  }
+}

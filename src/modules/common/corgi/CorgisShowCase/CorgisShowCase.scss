@@ -1,0 +1,44 @@
+@import 'variables';
+
+.showcase {
+  width: 100%;
+
+  &__title {
+    margin-bottom: $showcase-title-margin-bottom;
+
+    font-size: $showcase-title-font-size;
+    font-weight: $showcase-title-font-weight;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+
+    width: 100%;
+  }
+}
+
+@media all and (min-width: 1440px) {
+  .showcase {
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(17.5rem, 1fr));
+    }
+  }
+}
+
+@media all and (max-width: 1120px) {
+  .showcase {
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    }
+  }
+}
+
+@media all and (max-width: 360px) {
+  .showcase {
+    &__grid {
+      grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
+    }
+  }
+}

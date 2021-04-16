@@ -1,0 +1,59 @@
+@import 'mixins';
+@import 'variables';
+
+.bid {
+  @include dis-flex(space-between, center);
+
+  max-width: 100%;
+
+  margin: $bid-tile-margin;
+
+  box-sizing: border-box;
+
+  &__info {
+    @include flex-center;
+
+    padding: $bid-tile-info-padding;
+
+    white-space: nowrap;
+
+    &--near {
+      width: $bid-tile-info-near-width;
+      min-width: max-content;
+    }
+
+    &--bidder {
+      justify-content: flex-start;
+
+      width: $bid-tile-info-bidder-width;
+    }
+
+    &--time {
+      width: $bid-tile-info-time-width;
+    }
+  }
+
+  &__near-icon {
+    @include flex-center;
+
+    margin-left: $bid-tile-near-icon-margin-left;
+  }
+}
+
+@media all and (max-width: 800px) {
+  .bid__info--near {
+    padding-right: 2rem;
+  }
+}
+
+@media all and (max-width: 650px) {
+  .bid__info--near {
+    padding-right: 1rem;
+  }
+}
+
+@media all and (max-width: 500px) {
+  .bid__info--near {
+    padding-right: 0.5rem;
+  }
+}

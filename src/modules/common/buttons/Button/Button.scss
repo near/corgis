@@ -1,0 +1,57 @@
+@import 'mixins';
+@import 'variables';
+
+.button {
+  @include flex-center;
+
+  padding: $button-padding;
+
+  border-radius: $border-radius-basic;
+
+  background-color: $button-background-color;
+  color: $button-text-color;
+
+  font-weight: $button-font-weight;
+
+  letter-spacing: $button-letter-spacing;
+  white-space: nowrap;
+
+  box-sizing: border-box;
+
+  cursor: pointer;
+
+  transition: $transition-basic-ease-out;
+
+  &__badge {
+    background-color: $color-brown;
+
+    transform: translateX(15%);
+  }
+
+  &:hover {
+    background-color: $button-background-color-hover;
+  }
+
+  &--danger {
+    background-color: $color-red;
+  }
+
+  &--warning {
+    background-color: $color-purple; // yellow
+  }
+
+  &--disabled {
+    background-color: $button-background-color-disabled;
+    color: $button-text-color-disabled;
+  }
+
+  &--square {
+    padding: $button-padding-square;
+  }
+}
+
+@media all and (max-width: 670px) {
+  .button--stretchable {
+    width: 100%;
+  }
+}

@@ -1,0 +1,68 @@
+@import 'animations';
+@import 'mixins';
+@import 'variables';
+
+.spinner-wrapper {
+  @include flex-center;
+
+  width: $corgi-spinner-wrapper-width;
+  max-width: $corgi-spinner-wrapper-max-width;
+
+  padding: $corgi-spinner-padding;
+  margin: $corgi-spinner-margin;
+
+  overflow: hidden;
+}
+
+.spinner {
+  @include basicRound($corgi-spinner-size);
+  @include clear-mar-pad;
+
+  position: relative;
+
+  @include animateSpin;
+
+  z-index: 0;
+
+  &__gradient {
+    @include basicRound($corgi-spinner-gradient-size);
+    @include absolute-top-left(-25%, -25%);
+
+    background: #fbb040;
+    background: linear-gradient(to left top, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
+    background: -moz-linear-gradient(right bottom, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
+    background: -webkit-linear-gradient(right bottom, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
+    background: -o-linear-gradient(right bottom, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
+    background: -ms-linear-gradient(right bottom, #fff 0%, rgba(255, 187, 49, 0) 30%, #fbb040 80%);
+
+    z-index: -1;
+
+    // Use ::after to trim unnecessary part of gradient
+    &::after {
+      @include basicSquare($corgi-spinner-gradient-after-size);
+      @include absolute-top-left(0%, 50%);
+
+      content: '';
+
+      background-color: $color-white;
+    }
+  }
+
+  &__background {
+    @include fill-parent;
+
+    border-radius: inherit;
+
+    background-color: $color-white;
+  }
+
+  &__corgi {
+    @include basicSquare($corgi-spinner-image-size);
+    // pixel perfect positioning to remove gaps
+    @include absolute-top-left(-29%, 50%);
+
+    margin: $corgi-spinner-image-margin;
+
+    transform: translateX(-50%);
+  }
+}

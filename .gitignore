@@ -1,13 +1,16 @@
+# Node's dependencies
+/node_modules/
 
-# dependencies
-.cache
-/node_modules
-/out
-/dist
-/data
+# Parcel's internal cache
+/.cache/
 
-#keys
-/neardev
+# Parcel's bundled output
+/dist/
+
+/data/
+
+# Keys generation by `near dev-deploy`
+/neardev/
 
 # testing
 /coverage

@@ -1,0 +1,13 @@
+@import 'mixins';
+
+.page {
+  @include dis-flex-column(flex-start, center);
+
+  width: 100%;
+}
+
+.page-title {
+  margin-bottom: 1rem;
+
+  font-weight: 500;
+}
