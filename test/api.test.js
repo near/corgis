@@ -184,7 +184,7 @@ describe('Corgis contract integration tests', () => {
     balance(alice.account, 'alice');
 
     const newCorgi = await create_corgi(alice.contract, { name: 'dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' });
-    await alice.contract.add_item_for_sale({ token_id: newCorgi.id, duration: 15 });
+    await alice.contract.add_item_for_sale({ token_id: newCorgi.id, duration: 30 });
 
     await bid_for_item(bob.contract, { token_id: newCorgi.id }, '20');
     await bid_for_item(ted.contract, { token_id: newCorgi.id }, '50');
@@ -192,7 +192,7 @@ describe('Corgis contract integration tests', () => {
 
     await alice.contract.get_items_for_sale();
 
-    await sleep(15);
+    await sleep(30);
     await alice.contract.clearance_for_item({ token_id: newCorgi.id }, GAS);
 
     await balance(alice.account, 'alice');
@@ -208,7 +208,7 @@ describe('Corgis contract integration tests', () => {
     balance(alice.account, 'alice');
 
     const newCorgi = await create_corgi(alice.contract, { name: 'dog', quote: 'best doggy ever', color: 'red', background_color: 'yellow' });
-    await alice.contract.add_item_for_sale({ token_id: newCorgi.id, duration: 15 });
+    await alice.contract.add_item_for_sale({ token_id: newCorgi.id, duration: 30 });
 
     await bid_for_item(bob.contract, { token_id: newCorgi.id }, '20');
     await bid_for_item(ted.contract, { token_id: newCorgi.id }, '50');
@@ -216,7 +216,7 @@ describe('Corgis contract integration tests', () => {
 
     await alice.contract.get_items_for_sale();
 
-    await sleep(15);
+    await sleep(30);
     await bob.contract.clearance_for_item({ token_id: newCorgi.id }, GAS);
 
     await balance(alice.account, 'alice');
